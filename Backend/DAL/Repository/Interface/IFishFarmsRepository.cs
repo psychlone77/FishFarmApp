@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DAL.Entities;
+﻿using DAL.Entities;
 
 namespace DAL.Repository.Interface
 {
     public interface IFishFarmsRepository
     {
-        Task<ICollection<FishFarmEntity>> GetAllFishFarms();
+        Task<IList<FishFarmEntity>> GetAllFishFarmEntites();
+        Task<FishFarmEntity?> GetFishFarmEntityById(Guid id);
+        Task<FishFarmEntity> AddFishFarmEntity(FishFarmEntity fishFarm);
+        Task<FishFarmEntity?> UpdateFishFarmEntity(FishFarmEntity fishFarm);
+        Task<FishFarmEntity?> DeleteFishFarmEntity(Guid id);
     }
 }

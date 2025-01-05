@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace DAL.Entities
 {
-    public class WorkerEntity
+    public class WorkerEntity : BaseEntity
     {
-        public int Id { get; set; }
         public required string Name { get; set; }
         public string? ImageURL { get; set; }
         public int Age { get; set; }
@@ -16,14 +11,17 @@ namespace DAL.Entities
         public WorkerPosition WorkerPosition { get; set; }
         public DateTime CertifiedUntil { get; set; }
 
-        public int FishFarmId { get; set; }
+        public Guid FishFarmId { get; set; }
         public required FishFarmEntity FishFarm { get; set; }
     }
 
     public enum WorkerPosition
     {
+        [Display(Name = "CEO")]
         CEO,
+        [Display(Name = "Worker")]
         Worker,
+        [Display(Name = "Captain")]
         Captain,
     }
 }

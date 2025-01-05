@@ -1,3 +1,4 @@
+// Import necessary namespaces
 using BLL.Services;
 using BLL.Services.Interfaces;
 using DAL.Data;
@@ -9,17 +10,27 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+// Add controller services
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+// Add Swagger/OpenAPI services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<FishFarmsDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), x=> x.MigrationsAssembly("DAL")));
+// Add AutoMapper services
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+// Configure and add DbContext services
+builder.Services.AddDbContext<FishFarmsDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), x => x.MigrationsAssembly("DAL")));
+
+// Add scoped services for dependency injection
 builder.Services.AddScoped<IFishFarmsRepository, FishFarmsRepository>();
 builder.Services.AddScoped<IFishFarmsService, FishFarmsService>();
+builder.Services.AddScoped<IWorkersRepository, WorkersRepository>();
+builder.Services.AddScoped<IWorkersService, WorkersService>();
 
+// Configure CORS policy
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
@@ -30,17 +41,24 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Enable Swagger in development environment
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+// Enable HTTPS redirection
 app.UseHttpsRedirection();
+
+// Enable CORS with the specified policy
 app.UseCors("AllowSpecificOrigin");
+
+// Enable authorization
 app.UseAuthorization();
 
+// Map controller routes
 app.MapControllers();
 
+// Run the application
 app.Run();

@@ -1,0 +1,18 @@
+@Backend_HostAddress = https://localhost:7064
+
+GET {{Backend_HostAddress}}/FishFarm/
+Accept: application/json
+
+###
+
+POST {{Backend_HostAddress}}/FishFarm/
+Accept: application/json
+Content-Type: application/json
+  {
+    "name": "Fish Farm 1",
+    "latitude": 56.1234,
+    "longitude": 12.1234,
+    "cageCount": 2,
+    "hasBarge": true,
+    "imageURL": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fawionline.org%2Fcontent%2Ffish-farming-and-aquaculture&psig=AOvVaw1Uo21TgqEgA4jjzz6jvsux&ust=1736064047374000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCJDPi9nM24oDFQAAAAAdAAAAABAJ"
+  }

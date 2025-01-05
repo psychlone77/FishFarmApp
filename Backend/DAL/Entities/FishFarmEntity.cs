@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DAL.Entities
+﻿namespace DAL.Entities
 {
-    public class FishFarmEntity
+    public class FishFarmEntity : BaseEntity
     {
-        public int Id { get; set; }
         public required string Name { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }

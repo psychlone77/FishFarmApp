@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(FishFarmsDbContext))]
-    [Migration("20250103034844_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250104081032_Second")]
+    partial class Second
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,14 +27,17 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Entities.FishFarmEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("CageCount")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<bool>("HasBarge")
                         .HasColumnType("bit");
@@ -53,40 +56,21 @@ namespace DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("UpdatedOn")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
                     b.HasKey("Id");
 
                     b.ToTable("FishFarms");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CageCount = 10,
-                            HasBarge = true,
-                            ImageURL = "https://fishybusiness.com/",
-                            Latitude = 56.123399999999997,
-                            Longitude = 12.1234,
-                            Name = "Fishy Business"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CageCount = 10,
-                            HasBarge = true,
-                            ImageURL = "https://fishybusiness2.com/",
-                            Latitude = 56.123399999999997,
-                            Longitude = 12.1234,
-                            Name = "Fishy Business 2"
-                        });
                 });
 
             modelBuilder.Entity("DAL.Entities.WorkerEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Age")
                         .HasColumnType("int");
@@ -94,12 +78,17 @@ namespace DAL.Migrations
                     b.Property<DateTime>("CertifiedUntil")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("FishFarmId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("FishFarmId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ImageURL")
                         .HasColumnType("nvarchar(max)");
@@ -107,6 +96,11 @@ namespace DAL.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<int>("WorkerPosition")
                         .HasColumnType("int");
