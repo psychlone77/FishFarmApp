@@ -26,7 +26,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Route("{id}")]
+        [Route("{fishFarmId}")]
         public async Task<ActionResult<FishFarmResponseDTO>> GetFishFarmById(Guid fishFarmId)
         {
             var userId = GetUserId();
@@ -49,7 +49,7 @@ namespace API.Controllers
         }
 
         [HttpDelete]
-        [Route("{id}")]
+        [Route("{fishFarmId}")]
         public async Task<ActionResult<FishFarmResponseDTO>> DeleteFishFarm(Guid fishFarmId)
         {
             var userId = GetUserId();
