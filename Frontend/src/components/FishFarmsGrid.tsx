@@ -1,25 +1,33 @@
-import { useQuery } from "react-query";
-import { getFishFarms } from "../actions/fishFarmActions";
-import { FishFarmResponse } from "../types/types";
-import FishFarmGridCard from "./FishFarmGridCard";
-import { Box, Container } from "@mui/material";
-import { useRef, useState } from "react";
+import { useQuery } from 'react-query'
+import { getFishFarms } from '../actions/fishFarmActions'
+import { FishFarmResponse } from '../types/types'
+import FishFarmGridCard from './FishFarmGridCard'
+import { Box } from '@mui/material'
+import { useNavigate } from 'react-router'
 
 export default function FishFarmsGrid() {
-    const [count, setCount] = useState(0);
-    const countRef = useRef(0);
-    const { data, isLoading, isError } = useQuery<FishFarmResponse[]>('fishFarms', getFishFarms);
-    return (
-        <Box sx={{ padding: 2 }}>
-            {isLoading && <p>Loading...</p>}
-            {isError && <p>Error loading fish farms.</p>}
-            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 3 }}>
-                {data && data.map(fishFarm => (
-                    <FishFarmGridCard key={fishFarm.id} fishFarm={fishFarm} />
-                ))}
-            </Box>
-            <button onClick={() => {setCount(count + 1); console.log("useState: ",count);}}>Click me {count}</button>
-            <button onClick={() => {countRef.current += 1; console.log("useRef: ",countRef.current);}}>Click me {countRef.current}</button>
-        </Box>
-    )
+  const navigate = useNavigate()
+  const { data, isLoading, isError } = useQuery<FishFarmResponse[]>('fishFarms', getFishFarms)
+  return (
+    <Box sx={{ padding: 2 }}>
+      {isLoading && <p>Loading...</p>}
+      {isError && <p>Error loading fish farms.</p>}
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+          gap: 3,
+        }}
+      >
+        {data &&
+          data.map(fishFarm => (
+            <FishFarmGridCard
+              onClick={() => navigate(`/fish-farms/${fishFarm.id}`)}
+              key={fishFarm.id}
+              fishFarm={fishFarm}
+            />
+          ))}
+      </Box>
+    </Box>
+  )
 }

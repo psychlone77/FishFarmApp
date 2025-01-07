@@ -1,76 +1,87 @@
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import { Phishing } from '@mui/icons-material';
+import * as React from 'react'
+import AppBar from '@mui/material/AppBar'
+import Box from '@mui/material/Box'
+import Toolbar from '@mui/material/Toolbar'
+import IconButton from '@mui/material/IconButton'
+import Typography from '@mui/material/Typography'
+import Menu from '@mui/material/Menu'
+import MenuIcon from '@mui/icons-material/Menu'
+import Container from '@mui/material/Container'
+import Avatar from '@mui/material/Avatar'
+import Button from '@mui/material/Button'
+import Tooltip from '@mui/material/Tooltip'
+import MenuItem from '@mui/material/MenuItem'
+import { Phishing } from '@mui/icons-material'
+import { useNavigate } from 'react-router'
+import { Link } from 'react-router'
 
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const pages = ['Products', 'Pricing', 'Blog']
+const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
 
 function CustomNavbar() {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const navigate = useNavigate()
+  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
+  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null)
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
+    setAnchorElNav(event.currentTarget)
+  }
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
+    setAnchorElUser(event.currentTarget)
+  }
 
   const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
+    setAnchorElNav(null)
+  }
 
   const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
+    setAnchorElUser(null)
+  }
 
   return (
-    <AppBar position="static">
+    <AppBar position='static'>
       <Container maxWidth={false}>
         <Toolbar disableGutters>
-          <Phishing sx={{ display: { xs: 'none', md: 'flex' }, marginRight: 1 }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="#"
-            sx={{
-              marginRight: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontSize: 22,
-              fontWeight: 500,
-              letterSpacing: '0.1rem',
-              color: 'inherit',
+          <Link
+            to='/'
+            style={{
+              display: 'flex',
+              alignItems: 'center',
               textDecoration: 'none',
+              color: 'inherit',
             }}
           >
-            Fish Farms
-          </Typography>
+            <Phishing sx={{ display: { xs: 'none', md: 'flex' }, marginRight: 1 }} />
+            <Typography
+              variant='h6'
+              noWrap
+              sx={{
+                marginRight: 2,
+                display: { xs: 'none', md: 'flex' },
+                fontSize: 22,
+                fontWeight: 500,
+                letterSpacing: '0.1rem',
+                color: 'inherit',
+                textDecoration: 'none',
+              }}
+            >
+              Fish Farms
+            </Typography>
+          </Link>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
+              size='large'
+              aria-label='account of current user'
+              aria-controls='menu-appbar'
+              aria-haspopup='true'
               onClick={handleOpenNavMenu}
-              color="inherit"
+              color='inherit'
             >
               <MenuIcon />
             </IconButton>
             <Menu
-              id="menu-appbar"
+              id='menu-appbar'
               anchorEl={anchorElNav}
               anchorOrigin={{
                 vertical: 'bottom',
@@ -85,7 +96,7 @@ function CustomNavbar() {
               onClose={handleCloseNavMenu}
               sx={{ display: { xs: 'block', md: 'none' } }}
             >
-              {pages.map((page) => (
+              {pages.map(page => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
                   <Typography sx={{ textAlign: 'center' }}>{page}</Typography>
                 </MenuItem>
@@ -94,10 +105,10 @@ function CustomNavbar() {
           </Box>
           <Phishing sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <Typography
-            variant="h5"
+            variant='h5'
             noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
+            component='a'
+            href='#app-bar-with-responsive-menu'
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -113,11 +124,17 @@ function CustomNavbar() {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             <Box sx={{ display: 'flex', margin: 'auto', paddingRight: 8 }}>
-              {pages.map((page) => (
+              {pages.map(page => (
                 <Button
                   key={page}
                   onClick={handleCloseNavMenu}
-                  sx={{ fontSize: 16, fontWeight: 300, my: 'auto', color: 'white', display: 'block' }}
+                  sx={{
+                    fontSize: 16,
+                    fontWeight: 300,
+                    my: 'auto',
+                    color: 'white',
+                    display: 'block',
+                  }}
                 >
                   {page}
                 </Button>
@@ -125,14 +142,14 @@ function CustomNavbar() {
             </Box>
           </Box>
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
+            <Tooltip title='Open settings'>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt='Remy Sharp' src='/static/images/avatar/2.jpg' />
               </IconButton>
             </Tooltip>
             <Menu
               sx={{ mt: '45px' }}
-              id="menu-appbar"
+              id='menu-appbar'
               anchorEl={anchorElUser}
               anchorOrigin={{
                 vertical: 'top',
@@ -146,7 +163,7 @@ function CustomNavbar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
+              {settings.map(setting => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
                   <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
                 </MenuItem>
@@ -156,6 +173,6 @@ function CustomNavbar() {
         </Toolbar>
       </Container>
     </AppBar>
-  );
+  )
 }
-export default CustomNavbar;
+export default CustomNavbar
