@@ -4,10 +4,10 @@ namespace DAL.Repository.Interface
 {
     public interface IFishFarmsRepository
     {
-        Task<IList<FishFarmEntity>> GetAllFishFarmEntites();
-        Task<FishFarmEntity?> GetFishFarmEntityById(Guid id);
-        Task<FishFarmEntity> AddFishFarmEntity(FishFarmEntity fishFarm);
-        Task<FishFarmEntity?> UpdateFishFarmEntity(FishFarmEntity fishFarm);
-        Task<FishFarmEntity?> DeleteFishFarmEntity(Guid id);
+        Task<IList<FishFarmEntity>> GetAllFishFarmEntites(string userId);
+        Task<FishFarmEntity?> GetFishFarmEntityById(Guid fishFarmId, string userId);
+        Task<FishFarmEntity> AddFishFarmEntity(FishFarmEntity fishFarm, string userId);
+        Task<FishFarmEntity?> UpdateFishFarmEntity(FishFarmEntity fishFarm, string userId);
+        Task<FishFarmEntity?> DeleteFishFarmEntity(Guid id, string userId);
     }
 }

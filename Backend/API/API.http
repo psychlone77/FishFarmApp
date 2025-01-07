@@ -1,15 +1,15 @@
 @Backend_HostAddress = https://localhost:7064
 
-GET {{Backend_HostAddress}}/FishFarm/
+GET {{Backend_HostAddress}}/FishFarms/
 Accept: application/json
 
 ###
 
-POST {{Backend_HostAddress}}/FishFarm/
+POST {{Backend_HostAddress}}/FishFarms/
 Accept: application/json
 Content-Type: application/json
   {
-    "name": "Fish Farm 1",
+    "name": "Fish Farm 3",
     "latitude": 56.1234,
     "longitude": 12.1234,
     "cageCount": 2,

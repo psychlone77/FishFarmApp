@@ -5,14 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repository
 {
-    public class WorkersRepository : IWorkersRepository
+    public class WorkersRepository(FishFarmsDbContext context) : IWorkersRepository
     {
-        private readonly FishFarmsDbContext _context;
-
-        public WorkersRepository(FishFarmsDbContext context)
-        {
-            _context = context;
-        }
+        private readonly FishFarmsDbContext _context = context;
 
         public async Task<IList<WorkerEntity>> GetWorkerEntities(Guid fishFarmId)
         {

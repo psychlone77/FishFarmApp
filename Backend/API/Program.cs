@@ -2,8 +2,10 @@
 using BLL.Services;
 using BLL.Services.Interfaces;
 using DAL.Data;
+using DAL.Entities;
 using DAL.Repository;
 using DAL.Repository.Interface;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +18,14 @@ builder.Services.AddControllers();
 // Add Swagger/OpenAPI services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Add authorization services
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication().AddCookie(IdentityConstants.ApplicationScheme);
+
+// Add Identity services
+builder.Services.AddIdentityCore<User>().AddEntityFrameworkStores<FishFarmsDbContext>()
+    .AddApiEndpoints();
 
 // Add AutoMapper services
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -59,6 +69,7 @@ app.UseAuthorization();
 
 // Map controller routes
 app.MapControllers();
+app.MapIdentityApi<User>();
 
 // Run the application
 app.Run();

@@ -3,10 +3,10 @@ namespace BLL.Services.Interfaces
 {
     public interface IFishFarmsService
     {
-        Task<IList<FishFarmResponseDTO>> GetAllFishFarms();
-        Task<FishFarmResponseDTO> GetFishFarmById(Guid id);
-        Task<FishFarmResponseDTO> AddFishFarm(FishFarmRequestDTO fishFarm);
-        Task<FishFarmResponseDTO> UpdateFishFarm(FishFarmRequestDTO fishFarm, Guid id);
-        Task<FishFarmResponseDTO> DeleteFishFarm(Guid id);
+        Task<IList<FishFarmResponseDTO>> GetAllFishFarms(string userId);
+        Task<FishFarmResponseDTO> GetFishFarmById(Guid fishFarmId, string userId);
+        Task<FishFarmResponseDTO> AddFishFarm(FishFarmRequestDTO fishFarm, string userId);
+        Task<FishFarmResponseDTO> UpdateFishFarm(FishFarmRequestDTO fishFarm, Guid fishFarmId, string userId);
+        Task<FishFarmResponseDTO> DeleteFishFarm(Guid id, string userId);
     }
 }
