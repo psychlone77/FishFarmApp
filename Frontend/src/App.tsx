@@ -1,16 +1,27 @@
+import { createTheme, ThemeProvider, Typography } from '@mui/material'
 import './App.css'
+import CustomNavbar from './components/CustomNavbar'
+import FishFarmsGrid from './components/FishFarmsGrid'
+import { QueryClient, QueryClientProvider } from 'react-query'
 
 function App() {
-  function simpleGetCall() {
-    fetch('https://localhost:7064/FishFarm')
-      .then((response) => response.json())
-      .then((data) => console.log(data))
-  }
-  simpleGetCall();
+  const theme = createTheme({
+    typography: {
+      fontFamily: 'Outfit, sans-serif',
+    },
+  })
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: 0, refetchOnWindowFocus: false } },
+  });
+  
   return (
-    <>
-      
-    </>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <CustomNavbar/>
+        <Typography variant="h3">Fish Farms</Typography>
+        <FishFarmsGrid/>
+      </ThemeProvider>
+    </QueryClientProvider>
   )
 }
 
