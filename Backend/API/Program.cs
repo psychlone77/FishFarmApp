@@ -5,6 +5,7 @@ using DAL.Data;
 using DAL.Entities;
 using DAL.Repository;
 using DAL.Repository.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,7 +24,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication().AddCookie(IdentityConstants.ApplicationScheme, options =>
 {
-    options.Cookie.SameSite = SameSiteMode.None; // Set SameSite to None
+    options.Cookie.SameSite = builder.Environment.IsDevelopment() ? SameSiteMode.None : SameSiteMode.Lax; // Set SameSite to None
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Ensure the cookie is only sent over HTTPS
 });
 
@@ -56,6 +57,13 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// Apply migrations automatically
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<FishFarmsDbContext>();
+    dbContext.Database.Migrate();
+}
+
 // Enable Swagger in development environment
 if (app.Environment.IsDevelopment())
 {
@@ -74,7 +82,10 @@ app.UseAuthorization();
 
 // Map controller routes
 app.MapControllers();
-app.MapIdentityApi<User>();
+app.MapIdentityApi<User>().RequireAuthorization().WithMetadata(new AllowAnonymousAttribute());
+app.MapFallbackToFile("index.html");
+
+app.UseStaticFiles();
 
 // Run the application
 app.Run();

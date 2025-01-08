@@ -10,7 +10,6 @@ import WorkerForm from '../components/WorkerForm'
 
 export default function WorkerPage() {
   const { fishFarmId, workerId } = useParams<{ fishFarmId: string; workerId: string }>()
-  console.log(fishFarmId, workerId)
   const theme = useTheme()
   const [showWorkerForm, setShowWorkerForm] = useState(false)
 

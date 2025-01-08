@@ -12,7 +12,6 @@ import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import { Phishing } from '@mui/icons-material'
-import { useNavigate } from 'react-router'
 import { Link } from 'react-router'
 
 const pages = ['']
@@ -23,7 +22,6 @@ const settings = [
 ]
 
 function CustomNavbar() {
-  const navigate = useNavigate()
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null)
 
@@ -168,8 +166,8 @@ function CustomNavbar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map(setting => (
-                <Link to={setting.path} style={{ textDecoration: 'none', color: 'inherit' }}>
-                  <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
+                <Link key={setting.name} to={setting.path} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <MenuItem onClick={handleCloseUserMenu}>
                     <Typography sx={{ textAlign: 'center' }}>{setting.name}</Typography>
                   </MenuItem>
                 </Link>

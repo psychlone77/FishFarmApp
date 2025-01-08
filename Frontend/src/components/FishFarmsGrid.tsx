@@ -56,8 +56,8 @@ export default function FishFarmsGrid() {
             gap: 3,
           }}
         >
-          {data &&
-            data.map(fishFarm => (
+          {Array.isArray(data) &&
+            data?.map(fishFarm => (
               <FishFarmGridCard
                 onClick={() => navigate(`/fish-farms/${fishFarm.id}`)}
                 key={fishFarm.id}

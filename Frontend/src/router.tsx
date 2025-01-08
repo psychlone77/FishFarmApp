@@ -12,13 +12,13 @@ export default function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/login' element={<LoginPage />} />
-        <Route path='/logout' element={<LogoutPage />} />
         <Route path='/' element={<PrivateRoute element={<Layout />} />}>
           <Route index element={<HomePage />} />
           <Route path='fish-farms/:fishFarmId' element={<FishFarmPage />} />
           <Route path='fish-farms/:fishFarmId/workers/:workerId' element={<WorkerPage />} />
         </Route>
+        <Route path='/login' element={<LoginPage />} />
+        <Route path='/logout' element={<LogoutPage />} />
         <Route path='*' element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>

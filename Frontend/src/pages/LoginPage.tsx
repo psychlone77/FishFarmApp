@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form'
 import { useMutation } from 'react-query'
-import { TextField, Button, Container, Typography, Box } from '@mui/material'
+import { TextField, Button, Container, Typography, Box, CircularProgress } from '@mui/material'
 import { LoginRequest } from '../types/types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { LoginRequestSchema } from '../types/schemas'
@@ -19,7 +19,9 @@ export default function LoginPage() {
     mutationFn: async (data: LoginRequest) => {
       const res = await login(data)
       if (res.status === 200) {
-        navigate('/')
+        setTimeout(() => {
+          navigate('/')
+        }, 1000)
       }
     },
   })
@@ -88,21 +90,40 @@ export default function LoginPage() {
               error={!!errors.password}
               helperText={errors.password ? errors.password.message : ''}
             />
-            <Button
-              type='submit'
-              variant='contained'
-              color='primary'
-              fullWidth
-              sx={{
-                mt: 3,
-                width: '60%',
-                height: 50,
-                fontSize: 20,
-                borderRadius: 5,
-              }}
-            >
-              Login
-            </Button>
+            {mutation.isError && (
+              <Typography variant='body1' color='error'>
+                Login Failed
+              </Typography>
+            )}
+            {mutation.isSuccess && (
+              <Typography variant='body1' color='success'>
+                Logged in successfully
+              </Typography>
+            )}
+            {mutation.isLoading ? (
+              <CircularProgress
+                size={30}
+                sx={{
+                  mt: 3,
+                }}
+              />
+            ) : (
+              <Button
+                type='submit'
+                variant='contained'
+                color='primary'
+                fullWidth
+                sx={{
+                  mt: 3,
+                  width: '60%',
+                  height: 50,
+                  fontSize: 20,
+                  borderRadius: 5,
+                }}
+              >
+                Login
+              </Button>
+            )}
           </form>
         </Box>
       </Container>
