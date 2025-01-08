@@ -30,7 +30,8 @@ export default function FishFarmGridCard({
             alt={fishFarm.name}
             style={{
               width: '100%',
-              height: 'auto',
+              height: '200px',
+              objectFit: 'cover',
               borderRadius: '8px 8px 8px 8px',
             }}
           />

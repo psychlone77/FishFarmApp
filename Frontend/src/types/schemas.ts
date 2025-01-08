@@ -25,21 +25,23 @@ export const FishFarmRequestSchema = z.object({
   imageURL: z.string().url(),
 })
 
-const WorkerPositionEnum = z.enum(['CEO', 'Captain', 'Worker'])
+export const WorkerPositionEnum = z.enum(['CEO', 'Captain', 'Worker'])
 
 export const WorkerResponseSchema = z.object({
   id: z.string(),
   name: z.string(),
   age: z.number().positive(),
-  imageURL: z.string().url(),
-  worketPostion: WorkerPositionEnum,
+  email: z.string().email(),
+  imageURL: z.string().url().optional(),
+  workerPosition: WorkerPositionEnum,
   certifiedUntil: z.date(),
 })
 
 export const WorkerRequestSchema = z.object({
   name: z.string(),
   age: z.number().positive(),
-  imageURL: z.string().url(),
-  worketPostion: WorkerPositionEnum,
+  email: z.string().email(),
+  imageURL: z.string().url().optional(),
+  workerPosition: WorkerPositionEnum,
   certifiedUntil: z.date(),
 })

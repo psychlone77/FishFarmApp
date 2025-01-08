@@ -15,8 +15,13 @@ import { Phishing } from '@mui/icons-material'
 import { useNavigate } from 'react-router'
 import { Link } from 'react-router'
 
-const pages = ['Products', 'Pricing', 'Blog']
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
+// TODO: Add some specific pages
+const pages = ['']
+const settings = [
+  { name: 'Profile', path: '/profile' },
+  { name: 'Account', path: '/account' },
+  { name: 'Logout', path: '/logout' },
+]
 
 function CustomNavbar() {
   const navigate = useNavigate()
@@ -40,7 +45,7 @@ function CustomNavbar() {
 
   return (
     <AppBar position='static'>
-      <Container maxWidth={false}>
+      <Container maxWidth={false} sx={{ backgroundColor: 'primary.dark' }}>
         <Toolbar disableGutters>
           <Link
             to='/'
@@ -144,7 +149,7 @@ function CustomNavbar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title='Open settings'>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt='Remy Sharp' src='/static/images/avatar/2.jpg' />
+                <Avatar alt='Remy Sharp' src='https://t3.ftcdn.net/jpg/02/22/85/16/240_F_222851624_jfoMGbJxwRi5AWGdPgXKSABMnzCQo9RN.jpg' />
               </IconButton>
             </Tooltip>
             <Menu
@@ -164,9 +169,11 @@ function CustomNavbar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map(setting => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
-                </MenuItem>
+                <Link to={setting.path} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
+                    <Typography sx={{ textAlign: 'center' }}>{setting.name}</Typography>
+                  </MenuItem>
+                </Link>
               ))}
             </Menu>
           </Box>
