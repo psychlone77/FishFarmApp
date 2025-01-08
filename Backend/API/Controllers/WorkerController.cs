@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers
 {
     [ApiController]
-    [Route("FishFarm/{fishFarmId}/workers")]
+    [Route("FishFarms/{fishFarmId}/workers")]
     [Authorize]
     public class WorkerController(IWorkersService workersService) : Controller
     {

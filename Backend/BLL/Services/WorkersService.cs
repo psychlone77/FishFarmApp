@@ -43,6 +43,8 @@ namespace BLL.Services
             var workerEntity = _mapper.Map<WorkerEntity>(worker);
             workerEntity.Id = workerId;
             var updatedWorker = await _workersRepository.UpdateWorkerEntity(workerEntity);
+            if (updatedWorker is null)
+                throw new KeyNotFoundException($"Worker with id {workerId} not found");
             return _mapper.Map<WorkerResponseDTO>(updatedWorker);
         }
 

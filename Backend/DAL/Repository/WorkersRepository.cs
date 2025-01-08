@@ -28,11 +28,19 @@ namespace DAL.Repository
 
         public async Task<WorkerEntity?> UpdateWorkerEntity(WorkerEntity workerEntity)
         {
-            var updatedWorkerEntity = _context.Workers.Update(workerEntity);
-            if(updatedWorkerEntity == null)
+            var existingWorkerEntity = await _context.Workers.FirstOrDefaultAsync(w => w.Id == workerEntity.Id);
+            if (existingWorkerEntity == null)
                 return null;
+
+            existingWorkerEntity.Name = workerEntity.Name;
+            existingWorkerEntity.Age = workerEntity.Age;
+            existingWorkerEntity.ImageURL = workerEntity.ImageURL;
+            existingWorkerEntity.Email = workerEntity.Email;
+            existingWorkerEntity.WorkerPosition = workerEntity.WorkerPosition;
+            existingWorkerEntity.CertifiedUntil = workerEntity.CertifiedUntil;
+
             await _context.SaveChangesAsync();
-            return updatedWorkerEntity.Entity;
+            return existingWorkerEntity;
         }
 
         public async Task<WorkerEntity?> DeleteWorkerEntity(Guid workerId)
