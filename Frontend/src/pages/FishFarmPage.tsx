@@ -48,7 +48,6 @@ export default function FishFarmPage() {
       />
       {isLoading && <p>Loading...</p>}
       {isError && <p>Error loading fish farm details.</p>}
-      {/* TODO: Make the fishfarm details editable */}
       {fishFarm && (
         <Box sx={{ display: 'flex', gap: 2, padding: 2, paddingY: 4 }}>
           {fishFarm.imageURL && (
@@ -93,7 +92,6 @@ export default function FishFarmPage() {
           notifyError={notifyError}
         />
       )}
-      {/* TODO: Add worker list component */}
       <WorkerList fishFarmId={fishFarmId} notifySuccess={notifySuccess} notifyError={notifyError}/>
     </>
   )

@@ -15,7 +15,6 @@ import { Phishing } from '@mui/icons-material'
 import { useNavigate } from 'react-router'
 import { Link } from 'react-router'
 
-// TODO: Add some specific pages
 const pages = ['']
 const settings = [
   { name: 'Profile', path: '/profile' },

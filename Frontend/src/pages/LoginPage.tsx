@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { LoginRequestSchema } from '../types/schemas'
 import { login } from '../actions/authActions'
 import { useNavigate } from 'react-router'
+import { Phishing } from '@mui/icons-material'
 
 export default function LoginPage() {
   const navigate = useNavigate()
@@ -31,11 +32,29 @@ export default function LoginPage() {
     <Box
       sx={{
         display: 'flex',
+        flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
         height: '100vh',
       }}
     >
+      <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 5 }}>
+        <Phishing sx={{ display: { xs: 'none', md: 'flex' }, marginRight: 1, fontSize: 55 }} />
+        <Typography
+          variant='h2'
+          noWrap
+          sx={{
+            marginRight: 2,
+            display: { xs: 'none', md: 'flex' },
+            fontWeight: 500,
+            letterSpacing: '0.1rem',
+            color: 'inherit',
+            textDecoration: 'none',
+          }}
+        >
+          Fish Farms
+        </Typography>
+      </Box>
       <Container maxWidth='sm'>
         <Box
           sx={{
