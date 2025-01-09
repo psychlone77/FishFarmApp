@@ -1,4 +1,7 @@
 // Import necessary namespaces
+using Azure.Core;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 using BLL.Services;
 using BLL.Services.Interfaces;
 using DAL.Data;
@@ -35,9 +38,32 @@ builder.Services.AddIdentityCore<User>().AddEntityFrameworkStores<FishFarmsDbCon
 // Add AutoMapper services
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+string secretValue;
+
+if (builder.Environment.IsDevelopment())
+{
+    secretValue = builder.Configuration.GetConnectionString("LocalConnection") ?? throw new InvalidOperationException("Connection string 'DatabaseConnectionString' not found.");
+}
+else
+{
+    SecretClientOptions options = new SecretClientOptions()
+    {
+        Retry =
+        {
+            Delay= TimeSpan.FromSeconds(2),
+            MaxDelay = TimeSpan.FromSeconds(16),
+            MaxRetries = 5,
+            Mode = RetryMode.Exponential
+         }
+    };
+    var client = new SecretClient(new Uri("https://fish-farm-vault.vault.azure.net/"), new DefaultAzureCredential(), options);
+    KeyVaultSecret secret = client.GetSecret("DatabaseConnectionString");
+    secretValue = secret.Value ?? throw new InvalidOperationException("Secret 'DatabaseConnectionString' not found in Key Vault.");
+}
+
 // Configure and add DbContext services
 builder.Services.AddDbContext<FishFarmsDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), x => x.MigrationsAssembly("DAL")));
+    options.UseSqlServer(secretValue, x => x.MigrationsAssembly("DAL")));
 
 // Add scoped services for dependency injection
 builder.Services.AddScoped<IFishFarmsRepository, FishFarmsRepository>();
