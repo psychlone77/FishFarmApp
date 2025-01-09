@@ -43,26 +43,46 @@ export default function LoginPage() {
         justifyContent: 'center',
         alignItems: 'center',
         height: '100vh',
+        backgroundImage:
+          'url(https://cdn.prod.website-files.com/649c855c0f07ccf3e5f7970d/6501eceb415dfd2297c09cf6_iStock-1251358437.jpeg)',
+        backgroundSize: 'cover',
       }}
     >
-      <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 5 }}>
-        <Phishing sx={{ display: { xs: 'none', md: 'flex' }, marginRight: 1, fontSize: 55 }} />
-        <Typography
-          variant='h2'
-          noWrap
+      <Container maxWidth='sm'>
+        <Box
           sx={{
-            marginRight: 2,
-            display: { xs: 'none', md: 'flex' },
-            fontWeight: 500,
-            letterSpacing: '0.1rem',
-            color: 'inherit',
-            textDecoration: 'none',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginBottom: 0,
+            backdropFilter: 'blur(50px)',
+            paddingX: 5,
+            borderRadius: '10px',
           }}
         >
-          Fish Farms
-        </Typography>
-      </Box>
-      <Container maxWidth='sm'>
+          <Phishing
+            sx={{
+              display: { xs: 'none', md: 'flex' },
+              marginRight: 1,
+              fontSize: 55,
+              color: 'white',
+            }}
+          />
+          <Typography
+            variant='h2'
+            noWrap
+            sx={{
+              marginRight: 2,
+              display: { xs: 'none', md: 'flex' },
+              fontWeight: 500,
+              letterSpacing: '0.1rem',
+              color: 'white',
+              textDecoration: 'none',
+            }}
+          >
+            Fish Farms
+          </Typography>
+        </Box>
         <Box
           sx={{
             backgroundColor: '#f9f9f9',

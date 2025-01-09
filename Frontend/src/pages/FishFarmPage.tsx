@@ -2,7 +2,7 @@ import { useParams } from 'react-router'
 import { FishFarmResponse } from '../types/types'
 import { getFishFarm } from '../actions/fishFarmActions'
 import { useQuery } from 'react-query'
-import { Box, Button, Typography, useTheme } from '@mui/material'
+import { Box, Button, Skeleton, Typography, useTheme } from '@mui/material'
 import WorkerList from '../components/WorkerList'
 import FishFarmForm from '../components/FishFarmForm'
 import { useState } from 'react'
@@ -46,7 +46,9 @@ export default function FishFarmPage() {
         pauseOnHover
         theme={theme.palette.mode}
       />
-      {isLoading && <p>Loading...</p>}
+      {(isLoading)  && <Box sx={{ display: 'flex', gap: 2, padding: 2, paddingY: 4 }}>
+          <Skeleton variant='rectangular' width={350} height={350} />
+        </Box>}
       {isError && <p>Error loading fish farm details.</p>}
       {fishFarm && (
         <Box sx={{ display: 'flex', gap: 2, padding: 2, paddingY: 4 }}>
