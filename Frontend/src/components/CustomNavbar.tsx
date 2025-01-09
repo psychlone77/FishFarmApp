@@ -16,9 +16,9 @@ import { Link } from 'react-router'
 
 const pages = ['']
 const settings = [
-  { name: 'Profile', path: '/profile' },
-  { name: 'Account', path: '/account' },
-  { name: 'Logout', path: '/logout' },
+  { name: 'Profile', path: '/profile', isDisabled: true },
+  { name: 'Account', path: '/account', isDisabled: true },
+  { name: 'Logout', path: '/logout', isDisabled: false },
 ]
 
 function CustomNavbar() {
@@ -146,7 +146,10 @@ function CustomNavbar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title='Open settings'>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt='Remy Sharp' src='https://t3.ftcdn.net/jpg/02/22/85/16/240_F_222851624_jfoMGbJxwRi5AWGdPgXKSABMnzCQo9RN.jpg' />
+                <Avatar
+                  alt='Remy Sharp'
+                  src='https://t3.ftcdn.net/jpg/02/22/85/16/240_F_222851624_jfoMGbJxwRi5AWGdPgXKSABMnzCQo9RN.jpg'
+                />
               </IconButton>
             </Tooltip>
             <Menu
@@ -166,8 +169,12 @@ function CustomNavbar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map(setting => (
-                <Link key={setting.name} to={setting.path} style={{ textDecoration: 'none', color: 'inherit' }}>
-                  <MenuItem onClick={handleCloseUserMenu}>
+                <Link
+                  key={setting.name}
+                  to={setting.isDisabled ? '#' : setting.path}
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                >
+                  <MenuItem disabled={setting.isDisabled} onClick={handleCloseUserMenu}>
                     <Typography sx={{ textAlign: 'center' }}>{setting.name}</Typography>
                   </MenuItem>
                 </Link>

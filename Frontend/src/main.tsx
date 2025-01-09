@@ -18,11 +18,10 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: 'Outfit, sans-serif',
-
   },
 })
 const queryClient = new QueryClient({
-  defaultOptions: { queries: { retry: 0, refetchOnWindowFocus: false } },
+  defaultOptions: { queries: { retry: 2, refetchOnWindowFocus: false } },
 })
 
 createRoot(document.getElementById('root')!).render(
@@ -31,7 +30,7 @@ createRoot(document.getElementById('root')!).render(
       <ReactQueryDevtools initialIsOpen={false} />
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <AppRouter/>
+        <AppRouter />
       </ThemeProvider>
     </QueryClientProvider>
   </StrictMode>,

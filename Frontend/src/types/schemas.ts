@@ -17,7 +17,7 @@ export const FishFarmResponseSchema = z.object({
 })
 
 export const FishFarmRequestSchema = z.object({
-  name: z.string(),
+  name: z.string().min(3),
   latitude: z.number(),
   longitude: z.number(),
   cageCount: z.number().positive(),
@@ -38,7 +38,7 @@ export const WorkerResponseSchema = z.object({
 })
 
 export const WorkerRequestSchema = z.object({
-  name: z.string(),
+  name: z.string().min(3),
   age: z.number().positive(),
   email: z.string().email(),
   imageURL: z.string().url().optional(),

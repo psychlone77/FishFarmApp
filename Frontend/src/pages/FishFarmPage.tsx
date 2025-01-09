@@ -56,9 +56,9 @@ export default function FishFarmPage() {
                 src={fishFarm.imageURL}
                 alt={fishFarm.name}
                 style={{
-                    width: '100%',
-                    height: '350px',
-                    objectFit: 'cover',
+                  width: '100%',
+                  height: '350px',
+                  objectFit: 'cover',
                   borderRadius: '8px 8px 8px 8px',
                 }}
               />
@@ -78,7 +78,9 @@ export default function FishFarmPage() {
             </Typography>
           </Box>
           <Box sx={{ marginTop: 1, marginLeft: 2 }}>
-            <Button variant='contained' onClick={() => toggleFishFarmForm(true)}>Edit</Button>
+            <Button variant='contained' onClick={() => toggleFishFarmForm(true)}>
+              Edit
+            </Button>
           </Box>
         </Box>
       )}
@@ -92,7 +94,7 @@ export default function FishFarmPage() {
           notifyError={notifyError}
         />
       )}
-      <WorkerList fishFarmId={fishFarmId} notifySuccess={notifySuccess} notifyError={notifyError}/>
+      <WorkerList fishFarmId={fishFarmId} notifySuccess={notifySuccess} notifyError={notifyError} />
     </>
   )
 }

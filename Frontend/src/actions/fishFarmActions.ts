@@ -23,7 +23,10 @@ export async function createFishFarm(fishFarm: FishFarmRequest): Promise<FishFar
   return response.data
 }
 
-export async function updateFishFarm(fishFarm: FishFarmRequest, fishFarmId: string): Promise<FishFarmResponse> {
+export async function updateFishFarm(
+  fishFarm: FishFarmRequest,
+  fishFarmId: string,
+): Promise<FishFarmResponse> {
   const response = await axios.put(`${baseURL}/FishFarms/${fishFarmId}`, fishFarm, {
     withCredentials: true,
   })

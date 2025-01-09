@@ -39,7 +39,7 @@ export default function FishFarmForm({
   initialValues,
 }: FishFarmFormProps) {
   const queryClient = useQueryClient()
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -61,7 +61,7 @@ export default function FishFarmForm({
         notifySuccess(
           initialValues ? 'Fish farm updated successfully' : 'Fish farm added successfully',
         )
-        handleClose();
+        handleClose()
       },
       onError: () => {
         notifyError(initialValues ? 'Error updating fish farm' : 'Error adding fish farm')

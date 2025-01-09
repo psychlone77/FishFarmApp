@@ -13,7 +13,7 @@ import {
   Typography,
 } from '@mui/material'
 import { useNavigate } from 'react-router'
-import { Add } from '@mui/icons-material'
+import { Add, Edit } from '@mui/icons-material'
 import { useState } from 'react'
 import WorkerForm from './WorkerForm'
 
@@ -65,6 +65,7 @@ export default function WorkerList({
             <TableCell align='center'>Age</TableCell>
             <TableCell align='center'>Email</TableCell>
             <TableCell align='center'>Certified Until</TableCell>
+            <TableCell align='center'></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -107,6 +108,9 @@ export default function WorkerList({
               <TableCell align='center'>{worker.email}</TableCell>
               <TableCell align='center'>
                 {new Date(worker.certifiedUntil).toLocaleDateString()}
+              </TableCell>
+              <TableCell align='center'>
+                <Edit />
               </TableCell>
             </TableRow>
           ))}
