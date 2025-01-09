@@ -131,7 +131,7 @@ export default function WorkerForm({
             defaultValue={initialValues?.imageURL}
             error={!!errors.imageURL}
             helperText={errors.imageURL ? errors.imageURL.message : ''}
-            {...register('imageURL')}
+            {...register('imageURL', { required: false })}
           />
         </Box>
         <Box mb={2}>
