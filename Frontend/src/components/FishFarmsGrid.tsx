@@ -2,7 +2,7 @@ import { useQuery } from 'react-query'
 import { getFishFarms } from '../actions/fishFarmActions'
 import { FishFarmResponse } from '../types/types'
 import FishFarmGridCard from './FishFarmGridCard'
-import { Box, Button, Typography, useTheme } from '@mui/material'
+import { Box, Button, Card, CardContent, Skeleton, Typography, useTheme } from '@mui/material'
 import { useNavigate } from 'react-router'
 import { useState } from 'react'
 import { Add } from '@mui/icons-material'
@@ -47,7 +47,37 @@ export default function FishFarmsGrid() {
         </Button>
       </Box>
       <Box sx={{ marginTop: 2 }}>
-        {isLoading && <p>Loading...</p>}
+        {isLoading && (
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+              gap: 3,
+            }}
+          >
+            {Array.from(new Array(4)).map((_, index) => (
+              <Card
+                key={index}
+                sx={{
+                  maxWidth: 345,
+                  height: 'fit-content',
+                  borderRadius: 2,
+                  boxShadow: 'none',
+                  backgroundColor: theme.palette.grey[200],
+                }}
+              >
+                <CardContent>
+                  <Skeleton variant="rectangular" width="100%" height={150} />
+                  <Skeleton variant="text" sx={{ fontSize: '1.5em', marginTop: 1 }} />
+                  <Skeleton variant="text" sx={{ fontSize: '0.6em', marginTop: 0 }} />
+                  <Skeleton variant="text" sx={{ fontSize: '0.6em', marginTop: 0 }} />
+                  <Skeleton variant="text" sx={{ fontSize: '0.6em', marginTop: 0 }} />
+                  <Skeleton variant="text" sx={{ fontSize: '0.6em', marginTop: 0 }} />
+                </CardContent>
+              </Card>
+            ))}
+          </Box>
+        )}
         {isError && <p>Error loading fish farms.</p>}
         <Box
           sx={{

@@ -29,7 +29,7 @@ export default function LoginPage() {
     if (resultRef.current?.status === 200) {
       navigate('/')
     }
-  }, [resultRef.current])
+  }, [resultRef, navigate])
 
   const onSubmit = (data: LoginRequest) => {
     mutation.mutate(data)

@@ -1,6 +1,6 @@
 import { useParams } from 'react-router'
 import { useQuery } from 'react-query'
-import { Avatar, Box, Button, Card, Typography, useTheme } from '@mui/material'
+import { Avatar, Box, Button, Card, Skeleton, Typography, useTheme } from '@mui/material'
 import { WorkerResponse } from '../types/types'
 import { useState } from 'react'
 import { toast, ToastContainer } from 'react-toastify'
@@ -16,6 +16,7 @@ export default function WorkerPage() {
   const {
     data: worker,
     isLoading,
+    isFetching,
     isError,
   } = useQuery<WorkerResponse>(['worker', workerId], () => getWorker(fishFarmId!, workerId!), {
     enabled: !!workerId,
@@ -47,12 +48,9 @@ export default function WorkerPage() {
         pauseOnHover
         theme={theme.palette.mode}
       />
-      {isLoading && <p>Loading...</p>}
-      {isError && <p>Error loading worker details.</p>}
-      {worker && (
+      {isLoading || isFetching ? (
         <Box
           sx={{
-            position: 'relative',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -62,11 +60,7 @@ export default function WorkerPage() {
           }}
         >
           <Box maxWidth='sm'>
-            <Avatar
-              src={worker.imageURL}
-              alt={worker.name}
-              sx={{ width: '300px', height: '300px' }}
-            />
+            <Skeleton animation="wave" variant='circular' width={300} height={300} />
           </Box>
           <Card
             sx={{
@@ -79,22 +73,66 @@ export default function WorkerPage() {
               boxShadow: 1,
             }}
           >
-            <Typography variant='h3' component='div' noWrap>
-              {worker.name}
-            </Typography>
-            <Typography variant='subtitle1'>Age: {worker.age}</Typography>
-            <Typography variant='subtitle1'>Email: {worker.email}</Typography>
-            <Typography variant='subtitle1'>Position: {worker.workerPosition}</Typography>
-            <Typography variant='subtitle1'>
-              Certified Until: {new Date(worker.certifiedUntil).toLocaleDateString()}
-            </Typography>
+            <Skeleton animation="wave" variant='text' width={200} height={40} />
+            <Skeleton animation="wave" variant='text' width={100} height={30} />
+            <Skeleton animation="wave" variant='text' width={200} height={30} />
+            <Skeleton animation="wave" variant='text' width={150} height={30} />
+            <Skeleton animation="wave" variant='text' width={250} height={30} />
           </Card>
           <Box sx={{ marginTop: 1, marginLeft: 2, position: 'absolute', right: 30, top: 30 }}>
-            <Button variant='contained' onClick={() => toggleWorkerForm(true)}>
-              Edit
-            </Button>
+            <Skeleton animation="wave" variant='rectangular' width={100} height={40} />
           </Box>
         </Box>
+      ) : isError ? (
+        <p>Error loading worker details.</p>
+      ) : (
+        worker && (
+          <Box
+            sx={{
+              position: 'relative',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 2,
+              padding: 2,
+              paddingY: 4,
+            }}
+          >
+            <Box maxWidth='sm'>
+              <Avatar
+                src={worker.imageURL}
+                alt={worker.name}
+                sx={{ width: '300px', height: '300px' }}
+              />
+            </Box>
+            <Card
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 2,
+                justifyContent: 'center',
+                padding: 5,
+                borderRadius: '10px',
+                boxShadow: 1,
+              }}
+            >
+              <Typography variant='h3' component='div' noWrap>
+                {worker.name}
+              </Typography>
+              <Typography variant='subtitle1'>Age: {worker.age}</Typography>
+              <Typography variant='subtitle1'>Email: {worker.email}</Typography>
+              <Typography variant='subtitle1'>Position: {worker.workerPosition}</Typography>
+              <Typography variant='subtitle1'>
+                Certified Until: {new Date(worker.certifiedUntil).toLocaleDateString()}
+              </Typography>
+            </Card>
+            <Box sx={{ marginTop: 1, marginLeft: 2, position: 'absolute', right: 30, top: 30 }}>
+              <Button variant='contained' onClick={() => toggleWorkerForm(true)}>
+                Edit
+              </Button>
+            </Box>
+          </Box>
+        )
       )}
       {showWorkerForm && worker && workerId && (
         <WorkerForm

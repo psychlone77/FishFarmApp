@@ -10,7 +10,6 @@ interface PrivateRouteProps {
 const fetchAuthStatus = async () => {
   try {
     const response = await checkSession()
-    console.log(response)
     if (response.status === 200) {
       return true
     } else {
@@ -27,8 +26,7 @@ export default function PrivateRoute({ element }: PrivateRouteProps) {
     data: auth,
     isLoading,
     isFetching,
-  } = useQuery('authStatus', fetchAuthStatus, { refetchInterval: 0, refetchOnWindowFocus: true })
-  console.log(auth, isLoading)
+  } = useQuery('authStatus', fetchAuthStatus, { refetchInterval: 0 })
   if (isLoading || isFetching) {
     return (
       <Box
