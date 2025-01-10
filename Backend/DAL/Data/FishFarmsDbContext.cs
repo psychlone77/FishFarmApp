@@ -29,6 +29,7 @@ namespace DAL.Data
             modelBuilder.Entity<FishFarmEntity>()
                 .HasMany(f => f.Workers)
                 .WithOne(w => w.FishFarm)
+                .OnDelete(DeleteBehavior.Restrict)
                 .HasForeignKey(w => w.FishFarmId);
 
             modelBuilder.Entity<FishFarmEntity>()
