@@ -8,11 +8,11 @@ import { login } from '../actions/authActions'
 import { useNavigate } from 'react-router'
 import { Phishing } from '@mui/icons-material'
 import { AxiosResponse } from 'axios'
-import { useEffect, useRef } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function LoginPage() {
   const navigate = useNavigate()
-  const resultRef = useRef<AxiosResponse | null>(null)
+  const [result, setResult] = useState<AxiosResponse | null>(null)
   const {
     register,
     handleSubmit,
@@ -21,15 +21,15 @@ export default function LoginPage() {
   const mutation = useMutation({
     mutationFn: async (data: LoginRequest) => {
       const res = await login(data)
-      resultRef.current = res
+      setResult(res)
     },
   })
 
   useEffect(() => {
-    if (resultRef.current?.status === 200) {
+    if (result?.status === 200) {
       navigate('/')
     }
-  }, [resultRef, navigate])
+  }, [result, navigate])
 
   const onSubmit = (data: LoginRequest) => {
     mutation.mutate(data)
