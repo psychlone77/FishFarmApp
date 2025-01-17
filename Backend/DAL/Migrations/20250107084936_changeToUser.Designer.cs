@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DAL.Migrations
 {
-    [DbContext(typeof(FishFarmsDbContext))]
+    [DbContext(typeof(FishFarmAppDbContext))]
     [Migration("20250107084936_changeToUser")]
     partial class changeToUser
     {

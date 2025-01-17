@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DAL.Migrations
 {
-    [DbContext(typeof(FishFarmsDbContext))]
+    [DbContext(typeof(FishFarmAppDbContext))]
     [Migration("20250104081032_Second")]
     partial class Second
     {

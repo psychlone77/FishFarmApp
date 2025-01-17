@@ -21,7 +21,7 @@ namespace BLL.Services
 
         public async Task<WorkerResponseDTO> GetWorkerById(Guid workerId, string userId)
         {
-            WorkerEntity? worker = await _workersRepository.GetWorkerEntityById(workerId);
+            EmployeeEntity? worker = await _workersRepository.GetWorkerEntityById(workerId);
             if (worker is null)
                 throw new KeyNotFoundException($"Worker with id {workerId} not found");
             await CheckPermission(userId, worker.FishFarmId);
@@ -31,7 +31,7 @@ namespace BLL.Services
         public async Task<WorkerResponseDTO> AddWorker(WorkerRequestDTO worker, Guid fishFarmId, string userId)
         {
             await CheckPermission(userId, fishFarmId);
-            var workerEntity = _mapper.Map<WorkerEntity>(worker);
+            var workerEntity = _mapper.Map<EmployeeEntity>(worker);
             workerEntity.FishFarmId = fishFarmId;
             var addedWorker = await _workersRepository.AddWorkerEntity(workerEntity);
             return _mapper.Map<WorkerResponseDTO>(addedWorker);
@@ -40,8 +40,8 @@ namespace BLL.Services
         public async Task<WorkerResponseDTO> UpdateWorker(WorkerRequestDTO worker, Guid workerId, string userId)
         {
             await CheckWorkerPermissions(userId, workerId);
-            var workerEntity = _mapper.Map<WorkerEntity>(worker);
-            workerEntity.Id = workerId;
+            var workerEntity = _mapper.Map<EmployeeEntity>(worker);
+            workerEntity.Id = workerId.ToString();
             var updatedWorker = await _workersRepository.UpdateWorkerEntity(workerEntity);
             if (updatedWorker is null)
                 throw new KeyNotFoundException($"Worker with id {workerId} not found");

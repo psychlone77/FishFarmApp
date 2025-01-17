@@ -2,8 +2,9 @@
 
 namespace DAL.Entities
 {
-    public class WorkerEntity : BaseEntity
+    public class EmployeeEntity : BaseEntity
     {
+        public required string Id { get; set; }
         public required string Name { get; set; }
         public string? ImageURL { get; set; }
         public int Age { get; set; }
@@ -12,7 +13,11 @@ namespace DAL.Entities
         public DateTime CertifiedUntil { get; set; }
 
         public Guid FishFarmId { get; set; }
-        public required FishFarmEntity FishFarm { get; set; }
+        public ICollection<FishFarmEntity>? FishFarms { get; set; }
+        public ICollection<FishFarmEmployee>? FishFarmEmployees { get; set; }
+
+        public Guid? UserId { get; set; }
+        public required UserEntity? User { get; set; }
     }
 
     public enum WorkerPosition

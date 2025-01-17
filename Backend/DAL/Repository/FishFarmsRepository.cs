@@ -5,47 +5,44 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repository
 {
-    public class FishFarmsRepository(FishFarmsDbContext fishFarmsDbContext) : IFishFarmsRepository
+    public class FishFarmsRepository(FishFarmAppDbContext fishFarmAppDbContext) : IFishFarmsRepository
     {
-        private readonly FishFarmsDbContext _fishFarmsDbContext = fishFarmsDbContext;
+        private readonly FishFarmAppDbContext _fishFarmAppDbContext = fishFarmAppDbContext;
         public async Task<IList<FishFarmEntity>> GetAllFishFarmEntites(string userId)
         {
-            return await _fishFarmsDbContext.FishFarms
-                .Where(f => f.UserId == userId).ToListAsync();
+            return await _fishFarmAppDbContext.FishFarms.ToListAsync();
         }
 
         public async Task<FishFarmEntity?> GetFishFarmEntityById(Guid fishFarmId, string userId)
         {
-            return await _fishFarmsDbContext.FishFarms
-                .FirstOrDefaultAsync(f => f.Id == fishFarmId && f.UserId == userId);
+            return await _fishFarmAppDbContext.FishFarms
+                .FirstOrDefaultAsync(f => f.Id == fishFarmId);
         }
 
         public async Task<FishFarmEntity> AddFishFarmEntity(FishFarmEntity fishFarm, string userId)
         {
-            fishFarm.UserId = userId;
-            var addedFishFarm = await _fishFarmsDbContext.FishFarms.AddAsync(fishFarm);
-            await _fishFarmsDbContext.SaveChangesAsync();
+            var addedFishFarm = await _fishFarmAppDbContext.FishFarms.AddAsync(fishFarm);
+            await _fishFarmAppDbContext.SaveChangesAsync();
             return addedFishFarm.Entity;
         }
 
         public async Task<FishFarmEntity?> UpdateFishFarmEntity(FishFarmEntity fishFarm, string userId)
         {
-            fishFarm.UserId = userId;
-            var updatedFishFarm = _fishFarmsDbContext.FishFarms.Update(fishFarm);
+            var updatedFishFarm = _fishFarmAppDbContext.FishFarms.Update(fishFarm);
             if (updatedFishFarm is null)
                 return null;
-            await _fishFarmsDbContext.SaveChangesAsync();
+            await _fishFarmAppDbContext.SaveChangesAsync();
             return updatedFishFarm.Entity;
         }
 
         public async Task<FishFarmEntity?> DeleteFishFarmEntity(Guid fishFarmId, string userId)
         {
-            var fishFarm = await _fishFarmsDbContext.FishFarms
-                .FirstOrDefaultAsync(f => f.Id == fishFarmId && f.UserId == userId);
+            var fishFarm = await _fishFarmAppDbContext.FishFarms
+                .FirstOrDefaultAsync(f => f.Id == fishFarmId);
             if (fishFarm is null)
                 return null;
-            _fishFarmsDbContext.FishFarms.Remove(fishFarm);
-            await _fishFarmsDbContext.SaveChangesAsync();
+            _fishFarmAppDbContext.FishFarms.Remove(fishFarm);
+            await _fishFarmAppDbContext.SaveChangesAsync();
             return fishFarm;
         }
     }

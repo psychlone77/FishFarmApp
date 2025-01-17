@@ -4,10 +4,10 @@ namespace DAL.Repository.Interface
 {
     public interface IWorkersRepository
     {
-        Task<IList<WorkerEntity>> GetWorkerEntities(Guid fishFarmId);
-        Task<WorkerEntity?> GetWorkerEntityById(Guid workerId);
-        Task<WorkerEntity> AddWorkerEntity(WorkerEntity workerEntity);
-        Task<WorkerEntity?> UpdateWorkerEntity(WorkerEntity workerEntity);
-        Task<WorkerEntity?> DeleteWorkerEntity(Guid workerId);
+        Task<IList<EmployeeEntity>> GetWorkerEntities(Guid fishFarmId);
+        Task<EmployeeEntity?> GetWorkerEntityById(Guid workerId);
+        Task<EmployeeEntity> AddWorkerEntity(EmployeeEntity workerEntity);
+        Task<EmployeeEntity?> UpdateWorkerEntity(EmployeeEntity workerEntity);
+        Task<EmployeeEntity?> DeleteWorkerEntity(Guid workerId);
     }
 }

@@ -1,4 +1,3 @@
-// Import necessary namespaces
 using Azure.Core;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
@@ -31,9 +30,9 @@ builder.Services.AddAuthentication().AddCookie(IdentityConstants.ApplicationSche
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Ensure the cookie is only sent over HTTPS
 });
 
-// Add Identity services
-builder.Services.AddIdentityCore<User>().AddEntityFrameworkStores<FishFarmsDbContext>()
-    .AddApiEndpoints();
+//// Add Identity services
+//builder.Services.AddIdentityCore<UserEntity>().AddEntityFrameworkStores<FishFarmAppDbContext>()
+//    .AddApiEndpoints();
 
 // Add AutoMapper services
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -62,7 +61,7 @@ else
 }
 
 // Configure and add DbContext services
-builder.Services.AddDbContext<FishFarmsDbContext>(options =>
+builder.Services.AddDbContext<FishFarmAppDbContext>(options =>
     options.UseSqlServer(secretValue, x => x.MigrationsAssembly("DAL")));
 
 // Add scoped services for dependency injection
@@ -86,7 +85,7 @@ var app = builder.Build();
 // Apply migrations automatically
 using (var scope = app.Services.CreateScope())
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<FishFarmsDbContext>();
+    var dbContext = scope.ServiceProvider.GetRequiredService<FishFarmAppDbContext>();
     dbContext.Database.Migrate();
 }
 
@@ -108,7 +107,7 @@ app.UseAuthorization();
 
 // Map controller routes
 app.MapControllers();
-app.MapIdentityApi<User>().RequireAuthorization().WithMetadata(new AllowAnonymousAttribute());
+//app.MapIdentityApi<UserEntity>().RequireAuthorization().WithMetadata(new AllowAnonymousAttribute());
 app.MapFallbackToFile("index.html");
 
 app.UseStaticFiles();

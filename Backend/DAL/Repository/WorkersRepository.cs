@@ -5,30 +5,30 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repository
 {
-    public class WorkersRepository(FishFarmsDbContext context) : IWorkersRepository
+    public class WorkersRepository(FishFarmAppDbContext context) : IWorkersRepository
     {
-        private readonly FishFarmsDbContext _context = context;
+        private readonly FishFarmAppDbContext _context = context;
 
-        public async Task<IList<WorkerEntity>> GetWorkerEntities(Guid fishFarmId)
+        public async Task<IList<EmployeeEntity>> GetWorkerEntities(Guid fishFarmId)
         {
-            return await _context.Workers.Where(w => w.FishFarmId == fishFarmId).ToListAsync();
+            return await _context.Employees.Where(w => w.FishFarmId == fishFarmId).ToListAsync();
         }
 
-        public async Task<WorkerEntity?> GetWorkerEntityById(Guid workerId)
+        public async Task<EmployeeEntity?> GetWorkerEntityById(Guid workerId)
         {
-            return await _context.Workers.FindAsync(workerId);
+            return await _context.Employees.FindAsync(workerId);
         }
 
-        public async Task<WorkerEntity> AddWorkerEntity(WorkerEntity workerEntity)
+        public async Task<EmployeeEntity> AddWorkerEntity(EmployeeEntity workerEntity)
         {
-            var newWorkerEntity = await _context.Workers.AddAsync(workerEntity);
+            var newWorkerEntity = await _context.Employees.AddAsync(workerEntity);
             await _context.SaveChangesAsync();
             return newWorkerEntity.Entity;
         }
 
-        public async Task<WorkerEntity?> UpdateWorkerEntity(WorkerEntity workerEntity)
+        public async Task<EmployeeEntity?> UpdateWorkerEntity(EmployeeEntity workerEntity)
         {
-            var existingWorkerEntity = await _context.Workers.FirstOrDefaultAsync(w => w.Id == workerEntity.Id);
+            var existingWorkerEntity = await _context.Employees.FirstOrDefaultAsync(w => w.Id == workerEntity.Id);
             if (existingWorkerEntity == null)
                 return null;
 
@@ -43,12 +43,13 @@ namespace DAL.Repository
             return existingWorkerEntity;
         }
 
-        public async Task<WorkerEntity?> DeleteWorkerEntity(Guid workerId)
+        public async Task<EmployeeEntity?> DeleteWorkerEntity(Guid workerId)
         {
-            var workerEntity = await _context.Workers.FirstOrDefaultAsync(w => w.Id == workerId);
+            string workerIdString = workerId.ToString();
+            var workerEntity = await _context.Employees.FirstOrDefaultAsync(w => w.Id == workerIdString);
             if (workerEntity == null)
                 return null;
-            _context.Workers.Remove(workerEntity);
+            _context.Employees.Remove(workerEntity);
             await _context.SaveChangesAsync();
             return workerEntity;
         }
