@@ -8,11 +8,9 @@ namespace DAL.Entities
         public required string Name { get; set; }
         public string? ImageURL { get; set; }
         public int Age { get; set; }
-        public required string Email { get; set; }
-        public WorkerPosition WorkerPosition { get; set; }
+        public EmployeePosition EmployeePosition { get; set; }
         public DateTime CertifiedUntil { get; set; }
 
-        public Guid FishFarmId { get; set; }
         public ICollection<FishFarmEntity>? FishFarms { get; set; }
         public ICollection<FishFarmEmployee>? FishFarmEmployees { get; set; }
 
@@ -20,7 +18,7 @@ namespace DAL.Entities
         public required UserEntity? User { get; set; }
     }
 
-    public enum WorkerPosition
+    public enum EmployeePosition
     {
         [Display(Name = "CEO")]
         CEO,

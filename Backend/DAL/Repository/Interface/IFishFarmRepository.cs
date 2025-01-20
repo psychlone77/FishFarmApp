@@ -2,7 +2,7 @@
 
 namespace DAL.Repository.Interface
 {
-    public interface IFishFarmsRepository
+    public interface IFishFarmRepository
     {
         Task<IList<FishFarmEntity>> GetAllFishFarmEntites(string userId);
         Task<FishFarmEntity?> GetFishFarmEntityById(Guid fishFarmId, string userId);

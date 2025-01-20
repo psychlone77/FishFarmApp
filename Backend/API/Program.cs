@@ -1,34 +1,38 @@
+using System.Text;
+using API.Filters;
 using Azure.Core;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 using BLL.Services;
 using BLL.Services.Interfaces;
 using DAL.Data;
-using DAL.Entities;
 using DAL.Repository;
 using DAL.Repository.Interface;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 // Add controller services
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ExceptionFilter>();
+});
 
 // Add Swagger/OpenAPI services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Add authorization services
-builder.Services.AddAuthorization();
-builder.Services.AddAuthentication().AddCookie(IdentityConstants.ApplicationScheme, options =>
-{
-    options.Cookie.SameSite = builder.Environment.IsDevelopment() ? SameSiteMode.None : SameSiteMode.Lax; // Set SameSite to None
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Ensure the cookie is only sent over HTTPS
-});
+//builder.Services.AddAuthorization();
+//builder.Services.AddAuthentication().AddCookie(IdentityConstants.ApplicationScheme, options =>
+//{
+//    options.Cookie.SameSite = builder.Environment.IsDevelopment() ? SameSiteMode.None : SameSiteMode.Lax; // Set SameSite to None
+//    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Ensure the cookie is only sent over HTTPS
+//});
 
 //// Add Identity services
 //builder.Services.AddIdentityCore<UserEntity>().AddEntityFrameworkStores<FishFarmAppDbContext>()
@@ -38,10 +42,12 @@ builder.Services.AddAuthentication().AddCookie(IdentityConstants.ApplicationSche
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 string secretValue;
+string jwtKey = "";
 
 if (builder.Environment.IsDevelopment())
 {
     secretValue = builder.Configuration.GetConnectionString("LocalConnection") ?? throw new InvalidOperationException("Connection string 'DatabaseConnectionString' not found.");
+    jwtKey = builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT key not found.");
 }
 else
 {
@@ -64,11 +70,27 @@ else
 builder.Services.AddDbContext<FishFarmAppDbContext>(options =>
     options.UseSqlServer(secretValue, x => x.MigrationsAssembly("DAL")));
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+        };
+    });
+
 // Add scoped services for dependency injection
-builder.Services.AddScoped<IFishFarmsRepository, FishFarmsRepository>();
+builder.Services.AddSingleton(new TokenProvider(builder.Configuration));
+builder.Services.AddScoped<IFishFarmRepository, FishFarmRepository>();
 builder.Services.AddScoped<IFishFarmsService, FishFarmsService>();
-builder.Services.AddScoped<IWorkersRepository, WorkersRepository>();
-builder.Services.AddScoped<IWorkersService, WorkersService>();
+builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 // Configure CORS policy
 builder.Services.AddCors(options =>

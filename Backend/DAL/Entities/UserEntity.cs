@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-
-namespace DAL.Entities
+﻿namespace DAL.Entities
 {
     public class UserEntity : BaseEntity
     {

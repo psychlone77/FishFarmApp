@@ -4,6 +4,7 @@ using DAL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(FishFarmAppDbContext))]
-    partial class FishFarmsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250118062123_Databasev3.01")]
+    partial class Databasev301
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -117,6 +120,9 @@ namespace DAL.Migrations
 
                     b.Property<int>("EmployeePosition")
                         .HasColumnType("int");
+
+                    b.Property<Guid>("FishFarmId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ImageURL")
                         .HasColumnType("nvarchar(max)");

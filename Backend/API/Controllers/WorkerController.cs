@@ -1,5 +1,5 @@
 ﻿using System.Security.Claims;
-using BLL.DTOs.Workers;
+using BLL.DTOs.Employee;
 using BLL.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,48 +7,48 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers
 {
     [ApiController]
-    [Route("FishFarms/{fishFarmId}/workers")]
+    [Route("FishFarms/{fishFarmId}/employees")]
     [Authorize]
-    public class WorkerController(IWorkersService workersService) : Controller
+    public class EmployeeController(IEmployeeService employeesService) : Controller
     {
-        private readonly IWorkersService _workersService = workersService;
+        private readonly IEmployeeService _employeesService = employeesService;
 
         [HttpGet]
-        public async Task<ActionResult<List<WorkerResponseDTO>>> GetWorkers(Guid fishFarmId)
+        public async Task<ActionResult<List<EmployeeResponseDTO>>> GetEmployees(Guid fishFarmId)
         {
             var userId = GetUserId();
-            return Ok(await _workersService.GetWorkers(fishFarmId, userId));
+            return Ok(await _employeesService.GetEmployees(fishFarmId, userId));
         }
 
         [HttpGet]
-        [Route("{workerId}")]
-        public async Task<ActionResult<WorkerResponseDTO>> GetWorkerById(Guid workerId)
+        [Route("{employeeId}")]
+        public async Task<ActionResult<EmployeeResponseDTO>> GetEmployeeById(Guid employeeId)
         {
             var userId = GetUserId();
-            return Ok(await _workersService.GetWorkerById(workerId, userId));
+            return Ok(await _employeesService.GetEmployeeById(employeeId, userId));
         }
 
         [HttpPost]
-        public async Task<ActionResult<WorkerResponseDTO>> AddWorker(WorkerRequestDTO worker, Guid fishFarmId)
+        public async Task<ActionResult<EmployeeResponseDTO>> AddEmployee(EmployeeRequestDTO employee, Guid fishFarmId)
         {
             var userId = GetUserId();
-            return Ok(await _workersService.AddWorker(worker, fishFarmId, userId));
+            return Ok(await _employeesService.AddEmployee(employee, fishFarmId, userId));
         }
 
         [HttpPut]
-        [Route("{workerId}")]
-        public async Task<ActionResult<WorkerResponseDTO>> UpdateWorker(WorkerRequestDTO worker, Guid workerId)
+        [Route("{employeeId}")]
+        public async Task<ActionResult<EmployeeResponseDTO>> UpdateEmployee(EmployeeRequestDTO employee, Guid employeeId)
         {
             var userId = GetUserId();
-            return Ok(await _workersService.UpdateWorker(worker, workerId, userId));
+            return Ok(await _employeesService.UpdateEmployee(employee, employeeId, userId));
         }
 
         [HttpDelete]
-        [Route("{workerId}")]
-        public async Task<ActionResult<WorkerResponseDTO>> DeleteWorker(Guid workerId)
+        [Route("{employeeId}")]
+        public async Task<ActionResult<EmployeeResponseDTO>> DeleteEmployee(Guid employeeId)
         {
             var userId = GetUserId();
-            return Ok(await _workersService.DeleteWorker(workerId, userId));
+            return Ok(await _employeesService.DeleteEmployee(employeeId, userId));
         }
 
         private string GetUserId()

@@ -30,17 +30,9 @@ namespace DAL.Data
                 }
             }
 
-            //modelBuilder.Entity<FishFarmEntity>()
-            //    .HasMany(f => f.Workers)
-            //    .WithOne(w => w.FishFarm)
-            //    .OnDelete(DeleteBehavior.Restrict)
-            //    .HasForeignKey(w => w.FishFarmId);
-
-            //modelBuilder.Entity<FishFarmEntity>()
-            //    .HasOne(f => f.User)
-            //    .WithMany(u => u.FishFarms)
-            //    .HasForeignKey(f => f.UserId)
-            //    .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<UserEntity>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
 
             modelBuilder.Entity<UserEntity>()
                 .HasMany(u => u.UserSessions)

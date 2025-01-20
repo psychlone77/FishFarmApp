@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repository
 {
-    public class FishFarmsRepository(FishFarmAppDbContext fishFarmAppDbContext) : IFishFarmsRepository
+    public class FishFarmRepository(FishFarmAppDbContext fishFarmAppDbContext) : IFishFarmRepository
     {
         private readonly FishFarmAppDbContext _fishFarmAppDbContext = fishFarmAppDbContext;
         public async Task<IList<FishFarmEntity>> GetAllFishFarmEntites(string userId)

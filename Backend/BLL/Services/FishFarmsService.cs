@@ -6,9 +6,9 @@ using DAL.Repository.Interface;
 
 namespace BLL.Services
 {
-    public class FishFarmsService(IFishFarmsRepository fishFarmsRepository, IMapper mapper) : IFishFarmsService
+    public class FishFarmsService(IFishFarmRepository fishFarmsRepository, IMapper mapper) : IFishFarmsService
     {
-        public readonly IFishFarmsRepository _fishFarmsRepository = fishFarmsRepository;
+        public readonly IFishFarmRepository _fishFarmsRepository = fishFarmsRepository;
         private readonly IMapper _mapper = mapper;
         public async Task<IList<FishFarmResponseDTO>> GetAllFishFarms(string userId)
         {
