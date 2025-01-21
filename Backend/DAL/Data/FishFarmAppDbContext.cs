@@ -1,5 +1,4 @@
 ﻿using DAL.Entities;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Data
@@ -9,7 +8,6 @@ namespace DAL.Data
         public DbSet<FishFarmEntity> FishFarms { get; set; }
         public DbSet<EmployeeEntity> Employees { get; set; }
         public DbSet<BoatEntity> Boats { get; set; }
-        public DbSet<AdminEntity> Admins { get; set; }
         public DbSet<UserEntity> Users { get; set; }
         public DbSet<UserSessionEntity> UserSessions { get; set; }
 
@@ -28,6 +26,11 @@ namespace DAL.Data
                 {
                     updatedOnProperty.SetDefaultValueSql("GETUTCDATE()");
                 }
+                var isDeletedProperty = entityType.FindProperty("IsDeleted");
+                if (isDeletedProperty != null && isDeletedProperty.ClrType == typeof(bool))
+                {
+                    isDeletedProperty.SetDefaultValue(false);
+                }
             }
 
             modelBuilder.Entity<UserEntity>()
@@ -39,39 +42,22 @@ namespace DAL.Data
                 .WithOne(us => us.User)
                 .HasForeignKey(us => us.UserId);
 
-            modelBuilder.Entity<AdminEntity>()
-                .HasOne(u => u.User)
-                .WithOne(a => a.Admin)
-                .HasForeignKey<AdminEntity>(a => a.UserId);
-
-            modelBuilder.Entity<EmployeeEntity>()
-                .HasOne(e => e.User)
-                .WithOne(u => u.Employee)
-                .HasForeignKey<EmployeeEntity>(e => e.UserId)
+            modelBuilder.Entity<UserEntity>()
+                .HasOne(e => e.Employee)
+                .WithOne(u => u.User)
+                .HasForeignKey<UserEntity>(e => e.EmployeeId)
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<FishFarmEntity>()
-                .HasMany(f => f.Admins)
-                .WithMany(a => a.FishFarms)
-                .UsingEntity<AdminFishFarm>(
-                    j => j.HasOne(af => af.Admin)
-                        .WithMany(a => a.AdminFishFarms)
-                        .HasForeignKey(af => af.AdminId),
-                    j => j.HasOne(af => af.FishFarm)
-                        .WithMany(f => f.AdminFishFarms)
-                        .HasForeignKey(af => af.FishFarmId)
-                );
-
-            modelBuilder.Entity<FishFarmEntity>()
-                .HasMany(f => f.Employees)
+                .HasMany(f => f.Users)
                 .WithMany(e => e.FishFarms)
-                .UsingEntity<FishFarmEmployee>(
-                    j => j.HasOne(fe => fe.Employee)
-                        .WithMany(e => e.FishFarmEmployees)
-                        .HasForeignKey(fe => fe.EmployeeId),
+                .UsingEntity<FishFarmUser>(
+                    j => j.HasOne(fe => fe.User)
+                        .WithMany(e => e.FishFarmUsers)
+                        .HasForeignKey(fe => fe.UserId),
                     j => j.HasOne(fe => fe.FishFarm)
-                        .WithMany(f => f.FishFarmEmployees)
+                        .WithMany(f => f.FishFarmUsers)
                         .HasForeignKey(fe => fe.FishFarmId)
                 );
 

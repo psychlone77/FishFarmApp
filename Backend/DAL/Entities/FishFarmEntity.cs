@@ -12,14 +12,10 @@ namespace DAL.Entities
         public required Uri ImageURL { get; set; }
 
         // Navigation properties for Employees
-        public ICollection<EmployeeEntity>? Employees { get; set; }
-        public ICollection<FishFarmEmployee>? FishFarmEmployees { get; set; }
+        public ICollection<UserEntity>? Users { get; set; }
+        public ICollection<FishFarmUser>? FishFarmUsers { get; set; }
 
         // Navigation properties for Boats
         public ICollection<BoatEntity>? Boats { get; set; }
-
-        //Navigation properties for AdminFishFarm
-        public ICollection<AdminEntity>? Admins { get; set; }
-        public ICollection<AdminFishFarm>? AdminFishFarms { get; set; }
     }
 }

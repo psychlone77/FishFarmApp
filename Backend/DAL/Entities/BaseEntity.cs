@@ -12,5 +12,7 @@ namespace DAL.Entities
         [Required]
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime UpdatedOn { get; set; } = DateTime.UtcNow;
+
+        public bool IsDeleted { get; set; } = false;
     }
 }

@@ -4,6 +4,7 @@ using DAL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(FishFarmAppDbContext))]
-    partial class FishFarmsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250120093720_Databasev3.04")]
+    partial class Databasev304
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +24,53 @@ namespace DAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("DAL.Entities.AdminEntity", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("Admins");
+                });
+
+            modelBuilder.Entity("DAL.Entities.AdminFishFarm", b =>
+                {
+                    b.Property<Guid>("AdminId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("FishFarmId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("PermissionLevel")
+                        .HasColumnType("int");
+
+                    b.HasKey("AdminId", "FishFarmId");
+
+                    b.HasIndex("FishFarmId");
+
+                    b.ToTable("AdminFishFarm");
+                });
 
             modelBuilder.Entity("DAL.Entities.BoatEntity", b =>
                 {
@@ -95,9 +145,34 @@ namespace DAL.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
+
                     b.ToTable("Employees");
+                });
+
+            modelBuilder.Entity("DAL.Entities.FishFarmEmployee", b =>
+                {
+                    b.Property<string>("EmployeeId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid>("FishFarmId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("AssignedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("EmployeeId", "FishFarmId");
+
+                    b.HasIndex("FishFarmId");
+
+                    b.ToTable("FishFarmEmployee");
                 });
 
             modelBuilder.Entity("DAL.Entities.FishFarmEntity", b =>
@@ -143,27 +218,6 @@ namespace DAL.Migrations
                     b.ToTable("FishFarms");
                 });
 
-            modelBuilder.Entity("DAL.Entities.FishFarmUser", b =>
-                {
-                    b.Property<Guid>("FishFarmId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("AssignedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("PermissionLevel")
-                        .HasColumnType("int");
-
-                    b.HasKey("FishFarmId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("FishFarmUser");
-                });
-
             modelBuilder.Entity("DAL.Entities.UserEntity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -177,9 +231,6 @@ namespace DAL.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("EmployeeId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("FailedLoginAttempts")
@@ -210,10 +261,6 @@ namespace DAL.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.HasIndex("EmployeeId")
-                        .IsUnique()
-                        .HasFilter("[EmployeeId] IS NOT NULL");
-
                     b.ToTable("Users");
                 });
 
@@ -240,6 +287,36 @@ namespace DAL.Migrations
                     b.ToTable("UserSessions");
                 });
 
+            modelBuilder.Entity("DAL.Entities.AdminEntity", b =>
+                {
+                    b.HasOne("DAL.Entities.UserEntity", "User")
+                        .WithOne("Admin")
+                        .HasForeignKey("DAL.Entities.AdminEntity", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DAL.Entities.AdminFishFarm", b =>
+                {
+                    b.HasOne("DAL.Entities.AdminEntity", "Admin")
+                        .WithMany("AdminFishFarms")
+                        .HasForeignKey("AdminId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DAL.Entities.FishFarmEntity", "FishFarm")
+                        .WithMany("AdminFishFarms")
+                        .HasForeignKey("FishFarmId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Admin");
+
+                    b.Navigation("FishFarm");
+                });
+
             modelBuilder.Entity("DAL.Entities.BoatEntity", b =>
                 {
                     b.HasOne("DAL.Entities.FishFarmEntity", "FishFarm")
@@ -250,33 +327,33 @@ namespace DAL.Migrations
                     b.Navigation("FishFarm");
                 });
 
-            modelBuilder.Entity("DAL.Entities.FishFarmUser", b =>
+            modelBuilder.Entity("DAL.Entities.EmployeeEntity", b =>
                 {
-                    b.HasOne("DAL.Entities.FishFarmEntity", "FishFarm")
-                        .WithMany("FishFarmUsers")
-                        .HasForeignKey("FishFarmId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("DAL.Entities.UserEntity", "User")
-                        .WithMany("FishFarmUsers")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("FishFarm");
+                        .WithOne("Employee")
+                        .HasForeignKey("DAL.Entities.EmployeeEntity", "UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("DAL.Entities.UserEntity", b =>
+            modelBuilder.Entity("DAL.Entities.FishFarmEmployee", b =>
                 {
                     b.HasOne("DAL.Entities.EmployeeEntity", "Employee")
-                        .WithOne("User")
-                        .HasForeignKey("DAL.Entities.UserEntity", "EmployeeId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .WithMany("FishFarmEmployees")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DAL.Entities.FishFarmEntity", "FishFarm")
+                        .WithMany("FishFarmEmployees")
+                        .HasForeignKey("FishFarmId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Employee");
+
+                    b.Navigation("FishFarm");
                 });
 
             modelBuilder.Entity("DAL.Entities.UserSessionEntity", b =>
@@ -290,21 +367,30 @@ namespace DAL.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("DAL.Entities.AdminEntity", b =>
+                {
+                    b.Navigation("AdminFishFarms");
+                });
+
             modelBuilder.Entity("DAL.Entities.EmployeeEntity", b =>
                 {
-                    b.Navigation("User");
+                    b.Navigation("FishFarmEmployees");
                 });
 
             modelBuilder.Entity("DAL.Entities.FishFarmEntity", b =>
                 {
+                    b.Navigation("AdminFishFarms");
+
                     b.Navigation("Boats");
 
-                    b.Navigation("FishFarmUsers");
+                    b.Navigation("FishFarmEmployees");
                 });
 
             modelBuilder.Entity("DAL.Entities.UserEntity", b =>
                 {
-                    b.Navigation("FishFarmUsers");
+                    b.Navigation("Admin");
+
+                    b.Navigation("Employee");
 
                     b.Navigation("UserSessions");
                 });

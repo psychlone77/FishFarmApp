@@ -11,20 +11,16 @@ namespace DAL.Entities
         public EmployeePosition EmployeePosition { get; set; }
         public DateTime CertifiedUntil { get; set; }
 
-        public ICollection<FishFarmEntity>? FishFarms { get; set; }
-        public ICollection<FishFarmEmployee>? FishFarmEmployees { get; set; }
-
-        public Guid? UserId { get; set; }
-        public required UserEntity? User { get; set; }
+        public UserEntity? User { get; set; }
     }
 
     public enum EmployeePosition
     {
         [Display(Name = "CEO")]
         CEO,
-        [Display(Name = "Worker")]
-        Worker,
         [Display(Name = "Captain")]
         Captain,
+        [Display(Name = "Worker")]
+        Worker,
     }
 }
