@@ -6,74 +6,55 @@ using DAL.Repository.Interface;
 
 namespace BLL.Services
 {
-    public class EmployeeService(IEmployeeRepository employeeRepository, IFishFarmRepository fishFarmsRepository, IMapper mapper) : IEmployeeService
+    public class EmployeeService(IEmployeeRepository employeeRepository, IUserRepository userRepository, IAuthService authService, IMapper mapper) : IEmployeeService
     {
         private readonly IEmployeeRepository _employeeRepository = employeeRepository;
-        private readonly IFishFarmRepository _fishFarmsRepository = fishFarmsRepository;
+        private readonly IUserRepository _userRepository = userRepository;
+        private readonly IAuthService _authService = authService;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<IList<EmployeeResponseDTO>> GetEmployees(Guid fishFarmId, string userId)
+        public async Task<IList<EmployeeResponseDTO>> GetEmployees(Guid fishFarmId, string userId, string userRole)
         {
-            await CheckPermission(userId, fishFarmId);
+            if (userRole != "SuperAdmin")
+                await _authService.CheckFishFarmAccess(fishFarmId, userId, PermissionLevel.Read);
             var employee = await _employeeRepository.GetEmployeeEntities(fishFarmId);
             return _mapper.Map<IList<EmployeeResponseDTO>>(employee);
         }
-
-        public async Task<EmployeeResponseDTO> GetEmployeeById(string workerId, string userId)
+                    
+        public async Task<EmployeeResponseDTO> GetEmployeeById(string employeeId, string userId, string userRole)
         {
-            EmployeeEntity? worker = await _employeeRepository.GetEmployeeEntityById(workerId);
-            if (worker is null)
-                throw new KeyNotFoundException($"Employee with id {workerId} not found");
-            //await CheckPermission(userId, worker.FishFarmId);
-            return _mapper.Map<EmployeeResponseDTO>(worker);
+            EmployeeEntity? employee = await _employeeRepository.GetEmployeeEntityById(employeeId);
+            if (employee is null)
+                throw new KeyNotFoundException($"Employee with id {employeeId} not found");
+            //await CheckPermission(userId, employee.FishFarmId);
+            return _mapper.Map<EmployeeResponseDTO>(employee);
         }
 
-        public async Task<EmployeeResponseDTO> AddEmployee(EmployeeRequestDTO worker, Guid fishFarmId, string userId)
+        public async Task<EmployeeResponseDTO> AddEmployee(EmployeeRequestDTO employee, Guid fishFarmId, string userId, string userRole)
         {
-            await CheckPermission(userId, fishFarmId);
-            var workerEntity = _mapper.Map<EmployeeEntity>(worker);
-            //workerEntity.FishFarmId = fishFarmId;
-            var addedEmployee = await _employeeRepository.AddEmployeeEntity(workerEntity);
+            var employeeEntity = _mapper.Map<EmployeeEntity>(employee);
+            var addedEmployee = await _employeeRepository.AddEmployeeEntity(employeeEntity);
             return _mapper.Map<EmployeeResponseDTO>(addedEmployee);
         }
 
-        public async Task<EmployeeResponseDTO> UpdateEmployee(EmployeeRequestDTO worker, string workerId, string userId)
+        public async Task<EmployeeResponseDTO> UpdateEmployee(EmployeeRequestDTO employee, string employeeId)
         {
-            await CheckEmployeePermissions(userId, workerId);
-            var workerEntity = _mapper.Map<EmployeeEntity>(worker);
-            workerEntity.Id = workerId.ToString();
-            var updatedEmployee = await _employeeRepository.UpdateEmployeeEntity(workerEntity);
+            var employeeEntity = _mapper.Map<EmployeeEntity>(employee);
+            employeeEntity.Id = employeeId.ToString();
+            var updatedEmployee = await _employeeRepository.UpdateEmployeeEntity(employeeEntity);
             if (updatedEmployee is null)
-                throw new KeyNotFoundException($"Employee with id {workerId} not found");
+                throw new KeyNotFoundException($"Employee with id {employeeId} not found");
             return _mapper.Map<EmployeeResponseDTO>(updatedEmployee);
         }
 
-        public async Task<EmployeeResponseDTO> DeleteEmployee(string workerId, string userId)
+        public async Task<EmployeeResponseDTO> DeleteEmployee(string employeeId)
         {
-            await CheckEmployeePermissions(userId, workerId);
-            var deletedEmployee = await _employeeRepository.DeleteEmployeeEntity(workerId);
+            var deletedEmployee = await _employeeRepository.DeleteEmployeeEntity(employeeId);
             if (deletedEmployee is null)
-                throw new KeyNotFoundException($"Employee with id {workerId} not found");
+                throw new KeyNotFoundException($"Employee with id {employeeId} not found");
+            var user = await _userRepository.GetUserByEmployeeId(deletedEmployee.Id);
+            await _userRepository.DeleteUser(user!.Id);
             return _mapper.Map<EmployeeResponseDTO>(deletedEmployee);
-        }
-
-        private async Task CheckEmployeePermissions(string userId, string workerId)
-        {
-            var worker = await _employeeRepository.GetEmployeeEntityById(workerId);
-            if (worker is null)
-            {
-                throw new KeyNotFoundException($"Employee with id {workerId} not found");
-            }
-            //await CheckPermission(userId, worker.FishFarmId);
-        }
-
-        private async Task CheckPermission(string userId, Guid fishFarmId)
-        {
-            var fishFarm = await _fishFarmsRepository.GetFishFarmEntityById(fishFarmId, userId);
-            if (fishFarm is null)
-            {
-                throw new UnauthorizedAccessException("You don't have permission to access this resource");
-            }
         }
     }
 }

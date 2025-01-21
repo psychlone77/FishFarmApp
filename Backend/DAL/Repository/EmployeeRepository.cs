@@ -11,7 +11,9 @@ namespace DAL.Repository
 
         public async Task<IList<EmployeeEntity>> GetEmployeeEntities(Guid fishFarmId)
         {
-            return await _context.Employees.ToListAsync();
+            return await _context.Employees
+                .Where(e => e.User != null && e.User.FishFarmUsers != null && e.User.FishFarmUsers.Any(fu => fu.FishFarmId == fishFarmId))
+                .ToListAsync();
         }
 
         public async Task<EmployeeEntity?> GetEmployeeEntityById(string employeeId)
@@ -47,7 +49,7 @@ namespace DAL.Repository
             var employeeEntity = await _context.Employees.FirstOrDefaultAsync(w => w.Id == employeeId);
             if (employeeEntity == null)
                 return null;
-            _context.Employees.Remove(employeeEntity);
+            employeeEntity.IsDeleted = true;
             await _context.SaveChangesAsync();
             return employeeEntity;
         }

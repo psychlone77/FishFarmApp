@@ -5,7 +5,7 @@
         public required string Name { get; set; }
         public string? ImageURL { get; set; }
         public int Age { get; set; }
-        public required string WorkerPosition { get; set; }
+        public required string EmployeePosition { get; set; }
         public DateTime CertifiedUntil { get; set; }
     }
 

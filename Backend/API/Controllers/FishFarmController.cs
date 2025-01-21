@@ -1,8 +1,8 @@
-﻿using System.Security.Claims;
-using BLL.DTOs.FishFarm;
+﻿using BLL.DTOs.FishFarm;
 using BLL.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static API.Utils.Auth;
 
 namespace API.Controllers
 {
@@ -14,19 +14,18 @@ namespace API.Controllers
         private readonly IFishFarmsService _fishFarmsService = fishFarmsService;
 
         [HttpGet]
-        [Authorize]
         public async Task<ActionResult<List<FishFarmResponseDTO>>> GetAllFishFarms()
         {
-            var claims = GetClaims();
-            return Ok(await _fishFarmsService.GetAllFishFarms(claims.userId, claims.userRole));
+            var (userId, userRole) = GetClaims(User);
+            return Ok(await _fishFarmsService.GetAllFishFarms(userId, userRole));
         }
 
         [HttpGet]
         [Route("{fishFarmId}")]
         public async Task<ActionResult<FishFarmResponseDTO>> GetFishFarmById(Guid fishFarmId)
         {
-            var claims = GetClaims();
-            return Ok(await _fishFarmsService.GetFishFarmById(fishFarmId, claims.userId, claims.userRole));
+            var (userId, userRole) = GetClaims(User);
+            return Ok(await _fishFarmsService.GetFishFarmById(fishFarmId, userId, userRole));
         }
 
         [HttpPost]
@@ -40,27 +39,16 @@ namespace API.Controllers
         [Route("{fishFarmId}")]
         public async Task<ActionResult<FishFarmResponseDTO>> UpdateFishFarm(FishFarmRequestDTO fishFarm, Guid fishFarmId)
         {
-            var claims = GetClaims();
-            return Ok(await _fishFarmsService.UpdateFishFarm(fishFarm, fishFarmId, claims.userId, claims.userRole));
+            var (userId, userRole) = GetClaims(User);
+            return Ok(await _fishFarmsService.UpdateFishFarm(fishFarm, fishFarmId, userId, userRole));
         }
 
         [HttpDelete]
         [Route("{fishFarmId}")]
         public async Task<ActionResult<FishFarmResponseDTO>> DeleteFishFarm(Guid fishFarmId)
         {
-            var claims = GetClaims();
-            return Ok(await _fishFarmsService.DeleteFishFarm(fishFarmId, claims.userId, claims.userRole));
-        }
-
-        private (string userId, string userRole) GetClaims()
-        {
-            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var userRoleClaim = User.FindFirstValue(ClaimTypes.Role);
-            if (userIdClaim == null || userRoleClaim == null)
-            {
-                throw new ArgumentNullException("User ID claim not found.");
-            }
-            return (userIdClaim, userRoleClaim);
+            var (userId, userRole) = GetClaims(User);
+            return Ok(await _fishFarmsService.DeleteFishFarm(fishFarmId, userId, userRole));
         }
     }
 }

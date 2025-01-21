@@ -37,11 +37,15 @@ namespace DAL.Repository
 
         public async Task<FishFarmEntity?> UpdateFishFarmEntity(FishFarmEntity fishFarm, string? userId = null)
         {
-            var updatedFishFarm = _fishFarmAppDbContext.FishFarms.Update(fishFarm);
-            if (updatedFishFarm is null)
-                return null;
+            var existingEntity = await _fishFarmAppDbContext.FishFarms.FindAsync(fishFarm.Id);
+            if (existingEntity != null)
+            {
+                _fishFarmAppDbContext.Entry(existingEntity).State = EntityState.Detached;
+            }
+
+            _fishFarmAppDbContext.FishFarms.Update(fishFarm);
             await _fishFarmAppDbContext.SaveChangesAsync();
-            return updatedFishFarm.Entity;
+            return fishFarm;
         }
 
         public async Task<FishFarmEntity?> DeleteFishFarmEntity(Guid fishFarmId, string? userId = null)

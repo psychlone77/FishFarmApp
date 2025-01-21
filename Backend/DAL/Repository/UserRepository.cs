@@ -15,9 +15,14 @@ namespace DAL.Repository
             return addedUser.Entity;
         }
 
-        public Task<UserEntity?> DeleteUser(Guid userId)
+        public async Task<UserEntity?> DeleteUser(Guid userId)
         {
-            throw new NotImplementedException();
+            var user = _fishFarmAppDbContext.Users.Find(userId);
+            if (user == null)
+                return null;
+            _fishFarmAppDbContext.Users.Remove(user);
+            await _fishFarmAppDbContext.SaveChangesAsync();
+            return user;
         }
 
         public async Task<UserEntity?> GetUserByEmail(string email)
@@ -28,6 +33,11 @@ namespace DAL.Repository
         public Task<UserEntity?> GetUserById(Guid userId)
         {
             throw new NotImplementedException();
+        }
+
+        public Task<UserEntity?> GetUserByEmployeeId(string employeeId)
+        {
+            return _fishFarmAppDbContext.Users.FirstOrDefaultAsync(u => u.EmployeeId == employeeId);
         }
 
         public Task<UserEntity?> GetUserBySessionId(Guid sessionId)

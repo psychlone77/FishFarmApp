@@ -49,6 +49,8 @@ namespace DAL.Data
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<UserEntity>().HasQueryFilter(u => u.IsDeleted == false);
+
             modelBuilder.Entity<FishFarmEntity>()
                 .HasMany(f => f.Users)
                 .WithMany(e => e.FishFarms)
@@ -67,6 +69,10 @@ namespace DAL.Data
                 .HasForeignKey(f => f.FishFarmId)
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<FishFarmEntity>().HasQueryFilter(f => f.IsDeleted == false);
+
+            modelBuilder.Entity<BoatEntity>().HasQueryFilter(b => b.IsDeleted == false);
         }
     }
 }

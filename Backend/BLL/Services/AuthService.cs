@@ -8,8 +8,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace BLL.Services
 {
-    public class AuthService(IUserRepository userRepository, IEmployeeRepository employeeRepository, TokenProvider tokenProvider, IMapper mapper) : IAuthService
+    public class AuthService(IFishFarmRepository fishFarmRepository, IUserRepository userRepository, IEmployeeRepository employeeRepository, TokenProvider tokenProvider, IMapper mapper) : IAuthService
     {
+        private readonly IFishFarmRepository _fishFarmRepository = fishFarmRepository;
         private readonly IUserRepository _userRepository = userRepository;
         private readonly IEmployeeRepository _employeeRepository = employeeRepository;
         private readonly TokenProvider _tokenProvider = tokenProvider;
@@ -53,7 +54,7 @@ namespace BLL.Services
                 EmployeeId = addEmployee.Id,
                 Employee = addEmployee
             };
-            var addedUser = await _userRepository.AddUser(userEntity);
+            await _userRepository.AddUser(userEntity);
             return _mapper.Map<EmployeeResponseDTO>(addEmployee);
         }
 
@@ -69,8 +70,16 @@ namespace BLL.Services
                 EmployeeId = addEmployee.Id,
                 Employee = addEmployee
             };
-            var addedUser = await _userRepository.AddUser(userEntity);
+            await _userRepository.AddUser(userEntity);
             return _mapper.Map<EmployeeResponseDTO>(addEmployee);
+        }
+
+        public async Task CheckFishFarmAccess(Guid fishFarmId, string userId, PermissionLevel permissionLevel)
+        {
+            FishFarmEntity? fishFarm = await _fishFarmRepository.GetFishFarmByPermissionLevel(fishFarmId, userId, permissionLevel);
+            if (fishFarm is null)
+                throw new AccessViolationException($"You do not have access to this Fish Farm");
+            return;
         }
 
     }

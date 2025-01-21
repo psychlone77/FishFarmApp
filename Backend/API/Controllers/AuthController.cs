@@ -21,7 +21,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("employee/register")]
-        [Authorize(Roles = "SuperAdmin,Admin")]
+        [Authorize(Roles = "SuperAdmin")]
         public async Task<ActionResult> EmployeeRegister(EmployeeRegisterDTO registerRequest)
         {
             return Ok(await _authService.EmployeeRegister(registerRequest));
@@ -32,7 +32,15 @@ namespace API.Controllers
         [Authorize(Roles = "SuperAdmin")]
         public async Task<ActionResult> AdminRegister(EmployeeRegisterDTO registerRequest)
         {
-            return Ok(await _authService.EmployeeRegister(registerRequest));
+            return Ok(await _authService.AdminRegister(registerRequest));
+        }
+
+        [HttpGet]
+        [Route("validate-token")]
+        [Authorize]
+        public Task<ActionResult> ValidateToken()
+        {
+            return Task.FromResult<ActionResult>(Ok("Token is valid"));
         }
 
         [HttpGet]
@@ -59,4 +67,6 @@ namespace API.Controllers
             return Task.FromResult<ActionResult>(Ok("Authorized"));
         }
     }
+
+
 }

@@ -130,9 +130,9 @@ app.UseAuthorization();
 // Map controller routes
 app.MapControllers();
 //app.MapIdentityApi<UserEntity>().RequireAuthorization().WithMetadata(new AllowAnonymousAttribute());
-app.MapFallbackToFile("index.html");
+//app.MapFallbackToFile("index.html");
 
-app.UseStaticFiles();
+//app.UseStaticFiles();
 
 // Run the application
 app.Run();
