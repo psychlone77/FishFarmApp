@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers
 {
     [ApiController]
-    [Route("FishFarms/{fishFarmId}/employees")]
+    [Route("api/FishFarms/{fishFarmId}/employees")]
     [Authorize]
     public class EmployeeController(IEmployeeService employeesService) : Controller
     {
@@ -22,7 +22,7 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("{employeeId}")]
-        public async Task<ActionResult<EmployeeResponseDTO>> GetEmployeeById(Guid employeeId)
+        public async Task<ActionResult<EmployeeResponseDTO>> GetEmployeeById(string employeeId)
         {
             var userId = GetUserId();
             return Ok(await _employeesService.GetEmployeeById(employeeId, userId));
@@ -37,7 +37,7 @@ namespace API.Controllers
 
         [HttpPut]
         [Route("{employeeId}")]
-        public async Task<ActionResult<EmployeeResponseDTO>> UpdateEmployee(EmployeeRequestDTO employee, Guid employeeId)
+        public async Task<ActionResult<EmployeeResponseDTO>> UpdateEmployee(EmployeeRequestDTO employee, string employeeId)
         {
             var userId = GetUserId();
             return Ok(await _employeesService.UpdateEmployee(employee, employeeId, userId));
@@ -45,7 +45,7 @@ namespace API.Controllers
 
         [HttpDelete]
         [Route("{employeeId}")]
-        public async Task<ActionResult<EmployeeResponseDTO>> DeleteEmployee(Guid employeeId)
+        public async Task<ActionResult<EmployeeResponseDTO>> DeleteEmployee(string employeeId)
         {
             var userId = GetUserId();
             return Ok(await _employeesService.DeleteEmployee(employeeId, userId));

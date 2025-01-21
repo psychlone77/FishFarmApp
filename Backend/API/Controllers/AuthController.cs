@@ -13,7 +13,7 @@ namespace API.Controllers
         private readonly IAuthService _authService = authService;
 
         [HttpPost]
-        [Route("employee/login")]
+        [Route("login")]
         public async Task<ActionResult> EmployeeLogin(LoginRequest loginRequest)
         {
             return Ok(await _authService.EmployeeLogin(loginRequest));
@@ -21,15 +21,40 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("employee/register")]
+        [Authorize(Roles = "SuperAdmin,Admin")]
         public async Task<ActionResult> EmployeeRegister(EmployeeRegisterDTO registerRequest)
         {
             return Ok(await _authService.EmployeeRegister(registerRequest));
         }
 
+        [HttpPost]
+        [Route("admin/register")]
+        [Authorize(Roles = "SuperAdmin")]
+        public async Task<ActionResult> AdminRegister(EmployeeRegisterDTO registerRequest)
+        {
+            return Ok(await _authService.EmployeeRegister(registerRequest));
+        }
+
         [HttpGet]
-        [Route("employee/test-auth")]
-        [Authorize]
-        public Task<ActionResult> TestAuth()
+        [Route("test-auth-sa")]
+        [Authorize(Roles = "SuperAdmin")]
+        public Task<ActionResult> TestSuperAdminAuth()
+        {
+            return Task.FromResult<ActionResult>(Ok("Authorized"));
+        }
+
+        [HttpGet]
+        [Route("test-auth-admin")]
+        [Authorize(Roles = "Admin")]
+        public Task<ActionResult> TestAdminAuth()
+        {
+            return Task.FromResult<ActionResult>(Ok("Authorized"));
+        }
+
+        [HttpGet]
+        [Route("test-auth-employee")]
+        [Authorize(Roles = "Employee")]
+        public Task<ActionResult> TestEmployeeAuth()
         {
             return Task.FromResult<ActionResult>(Ok("Authorized"));
         }

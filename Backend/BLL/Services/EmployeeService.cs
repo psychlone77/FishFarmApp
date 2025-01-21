@@ -19,7 +19,7 @@ namespace BLL.Services
             return _mapper.Map<IList<EmployeeResponseDTO>>(employee);
         }
 
-        public async Task<EmployeeResponseDTO> GetEmployeeById(Guid workerId, string userId)
+        public async Task<EmployeeResponseDTO> GetEmployeeById(string workerId, string userId)
         {
             EmployeeEntity? worker = await _employeeRepository.GetEmployeeEntityById(workerId);
             if (worker is null)
@@ -37,7 +37,7 @@ namespace BLL.Services
             return _mapper.Map<EmployeeResponseDTO>(addedEmployee);
         }
 
-        public async Task<EmployeeResponseDTO> UpdateEmployee(EmployeeRequestDTO worker, Guid workerId, string userId)
+        public async Task<EmployeeResponseDTO> UpdateEmployee(EmployeeRequestDTO worker, string workerId, string userId)
         {
             await CheckEmployeePermissions(userId, workerId);
             var workerEntity = _mapper.Map<EmployeeEntity>(worker);
@@ -48,7 +48,7 @@ namespace BLL.Services
             return _mapper.Map<EmployeeResponseDTO>(updatedEmployee);
         }
 
-        public async Task<EmployeeResponseDTO> DeleteEmployee(Guid workerId, string userId)
+        public async Task<EmployeeResponseDTO> DeleteEmployee(string workerId, string userId)
         {
             await CheckEmployeePermissions(userId, workerId);
             var deletedEmployee = await _employeeRepository.DeleteEmployeeEntity(workerId);
@@ -57,7 +57,7 @@ namespace BLL.Services
             return _mapper.Map<EmployeeResponseDTO>(deletedEmployee);
         }
 
-        private async Task CheckEmployeePermissions(string userId, Guid workerId)
+        private async Task CheckEmployeePermissions(string userId, string workerId)
         {
             var worker = await _employeeRepository.GetEmployeeEntityById(workerId);
             if (worker is null)

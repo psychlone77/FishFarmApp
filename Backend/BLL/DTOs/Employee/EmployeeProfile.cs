@@ -20,6 +20,9 @@ namespace BLL.DTOs.Employee
 
             CreateMap<EmployeeRequestDTO, EmployeeEntity>()
                 .ForMember(dest => dest.EmployeePosition, opt => opt.MapFrom(src => Enum.Parse<EmployeePosition>(src.WorkerPosition)));
+
+            CreateMap<EmployeeRegisterDTO, EmployeeEntity>()
+                .ForMember(dest => dest.EmployeePosition, opt => opt.MapFrom(src => Enum.Parse<EmployeePosition>(src.WorkerPosition)));
         }
     }
 }

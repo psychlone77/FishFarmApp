@@ -14,14 +14,9 @@ namespace DAL.Repository
             return await _context.Employees.ToListAsync();
         }
 
-        public async Task<EmployeeEntity?> GetEmployeeEntityById(Guid employeeId)
+        public async Task<EmployeeEntity?> GetEmployeeEntityById(string employeeId)
         {
             return await _context.Employees.FindAsync(employeeId);
-        }
-
-        public async Task<EmployeeEntity?> GetEmployeeEntityByUserId(Guid userId)
-        {
-            return await _context.Employees.FirstOrDefaultAsync(w => w.UserId == userId);
         }
 
         public async Task<EmployeeEntity> AddEmployeeEntity(EmployeeEntity employeeEntity)
@@ -47,10 +42,9 @@ namespace DAL.Repository
             return existingEmployeeEntity;
         }
 
-        public async Task<EmployeeEntity?> DeleteEmployeeEntity(Guid employeeId)
+        public async Task<EmployeeEntity?> DeleteEmployeeEntity(string employeeId)
         {
-            string employeeIdString = employeeId.ToString();
-            var employeeEntity = await _context.Employees.FirstOrDefaultAsync(w => w.Id == employeeIdString);
+            var employeeEntity = await _context.Employees.FirstOrDefaultAsync(w => w.Id == employeeId);
             if (employeeEntity == null)
                 return null;
             _context.Employees.Remove(employeeEntity);

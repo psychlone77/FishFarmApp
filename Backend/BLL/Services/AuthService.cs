@@ -20,32 +20,57 @@ namespace BLL.Services
             var user = await _userRepository.GetUserByEmail(loginRequest.Email);
             if (user == null)
                 throw new KeyNotFoundException("Employee Email not found");
-            var employee = await _employeeRepository.GetEmployeeEntityByUserId(user.Id);
+            if (user.FailedLoginAttempts >= 5 && user.LastLogin > DateTime.UtcNow.AddHours(-1))
+                throw new UnauthorizedAccessException("User is blocked");
+            var employee = await _employeeRepository.GetEmployeeEntityById(user.EmployeeId);
             if (employee == null)
                 throw new KeyNotFoundException("Employee does not exist for this email");
             var passwordVerificationResult = new PasswordHasher<IdentityUser>()
                 .VerifyHashedPassword(new IdentityUser(), user.PasswordHash, loginRequest.Password);
             if (passwordVerificationResult == PasswordVerificationResult.Failed)
+            {
+                await _userRepository.FailedLoginAttempt(user.Id);
                 throw new UnauthorizedAccessException("Password is incorrect");
+            }
+            await _userRepository.SuccessfulLogin(user.Id);
             var token = _tokenProvider.CreateToken(user);
             return new LoginSuccess<EmployeeResponseDTO>
             {
                 Token = token,
                 UserData = _mapper.Map<EmployeeResponseDTO>(employee)
             };
-
         }
 
         public async Task<EmployeeResponseDTO> EmployeeRegister(EmployeeRegisterDTO registerRequest)
         {
             var hashedPassword = new PasswordHasher<IdentityUser>().HashPassword(new IdentityUser(), registerRequest.Password);
+            var addEmployee = _mapper.Map<EmployeeEntity>(registerRequest);
             var userEntity = new UserEntity
             {
                 Email = registerRequest.Email,
                 PasswordHash = hashedPassword,
+                Role = UserRole.Employee,
+                EmployeeId = addEmployee.Id,
+                Employee = addEmployee
             };
             var addedUser = await _userRepository.AddUser(userEntity);
-            return _mapper.Map<EmployeeResponseDTO>(addedUser.Employee);
+            return _mapper.Map<EmployeeResponseDTO>(addEmployee);
+        }
+
+        public async Task<EmployeeResponseDTO> AdminRegister(EmployeeRegisterDTO registerRequest)
+        {
+            var hashedPassword = new PasswordHasher<IdentityUser>().HashPassword(new IdentityUser(), registerRequest.Password);
+            var addEmployee = _mapper.Map<EmployeeEntity>(registerRequest);
+            var userEntity = new UserEntity
+            {
+                Email = registerRequest.Email,
+                PasswordHash = hashedPassword,
+                Role = UserRole.Admin,
+                EmployeeId = addEmployee.Id,
+                Employee = addEmployee
+            };
+            var addedUser = await _userRepository.AddUser(userEntity);
+            return _mapper.Map<EmployeeResponseDTO>(addEmployee);
         }
 
     }

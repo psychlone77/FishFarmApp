@@ -39,5 +39,25 @@ namespace DAL.Repository
         {
             throw new NotImplementedException();
         }
+
+        public async Task FailedLoginAttempt(Guid userId)
+        {
+            var user = await _fishFarmAppDbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null)
+                throw new KeyNotFoundException("User not found");
+            user.FailedLoginAttempts++;
+            user.LastLogin = DateTime.Now;
+            await _fishFarmAppDbContext.SaveChangesAsync();
+        }
+
+        public async Task SuccessfulLogin(Guid userId)
+        {
+            var user = await _fishFarmAppDbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null)
+                throw new KeyNotFoundException("User not found");
+            user.FailedLoginAttempts = 0;
+            user.LastLogin = DateTime.Now;
+            await _fishFarmAppDbContext.SaveChangesAsync();
+        }
     }
 }
