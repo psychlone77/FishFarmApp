@@ -1,4 +1,4 @@
-import { FishFarmRequest, WorkerRequest } from './types'
+import { FishFarmRequest, EmployeeRequest } from './types'
 
 export interface FishFarmFormProps {
   title: string
@@ -9,12 +9,12 @@ export interface FishFarmFormProps {
   initialValues?: FishFarmRequest & { id: string }
 }
 
-export interface WorkerFormProps {
+export interface EmployeeFormProps {
   title: string
   open: boolean
   handleClose: () => void
   notifySuccess: (message: string) => void
   notifyError: (message: string) => void
   fishFarmId: string
-  initialValues?: WorkerRequest & { workerId: string }
+  initialValues?: EmployeeRequest & { employeeId: string }
 }

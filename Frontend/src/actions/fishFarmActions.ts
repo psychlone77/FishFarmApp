@@ -3,23 +3,17 @@ import { baseURL } from '.'
 import { FishFarmRequest, FishFarmResponse } from '../types/types'
 
 export async function getFishFarms(): Promise<FishFarmResponse[]> {
-  const response = await axios.get(`${baseURL}/FishFarms`, {
-    withCredentials: true,
-  })
+  const response = await axios.get(`https://localhost:7064/api/FishFarms`)
   return response.data
 }
 
 export async function getFishFarm(id: string): Promise<FishFarmResponse> {
-  const response = await axios.get(`${baseURL}/FishFarms/${id}`, {
-    withCredentials: true,
-  })
+  const response = await axios.get(`${baseURL}/FishFarms/${id}`)
   return response.data
 }
 
 export async function createFishFarm(fishFarm: FishFarmRequest): Promise<FishFarmResponse> {
-  const response = await axios.post(`${baseURL}/FishFarms`, fishFarm, {
-    withCredentials: true,
-  })
+  const response = await axios.post(`${baseURL}/FishFarms`, fishFarm)
   return response.data
 }
 

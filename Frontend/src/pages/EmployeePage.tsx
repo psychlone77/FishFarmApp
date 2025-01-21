@@ -1,29 +1,29 @@
 import { useParams } from 'react-router'
 import { useQuery } from 'react-query'
 import { Avatar, Box, Button, Card, Skeleton, Typography, useTheme } from '@mui/material'
-import { WorkerResponse } from '../types/types'
+import { EmployeeResponse } from '../types/types'
 import { useState } from 'react'
 import { toast, ToastContainer } from 'react-toastify'
-import { getWorker } from '../actions/workerActions'
-import WorkerForm from '../components/WorkerForm'
-// import WorkerForm from '../components/WorkerForm'
+import { getEmployee } from '../actions/employeeActions'
+import EmployeeForm from '../components/EmployeeForm'
+// import EmployeeForm from '../components/EmployeeForm'
 
-export default function WorkerPage() {
-  const { fishFarmId, workerId } = useParams<{ fishFarmId: string; workerId: string }>()
+export default function EmployeePage() {
+  const { fishFarmId, employeeId } = useParams<{ fishFarmId: string; employeeId: string }>()
   const theme = useTheme()
-  const [showWorkerForm, setShowWorkerForm] = useState(false)
+  const [showEmployeeForm, setShowEmployeeForm] = useState(false)
 
   const {
-    data: worker,
+    data: employee,
     isLoading,
     isFetching,
     isError,
-  } = useQuery<WorkerResponse>(['worker', workerId], () => getWorker(fishFarmId!, workerId!), {
-    enabled: !!workerId,
+  } = useQuery<EmployeeResponse>(['employee', employeeId], () => getEmployee(fishFarmId!, employeeId!), {
+    enabled: !!employeeId,
   })
 
-  const toggleWorkerForm = (toggle: boolean) => {
-    setShowWorkerForm(toggle)
+  const toggleEmployeeForm = (toggle: boolean) => {
+    setShowEmployeeForm(toggle)
   }
 
   const notifySuccess = (message: string) => {
@@ -84,9 +84,9 @@ export default function WorkerPage() {
           </Box>
         </Box>
       ) : isError ? (
-        <p>Error loading worker details.</p>
+        <p>Error loading employee details.</p>
       ) : (
-        worker && (
+        employee && (
           <Box
             sx={{
               position: 'relative',
@@ -100,8 +100,8 @@ export default function WorkerPage() {
           >
             <Box maxWidth='sm'>
               <Avatar
-                src={worker.imageURL}
-                alt={worker.name}
+                src={employee.imageURL}
+                alt={employee.name}
                 sx={{ width: '300px', height: '300px' }}
               />
             </Box>
@@ -117,30 +117,30 @@ export default function WorkerPage() {
               }}
             >
               <Typography variant='h3' component='div' noWrap>
-                {worker.name}
+                {employee.name}
               </Typography>
-              <Typography variant='subtitle1'>Age: {worker.age}</Typography>
-              <Typography variant='subtitle1'>Email: {worker.email}</Typography>
-              <Typography variant='subtitle1'>Position: {worker.workerPosition}</Typography>
+              <Typography variant='subtitle1'>Age: {employee.age}</Typography>
+              <Typography variant='subtitle1'>Email: {employee.email}</Typography>
+              <Typography variant='subtitle1'>Position: {employee.employeePosition}</Typography>
               <Typography variant='subtitle1'>
-                Certified Until: {new Date(worker.certifiedUntil).toLocaleDateString()}
+                Certified Until: {new Date(employee.certifiedUntil).toLocaleDateString()}
               </Typography>
             </Card>
             <Box sx={{ marginTop: 1, marginLeft: 2, position: 'absolute', right: 30, top: 30 }}>
-              <Button variant='contained' onClick={() => toggleWorkerForm(true)}>
+              <Button variant='contained' onClick={() => toggleEmployeeForm(true)}>
                 Edit
               </Button>
             </Box>
           </Box>
         )
       )}
-      {showWorkerForm && worker && workerId && (
-        <WorkerForm
-          initialValues={{ ...worker, workerId }}
+      {showEmployeeForm && employee && employeeId && (
+        <EmployeeForm
+          initialValues={{ ...employee, employeeId }}
           fishFarmId={fishFarmId!}
-          open={showWorkerForm}
-          title='Edit Worker'
-          handleClose={() => toggleWorkerForm(false)}
+          open={showEmployeeForm}
+          title='Edit Employee'
+          handleClose={() => toggleEmployeeForm(false)}
           notifySuccess={notifySuccess}
           notifyError={notifyError}
         />

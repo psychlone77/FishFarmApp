@@ -3,19 +3,18 @@ import { baseURL } from '.'
 import { LoginRequest } from '../types/types'
 
 export async function checkSession(): Promise<AxiosResponse> {
-  const response = await axios.get(`${baseURL}/manage/info`, {
-    withCredentials: true,
-  })
+  axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`
+  const response = await axios.get(`${baseURL}/Auth/validate-token`)
   return response
 }
 
 export async function login(loginRequest: LoginRequest): Promise<AxiosResponse> {
   const response = await axios.post(
-    `${baseURL}/login?useCookies=true&useSessionCookies=true`,
+    `${baseURL}/auth/login`,
     loginRequest,
-    {
-      withCredentials: true,
-    },
   )
+  localStorage.setItem('token', response.data.token)
+  axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`
+  axios.defaults.headers.get['Content-Type'] = 'application/json'
   return response
 }

@@ -1,5 +1,5 @@
 import { useQuery } from 'react-query'
-import getWorkers from '../actions/workerActions'
+import getEmployees from '../actions/employeeActions'
 import {
   Button,
   Paper,
@@ -15,9 +15,9 @@ import {
 import { useNavigate } from 'react-router'
 import { Add, Edit } from '@mui/icons-material'
 import { useState } from 'react'
-import WorkerForm from './WorkerForm'
+import EmployeeForm from './EmployeeForm'
 
-export default function WorkerList({
+export default function EmployeeList({
   fishFarmId,
   notifySuccess,
   notifyError,
@@ -27,12 +27,12 @@ export default function WorkerList({
   notifyError: (message: string) => void
 }) {
   const navigate = useNavigate()
-  const [showWorkerForm, setShowWorkerForm] = useState(false)
+  const [showEmployeeForm, setShowEmployeeForm] = useState(false)
   const {
-    data: workers,
+    data: employees,
     isLoading,
     isFetching,
-  } = useQuery(['workers', fishFarmId], () => getWorkers(fishFarmId!), {
+  } = useQuery(['employees', fishFarmId], () => getEmployees(fishFarmId!), {
     enabled: !!fishFarmId,
   })
   return (
@@ -47,15 +47,15 @@ export default function WorkerList({
         noWrap
         sx={{ marginTop: 2, marginBottom: 2 }}
       >
-        Workers
+        Employees
       </Typography>
       <Button
         sx={{ position: 'absolute', right: 30, top: 30 }}
         variant='contained'
-        onClick={() => setShowWorkerForm(true)}
+        onClick={() => setShowEmployeeForm(true)}
       >
         <Add />
-        Add Worker
+        Add Employee
       </Button>
       <Table sx={{ minWidth: 300 }}>
         <TableHead>
@@ -90,44 +90,44 @@ export default function WorkerList({
                 </TableRow>
               ))
             : null}
-          {workers?.map(worker => (
+          {employees?.map(employee => (
             <TableRow
-              key={worker.id}
+              key={employee.id}
               hover
               sx={{
                 '&:hover': { cursor: 'pointer' },
                 '&:last-child td, &:last-child th': { border: 0 },
               }}
               onClick={() => {
-                navigate(`workers/${worker.id}`)
+                navigate(`employees/${employee.id}`)
               }}
             >
-              <TableCell align='center'>{worker.name}</TableCell>
-              <TableCell align='center'>{worker.workerPosition}</TableCell>
-              <TableCell align='center'>{worker.age}</TableCell>
-              <TableCell align='center'>{worker.email}</TableCell>
+              <TableCell align='center'>{employee.name}</TableCell>
+              <TableCell align='center'>{employee.employeePosition}</TableCell>
+              <TableCell align='center'>{employee.age}</TableCell>
+              <TableCell align='center'>{employee.email}</TableCell>
               <TableCell align='center'>
-                {new Date(worker.certifiedUntil).toLocaleDateString()}
+                {new Date(employee.certifiedUntil).toLocaleDateString()}
               </TableCell>
               <TableCell align='center'>
                 <Edit />
               </TableCell>
             </TableRow>
           ))}
-          {workers?.length === 0 && !isFetching && (
+          {employees?.length === 0 && !isFetching && (
             <TableRow>
               <TableCell colSpan={5} align='center'>
-                No workers found
+                No employees found
               </TableCell>
             </TableRow>
           )}
         </TableBody>
       </Table>
-      <WorkerForm
-        title='Add Worker'
+      <EmployeeForm
+        title='Add Employee'
         fishFarmId={fishFarmId!}
-        open={showWorkerForm}
-        handleClose={() => setShowWorkerForm(false)}
+        open={showEmployeeForm}
+        handleClose={() => setShowEmployeeForm(false)}
         notifySuccess={notifySuccess}
         notifyError={notifyError}
       />

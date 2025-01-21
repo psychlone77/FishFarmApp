@@ -3,7 +3,7 @@ import { FishFarmResponse } from '../types/types'
 import { getFishFarm } from '../actions/fishFarmActions'
 import { useQuery } from 'react-query'
 import { Box, Button, Skeleton, Typography, useTheme } from '@mui/material'
-import WorkerList from '../components/WorkerList'
+import EmployeeList from '../components/EmployeeList'
 import FishFarmForm from '../components/FishFarmForm'
 import { useState } from 'react'
 import { toast, ToastContainer } from 'react-toastify'
@@ -96,7 +96,7 @@ export default function FishFarmPage() {
           notifyError={notifyError}
         />
       )}
-      <WorkerList fishFarmId={fishFarmId} notifySuccess={notifySuccess} notifyError={notifyError} />
+      <EmployeeList fishFarmId={fishFarmId} notifySuccess={notifySuccess} notifyError={notifyError} />
     </>
   )
 }

@@ -2,11 +2,11 @@ import { useForm, SubmitHandler } from 'react-hook-form'
 import { useMutation, useQueryClient } from 'react-query'
 import { TextField, Button, Box, Modal, IconButton, Typography, MenuItem } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
-import { WorkerRequest } from '../types/types'
-import { createWorker, deleteWorker, updateWorker } from '../actions/workerActions'
-import { WorkerFormProps } from '../types/interfaces'
+import { EmployeeRequest } from '../types/types'
+import { createEmployee, deleteEmployee, updateEmployee } from '../actions/employeeActions'
+import { EmployeeFormProps } from '../types/interfaces'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { WorkerPositionEnum, WorkerRequestSchema } from '../types/schemas'
+import { EmployeePositionEnum, EmployeeRequestSchema } from '../types/schemas'
 import { useNavigate } from 'react-router'
 
 const style = {
@@ -21,7 +21,7 @@ const style = {
   p: 4,
 }
 
-export default function WorkerForm({
+export default function EmployeeForm({
   title,
   open,
   handleClose,
@@ -29,34 +29,34 @@ export default function WorkerForm({
   notifyError,
   fishFarmId,
   initialValues,
-}: WorkerFormProps) {
+}: EmployeeFormProps) {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<WorkerRequest>({ resolver: zodResolver(WorkerRequestSchema) })
+  } = useForm<EmployeeRequest>({ resolver: zodResolver(EmployeeRequestSchema) })
   const mutation = useMutation(
     initialValues
-      ? (worker: WorkerRequest) => updateWorker(worker, initialValues.workerId, fishFarmId)
-      : (worker: WorkerRequest) => createWorker(worker, fishFarmId),
+      ? (employee: EmployeeRequest) => updateEmployee(employee, initialValues.employeeId, fishFarmId)
+      : (employee: EmployeeRequest) => createEmployee(employee, fishFarmId),
   )
   const mutationSecondary = useMutation(() =>
-    initialValues ? deleteWorker(initialValues?.workerId, fishFarmId) : Promise.resolve(),
+    initialValues ? deleteEmployee(initialValues?.employeeId, fishFarmId) : Promise.resolve(),
   )
 
-  const onSubmit: SubmitHandler<WorkerRequest> = data => {
+  const onSubmit: SubmitHandler<EmployeeRequest> = data => {
     mutation.mutate(data, {
       onSuccess: () => {
         queryClient.invalidateQueries(
-          initialValues ? ['worker', initialValues?.workerId] : 'workers',
+          initialValues ? ['employee', initialValues?.employeeId] : 'employees',
         )
-        notifySuccess(initialValues ? 'Worker updated successfully' : 'Worker added successfully')
+        notifySuccess(initialValues ? 'Employee updated successfully' : 'Employee added successfully')
         handleClose()
       },
       onError: () => {
-        notifyError(initialValues ? 'Error updating worker' : 'Error adding worker')
+        notifyError(initialValues ? 'Error updating employee' : 'Error adding employee')
       },
     })
   }
@@ -65,13 +65,13 @@ export default function WorkerForm({
     if (mutationSecondary) {
       mutationSecondary.mutate(undefined, {
         onSuccess: () => {
-          queryClient.invalidateQueries('workers')
-          notifySuccess('Worker deleted successfully')
+          queryClient.invalidateQueries('employees')
+          notifySuccess('Employee deleted successfully')
           handleClose()
           navigate(`/fish-farms/${fishFarmId}`)
         },
         onError: () => {
-          notifyError('Error deleting worker')
+          notifyError('Error deleting employee')
         },
       })
     }
@@ -155,14 +155,14 @@ export default function WorkerForm({
           <TextField
             fullWidth
             select
-            label='Worker Position'
+            label='Employee Position'
             variant='outlined'
-            defaultValue={initialValues?.workerPosition}
-            error={!!errors.workerPosition}
-            helperText={errors.workerPosition ? errors.workerPosition.message : ''}
-            {...register('workerPosition', { required: true })}
+            defaultValue={initialValues?.employeePosition}
+            error={!!errors.employeePosition}
+            helperText={errors.employeePosition ? errors.employeePosition.message : ''}
+            {...register('employeePosition', { required: true })}
           >
-            {WorkerPositionEnum.options.map(position => (
+            {EmployeePositionEnum.options.map(position => (
               <MenuItem key={position} value={position}>
                 {position}
               </MenuItem>
@@ -172,7 +172,7 @@ export default function WorkerForm({
         <Box display='flex' justifyContent='space-between'>
           {initialValues && (
             <Button variant='outlined' color='error' onClick={handleSecondaryAction}>
-              Delete Worker
+              Delete Employee
             </Button>
           )}
           <Button sx={{ marginLeft: 'auto' }} variant='contained' color='primary' type='submit'>

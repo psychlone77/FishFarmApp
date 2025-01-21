@@ -5,7 +5,7 @@ import PrivateRoute from './pages/PrivateRoute'
 import Layout from './layout'
 import HomePage from './pages/HomePage'
 import FishFarmPage from './pages/FishFarmPage'
-import WorkerPage from './pages/WorkerPage'
+import EmployeePage from './pages/EmployeePage'
 import NotFoundPage from './pages/NotFoundPage'
 
 export default function AppRouter() {
@@ -15,7 +15,7 @@ export default function AppRouter() {
         <Route path='/' element={<PrivateRoute element={<Layout />} />}>
           <Route index element={<HomePage />} />
           <Route path='fish-farms/:fishFarmId' element={<FishFarmPage />} />
-          <Route path='fish-farms/:fishFarmId/workers/:workerId' element={<WorkerPage />} />
+          <Route path='fish-farms/:fishFarmId/employees/:employeeId' element={<EmployeePage />} />
         </Route>
         <Route path='/login' element={<LoginPage />} />
         <Route path='/logout' element={<LogoutPage />} />
