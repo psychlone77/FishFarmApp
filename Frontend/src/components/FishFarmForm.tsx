@@ -64,8 +64,9 @@ export default function FishFarmForm({
         )
         handleClose()
       },
-      onError: () => {
-        notifyError(initialValues ? 'Error updating fish farm' : 'Error adding fish farm')
+      onError(error) {
+        const message = (error as any).response.data.message || 'An error occurred'
+        notifyError(message as string)
       },
     })
   }

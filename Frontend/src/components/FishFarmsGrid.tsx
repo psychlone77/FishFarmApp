@@ -42,7 +42,7 @@ export default function FishFarmsGrid() {
         <Button
           variant='contained'
           onClick={() => setShowFishFarmForm(true)}
-          sx={{ marginLeft: 2, display: role === 'SuperAdmin' ? 'block' : 'none' }}
+          sx={{ marginLeft: 2, display: role === 'SuperAdmin' ? 'flex' : 'none' }}
         >
           <Add />
           Add Fish Farm

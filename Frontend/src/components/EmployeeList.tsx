@@ -47,7 +47,7 @@ export default function EmployeeList({
         noWrap
         sx={{ marginTop: 2, marginBottom: 2 }}
       >
-        Employees
+        Assigned Employees
       </Typography>
       <Button
         sx={{ position: 'absolute', right: 30, top: 30 }}

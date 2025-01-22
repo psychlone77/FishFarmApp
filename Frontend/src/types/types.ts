@@ -6,13 +6,14 @@ import {
   EmployeeRequestSchema,
   EmployeeResponseSchema,
 } from './schemas'
+import { AxiosResponse } from 'axios'
 
 export type AuthContextType = {
   isAuthenticated: boolean
   isLoading: boolean
   role: string
   user: EmployeeResponse | null
-  login: (data: LoginRequest) => void
+  login: (data: LoginRequest) => Promise<AxiosResponse>
   logout: () => void
 }
 

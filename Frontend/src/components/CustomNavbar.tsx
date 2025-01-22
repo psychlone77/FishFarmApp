@@ -13,6 +13,7 @@ import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import { Phishing } from '@mui/icons-material'
 import { Link } from 'react-router'
+import useAuth from '../hooks/useAuth'
 
 const pages = ['']
 const settings = [
@@ -22,6 +23,7 @@ const settings = [
 ]
 
 function CustomNavbar() {
+  const { user } = useAuth()
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null)
 
@@ -143,13 +145,14 @@ function CustomNavbar() {
               ))}
             </Box>
           </Box>
+          <Box sx={{ display: { xs: 'none', md: 'flex'},  marginRight: 2, flexDirection: 'column', alignItems: 'end' }}>
+            <Typography variant='body1'>{user?.name}</Typography>
+            <Typography variant='caption'>{user?.employeePosition}</Typography>
+          </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title='Open settings'>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar
-                  alt='Remy Sharp'
-                  src='https://t3.ftcdn.net/jpg/02/22/85/16/240_F_222851624_jfoMGbJxwRi5AWGdPgXKSABMnzCQo9RN.jpg'
-                />
+                <Avatar alt='Remy Sharp' src={user?.imageURL} />
               </IconButton>
             </Tooltip>
             <Menu

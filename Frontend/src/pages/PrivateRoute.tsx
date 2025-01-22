@@ -1,5 +1,6 @@
 import { Box, CircularProgress } from '@mui/material'
 import useAuth from '../hooks/useAuth'
+import { Navigate } from 'react-router'
 
 interface PrivateRouteProps {
   element: JSX.Element
@@ -23,5 +24,5 @@ export default function PrivateRoute({ element }: PrivateRouteProps) {
     )
   }
 
-  return isAuthenticated ? element : null
+  return isAuthenticated ? element : <Navigate to='/login' replace/>
 }

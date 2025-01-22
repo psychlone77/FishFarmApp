@@ -1,11 +1,12 @@
-import { useForm } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { useMutation } from 'react-query'
-import { TextField, Button, Container, Typography, Box, CircularProgress } from '@mui/material'
+import { TextField, Button, Typography, Box, CircularProgress } from '@mui/material'
 import { LoginRequest } from '../types/types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { LoginRequestSchema } from '../types/schemas'
 import { Phishing } from '@mui/icons-material'
 import useAuth from '../hooks/useAuth'
+import { loginAction } from '../actions/authActions'
 
 export default function LoginPage() {
   const { login } = useAuth()
@@ -14,14 +15,14 @@ export default function LoginPage() {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginRequest>({ resolver: zodResolver(LoginRequestSchema) })
-  const mutation = useMutation({
-    mutationFn: async (data: LoginRequest) => {
-      login(data)
-    },
-  })
+  const mutation = useMutation(login)
 
-  const onSubmit = (data: LoginRequest) => {
-    mutation.mutate(data)
+  const onSubmit : SubmitHandler<LoginRequest> = data => {
+    mutation.mutate(data, {
+      onError: () => {
+        console.log('error')
+      }
+    } )
   }
 
   return (
@@ -37,21 +38,20 @@ export default function LoginPage() {
         backgroundSize: 'cover',
       }}
     >
-      <Container maxWidth='sm'>
+      <Box sx={{padding: 10, borderRadius: '50px', maxWidth:'720px'}}>
         <Box
           sx={{
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
             marginBottom: 0,
-            backdropFilter: 'blur(50px)',
             paddingX: 5,
             borderRadius: '10px',
           }}
         >
           <Phishing
             sx={{
-              display: { xs: 'none', md: 'flex' },
+              display: 'flex',
               marginRight: 1,
               fontSize: 55,
               color: 'white',
@@ -62,7 +62,7 @@ export default function LoginPage() {
             noWrap
             sx={{
               marginRight: 2,
-              display: { xs: 'none', md: 'flex' },
+              display: 'flex',
               fontWeight: 500,
               letterSpacing: '0.1rem',
               color: 'white',
@@ -74,7 +74,7 @@ export default function LoginPage() {
         </Box>
         <Box
           sx={{
-            backgroundColor: '#f9f9f9',
+            backgroundColor: 'rgb(255,255,255)',
             p: 6,
             borderRadius: 5,
             boxShadow: 2,
@@ -106,7 +106,7 @@ export default function LoginPage() {
             />
             {mutation.isError && (
               <Typography variant='body1' color='error'>
-                Login Failed
+                {(mutation.error as any).response.data.message || 'An Unexpected Error has Occured'}
               </Typography>
             )}
             {mutation.isSuccess && (
@@ -140,7 +140,7 @@ export default function LoginPage() {
             )}
           </form>
         </Box>
-      </Container>
+      </Box>
     </Box>
   )
 }
