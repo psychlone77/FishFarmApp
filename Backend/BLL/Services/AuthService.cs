@@ -38,6 +38,8 @@ namespace BLL.Services
             return new LoginSuccess<EmployeeResponseDTO>
             {
                 Token = token,
+                Email = user.Email,
+                Role = user.Role.ToString(),
                 UserData = _mapper.Map<EmployeeResponseDTO>(employee)
             };
         }
