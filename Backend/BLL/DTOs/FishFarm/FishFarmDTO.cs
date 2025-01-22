@@ -10,6 +10,7 @@
         public Boolean HasBarge { get; set; }
         public required Uri ImageURL { get; set; }
         public DateTime CreatedOn { get; set; }
+        public int PermissionLevel { get; set; }
     }
 
     public class FishFarmRequestDTO

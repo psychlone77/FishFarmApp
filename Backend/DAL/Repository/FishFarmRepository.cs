@@ -62,7 +62,7 @@ namespace DAL.Repository
         public async Task<FishFarmEntity?> GetFishFarmByPermissionLevel(Guid fishFarmId, string userId, PermissionLevel permissionLevel)
         {
             return await _fishFarmAppDbContext.FishFarms
-                .FirstOrDefaultAsync(f => f.Id == fishFarmId && f.FishFarmUsers != null && f.FishFarmUsers.Any(fu => fu.UserId == Guid.Parse(userId) && (fu.PermissionLevel & (int)PermissionLevel.Read) == (int)PermissionLevel.Read));
+                .FirstOrDefaultAsync(f => f.Id == fishFarmId && f.FishFarmUsers != null && f.FishFarmUsers.Any(fu => fu.UserId == Guid.Parse(userId) && (fu.PermissionLevel & (int)permissionLevel) == (int)permissionLevel));
         }
     }
 }

@@ -20,6 +20,10 @@ namespace API.Filters
             {
                 statusCode = StatusCodes.Status401Unauthorized;
             }
+            else if (context.Exception is AccessViolationException)
+            {
+                statusCode = StatusCodes.Status403Forbidden;
+            }
             else if (context.Exception is KeyNotFoundException)
             {
                 statusCode = StatusCodes.Status404NotFound;
