@@ -2,6 +2,8 @@ import { createTheme, CssBaseline, ThemeProvider } from '@mui/material'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactNode } from 'react'
+import { BrowserRouter } from 'react-router'
+import { AuthProvider } from './AuthContext'
 
 export default function AppProviders({ children }: { children: ReactNode }) {
   const theme = createTheme({
@@ -26,7 +28,9 @@ export default function AppProviders({ children }: { children: ReactNode }) {
       <ReactQueryDevtools initialIsOpen={false} />
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        {children}
+        <BrowserRouter>
+          <AuthProvider>{children}</AuthProvider>
+        </BrowserRouter>
       </ThemeProvider>
     </QueryClientProvider>
   )
