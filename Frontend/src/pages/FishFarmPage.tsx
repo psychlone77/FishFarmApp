@@ -46,9 +46,11 @@ export default function FishFarmPage() {
         pauseOnHover
         theme={theme.palette.mode}
       />
-      {(isLoading)  && <Box sx={{ display: 'flex', gap: 2, padding: 2, paddingY: 4 }}>
+      {isLoading && (
+        <Box sx={{ display: 'flex', gap: 2, padding: 2, paddingY: 4 }}>
           <Skeleton variant='rectangular' width={350} height={350} />
-        </Box>}
+        </Box>
+      )}
       {isError && <p>Error loading fish farm details.</p>}
       {fishFarm && (
         <Box sx={{ display: 'flex', gap: 2, padding: 2, paddingY: 4 }}>
@@ -96,7 +98,11 @@ export default function FishFarmPage() {
           notifyError={notifyError}
         />
       )}
-      <EmployeeList fishFarmId={fishFarmId} notifySuccess={notifySuccess} notifyError={notifyError} />
+      <EmployeeList
+        fishFarmId={fishFarmId}
+        notifySuccess={notifySuccess}
+        notifyError={notifyError}
+      />
     </>
   )
 }

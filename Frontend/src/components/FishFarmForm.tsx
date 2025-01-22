@@ -166,18 +166,18 @@ export default function FishFarmForm({
         <Box display='flex' justifyContent='space-between' width={'100%'}>
           {mutation.isLoading || mutationSecondary.isLoading ? (
             <Box sx={{ width: '100%', height: 37, display: 'flex', alignItems: 'center' }}>
-              <LinearProgress sx={{flexGrow: 1}}/>
+              <LinearProgress sx={{ flexGrow: 1 }} />
             </Box>
           ) : (
             <>
-          {initialValues && (
-            <Button variant='outlined' color='error' onClick={handleSecondaryAction}>
-              Delete Fish Farm
-            </Button>
-          )}
-          <Button sx={{ marginLeft: 'auto' }} variant='contained' color='primary' type='submit'>
-            {initialValues ? 'Update' : 'Add'}
-          </Button>
+              {initialValues && (
+                <Button variant='outlined' color='error' onClick={handleSecondaryAction}>
+                  Delete Fish Farm
+                </Button>
+              )}
+              <Button sx={{ marginLeft: 'auto' }} variant='contained' color='primary' type='submit'>
+                {initialValues ? 'Update' : 'Add'}
+              </Button>
             </>
           )}
         </Box>

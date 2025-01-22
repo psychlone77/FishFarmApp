@@ -32,7 +32,7 @@ export const EmployeeResponseSchema = z.object({
   name: z.string(),
   age: z.number().positive(),
   email: z.string().email(),
-  imageURL: z.union([z.string().url().optional(), z.literal("")]),
+  imageURL: z.union([z.string().url().optional(), z.literal('')]),
   employeePosition: EmployeePositionEnum,
   certifiedUntil: z.date(),
 })
@@ -41,7 +41,7 @@ export const EmployeeRequestSchema = z.object({
   name: z.string().min(3),
   age: z.number().positive(),
   email: z.string().email(),
-  imageURL: z.union([z.string().url().optional(), z.literal("")]),
+  imageURL: z.union([z.string().url().optional(), z.literal('')]),
   employeePosition: EmployeePositionEnum,
   certifiedUntil: z.date(),
 })

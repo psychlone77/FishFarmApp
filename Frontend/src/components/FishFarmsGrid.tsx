@@ -8,9 +8,11 @@ import { useState } from 'react'
 import { Add } from '@mui/icons-material'
 import FishFarmForm from './FishFarmForm'
 import { toast, ToastContainer } from 'react-toastify'
+import useAuth from '../hooks/useAuth'
 
 export default function FishFarmsGrid() {
   const navigate = useNavigate()
+  const { role } = useAuth()
   const theme = useTheme()
   const [showFishFarmForm, setShowFishFarmForm] = useState(false)
   const { data, isLoading, isError } = useQuery<FishFarmResponse[]>('fishFarms', getFishFarms)
@@ -40,7 +42,7 @@ export default function FishFarmsGrid() {
         <Button
           variant='contained'
           onClick={() => setShowFishFarmForm(true)}
-          sx={{ marginLeft: 2 }}
+          sx={{ marginLeft: 2, display: role === 'SuperAdmin' ? 'block' : 'none' }}
         >
           <Add />
           Add Fish Farm
@@ -67,12 +69,12 @@ export default function FishFarmsGrid() {
                 }}
               >
                 <CardContent>
-                  <Skeleton variant="rectangular" width="100%" height={150} />
-                  <Skeleton variant="text" sx={{ fontSize: '1.5em', marginTop: 1 }} />
-                  <Skeleton variant="text" sx={{ fontSize: '0.6em', marginTop: 0 }} />
-                  <Skeleton variant="text" sx={{ fontSize: '0.6em', marginTop: 0 }} />
-                  <Skeleton variant="text" sx={{ fontSize: '0.6em', marginTop: 0 }} />
-                  <Skeleton variant="text" sx={{ fontSize: '0.6em', marginTop: 0 }} />
+                  <Skeleton variant='rectangular' width='100%' height={150} />
+                  <Skeleton variant='text' sx={{ fontSize: '1.5em', marginTop: 1 }} />
+                  <Skeleton variant='text' sx={{ fontSize: '0.6em', marginTop: 0 }} />
+                  <Skeleton variant='text' sx={{ fontSize: '0.6em', marginTop: 0 }} />
+                  <Skeleton variant='text' sx={{ fontSize: '0.6em', marginTop: 0 }} />
+                  <Skeleton variant='text' sx={{ fontSize: '0.6em', marginTop: 0 }} />
                 </CardContent>
               </Card>
             ))}

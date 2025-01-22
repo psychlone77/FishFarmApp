@@ -1,33 +1,13 @@
-import { Navigate } from 'react-router'
-import { checkSession } from '../actions/authActions'
 import { Box, CircularProgress } from '@mui/material'
-import { useQuery } from 'react-query'
+import useAuth from '../hooks/useAuth'
 
 interface PrivateRouteProps {
   element: JSX.Element
 }
 
-const fetchAuthStatus = async () => {
-  try {
-    const response = await checkSession()
-    if (response.status === 200) {
-      return true
-    } else {
-      return false
-    }
-  } catch (error) {
-    console.error('Error checking session:', error)
-    return false
-  }
-}
-
 export default function PrivateRoute({ element }: PrivateRouteProps) {
-  const {
-    data: auth,
-    isLoading,
-    isFetching,
-  } = useQuery('authStatus', fetchAuthStatus, { refetchInterval: 0 })
-  if (isLoading || isFetching) {
+  const { isAuthenticated, isLoading } = useAuth()
+  if (isLoading) {
     return (
       <Box
         sx={{
@@ -43,5 +23,5 @@ export default function PrivateRoute({ element }: PrivateRouteProps) {
     )
   }
 
-  return auth ? element : <Navigate to='/login' />
+  return isAuthenticated ? element : null
 }

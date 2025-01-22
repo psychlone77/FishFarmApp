@@ -7,20 +7,23 @@ import HomePage from './pages/HomePage'
 import FishFarmPage from './pages/FishFarmPage'
 import EmployeePage from './pages/EmployeePage'
 import NotFoundPage from './pages/NotFoundPage'
+import { AuthProvider } from './contexts/AuthContext'
 
 export default function AppRouter() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<PrivateRoute element={<Layout />} />}>
-          <Route index element={<HomePage />} />
-          <Route path='fish-farms/:fishFarmId' element={<FishFarmPage />} />
-          <Route path='fish-farms/:fishFarmId/employees/:employeeId' element={<EmployeePage />} />
-        </Route>
-        <Route path='/login' element={<LoginPage />} />
-        <Route path='/logout' element={<LogoutPage />} />
-        <Route path='*' element={<NotFoundPage />} />
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route path='/' element={<PrivateRoute element={<Layout />} />}>
+            <Route index element={<HomePage />} />
+            <Route path='fish-farms/:fishFarmId' element={<FishFarmPage />} />
+            <Route path='fish-farms/:fishFarmId/employees/:employeeId' element={<EmployeePage />} />
+          </Route>
+          <Route path='/login' element={<LoginPage />} />
+          <Route path='/logout' element={<LogoutPage />} />
+          <Route path='*' element={<NotFoundPage />} />
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   )
 }

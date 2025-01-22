@@ -39,7 +39,8 @@ export default function EmployeeForm({
   } = useForm<EmployeeRequest>({ resolver: zodResolver(EmployeeRequestSchema) })
   const mutation = useMutation(
     initialValues
-      ? (employee: EmployeeRequest) => updateEmployee(employee, initialValues.employeeId, fishFarmId)
+      ? (employee: EmployeeRequest) =>
+          updateEmployee(employee, initialValues.employeeId, fishFarmId)
       : (employee: EmployeeRequest) => createEmployee(employee, fishFarmId),
   )
   const mutationSecondary = useMutation(() =>
@@ -52,7 +53,9 @@ export default function EmployeeForm({
         queryClient.invalidateQueries(
           initialValues ? ['employee', initialValues?.employeeId] : 'employees',
         )
-        notifySuccess(initialValues ? 'Employee updated successfully' : 'Employee added successfully')
+        notifySuccess(
+          initialValues ? 'Employee updated successfully' : 'Employee added successfully',
+        )
         handleClose()
       },
       onError: () => {

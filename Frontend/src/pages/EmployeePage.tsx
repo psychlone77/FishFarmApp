@@ -18,9 +18,13 @@ export default function EmployeePage() {
     isLoading,
     isFetching,
     isError,
-  } = useQuery<EmployeeResponse>(['employee', employeeId], () => getEmployee(fishFarmId!, employeeId!), {
-    enabled: !!employeeId,
-  })
+  } = useQuery<EmployeeResponse>(
+    ['employee', employeeId],
+    () => getEmployee(fishFarmId!, employeeId!),
+    {
+      enabled: !!employeeId,
+    },
+  )
 
   const toggleEmployeeForm = (toggle: boolean) => {
     setShowEmployeeForm(toggle)
@@ -60,7 +64,7 @@ export default function EmployeePage() {
           }}
         >
           <Box maxWidth='sm'>
-            <Skeleton animation="wave" variant='circular' width={300} height={300} />
+            <Skeleton animation='wave' variant='circular' width={300} height={300} />
           </Box>
           <Card
             sx={{
@@ -73,14 +77,14 @@ export default function EmployeePage() {
               boxShadow: 1,
             }}
           >
-            <Skeleton animation="wave" variant='text' width={200} height={40} />
-            <Skeleton animation="wave" variant='text' width={100} height={30} />
-            <Skeleton animation="wave" variant='text' width={200} height={30} />
-            <Skeleton animation="wave" variant='text' width={150} height={30} />
-            <Skeleton animation="wave" variant='text' width={250} height={30} />
+            <Skeleton animation='wave' variant='text' width={200} height={40} />
+            <Skeleton animation='wave' variant='text' width={100} height={30} />
+            <Skeleton animation='wave' variant='text' width={200} height={30} />
+            <Skeleton animation='wave' variant='text' width={150} height={30} />
+            <Skeleton animation='wave' variant='text' width={250} height={30} />
           </Card>
           <Box sx={{ marginTop: 1, marginLeft: 2, position: 'absolute', right: 30, top: 30 }}>
-            <Skeleton animation="wave" variant='rectangular' width={100} height={40} />
+            <Skeleton animation='wave' variant='rectangular' width={100} height={40} />
           </Box>
         </Box>
       ) : isError ? (

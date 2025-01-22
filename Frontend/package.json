@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build --emptyOutDir",
     "lint": "eslint .",
     "preview": "vite preview",
-    "format": "npx prettier --write ."
+    "format": "npx prettier --write .",
+    "format:check": "npx prettier --check ."
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

@@ -1,14 +1,12 @@
 import { useEffect } from 'react'
-import { useNavigate } from 'react-router'
+import useAuth from '../hooks/useAuth'
 
 export default function LogoutPage() {
-  const navigate = useNavigate()
+  const { logout } = useAuth()
 
   useEffect(() => {
-    document.cookie =
-      '.AspNetCore.Identity.Application=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
-    navigate('/login')
-  }, [navigate])
+    logout()
+  }, [logout])
 
   return null
 }

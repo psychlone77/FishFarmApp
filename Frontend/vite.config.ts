@@ -10,11 +10,11 @@ export default defineConfig({
       output: {
         manualChunks: {
           react: ['react', 'react-dom', 'react-router'],
-          quering: ['axios','react-query', 'react-query/devtools'],
+          quering: ['axios', 'react-query', 'react-query/devtools'],
           styling: ['@emotion/react', '@emotion/styled'],
           materialui: ['@mui/material', '@mui/icons-material'],
-        }
-      }
-    }
+        },
+      },
+    },
   },
 })

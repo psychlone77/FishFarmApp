@@ -7,7 +7,10 @@ export default async function getEmployees(fishFarmId: string): Promise<Employee
   return response.data
 }
 
-export async function getEmployee(fishFarmId: string, employeeId: string): Promise<EmployeeResponse> {
+export async function getEmployee(
+  fishFarmId: string,
+  employeeId: string,
+): Promise<EmployeeResponse> {
   const response = await axios.get(`${baseURL}/FishFarms/${fishFarmId}/employees/${employeeId}`, {
     withCredentials: true,
   })

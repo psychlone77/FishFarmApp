@@ -4,15 +4,11 @@ import { TextField, Button, Container, Typography, Box, CircularProgress } from 
 import { LoginRequest } from '../types/types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { LoginRequestSchema } from '../types/schemas'
-import { login } from '../actions/authActions'
-import { useNavigate } from 'react-router'
 import { Phishing } from '@mui/icons-material'
-import { AxiosResponse } from 'axios'
-import { useEffect, useState } from 'react'
+import useAuth from '../hooks/useAuth'
 
 export default function LoginPage() {
-  const navigate = useNavigate()
-  const [result, setResult] = useState<AxiosResponse | null>(null)
+  const { login } = useAuth()
   const {
     register,
     handleSubmit,
@@ -20,16 +16,9 @@ export default function LoginPage() {
   } = useForm<LoginRequest>({ resolver: zodResolver(LoginRequestSchema) })
   const mutation = useMutation({
     mutationFn: async (data: LoginRequest) => {
-      const res = await login(data)
-      setResult(res)
+      login(data)
     },
   })
-
-  useEffect(() => {
-    if (result?.status === 200) {
-      navigate('/')
-    }
-  }, [result, navigate])
 
   const onSubmit = (data: LoginRequest) => {
     mutation.mutate(data)
