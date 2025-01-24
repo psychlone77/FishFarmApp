@@ -6,7 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { LoginRequestSchema } from '../types/schemas'
 import { Phishing } from '@mui/icons-material'
 import useAuth from '../hooks/useAuth'
-import { loginAction } from '../actions/authActions'
 
 export default function LoginPage() {
   const { login } = useAuth()
@@ -18,11 +17,7 @@ export default function LoginPage() {
   const mutation = useMutation(login)
 
   const onSubmit : SubmitHandler<LoginRequest> = data => {
-    mutation.mutate(data, {
-      onError: () => {
-        console.log('error')
-      }
-    } )
+    mutation.mutate(data)
   }
 
   return (
@@ -104,11 +99,6 @@ export default function LoginPage() {
               error={!!errors.password}
               helperText={errors.password ? errors.password.message : ''}
             />
-            {mutation.isError && (
-              <Typography variant='body1' color='error'>
-                {(mutation.error as any).response.data.message || 'An Unexpected Error has Occured'}
-              </Typography>
-            )}
             {mutation.isSuccess && (
               <Typography variant='body1' color='success'>
                 Logged in successfully

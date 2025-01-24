@@ -7,6 +7,7 @@ import EmployeeList from '../components/EmployeeList'
 import FishFarmForm from '../components/FishFarmForm'
 import { useState } from 'react'
 import { toast, ToastContainer } from 'react-toastify'
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 
 export default function FishFarmPage() {
   const theme = useTheme()
@@ -86,6 +87,17 @@ export default function FishFarmPage() {
               Edit
             </Button>
           </Box>
+          <MapContainer center={[fishFarm.latitude, fishFarm.longitude]} zoom={13} scrollWheelZoom={false}>
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+              />
+              <Marker position={[fishFarm.latitude, fishFarm.longitude]}>
+                <Popup>
+                  A pretty CSS3 popup. <br /> Easily customizable.
+                </Popup>
+              </Marker>
+            </MapContainer>
         </Box>
       )}
       {showFishFarmForm && fishFarm && fishFarmId && (

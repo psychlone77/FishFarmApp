@@ -3,6 +3,7 @@ import { AuthContextType, LoginRequest } from '../types/types'
 import { checkSession, loginAction } from '../actions/authActions'
 import axios from 'axios'
 import { useNavigate } from 'react-router'
+import axiosInstance from '../actions/axiosInstance.ts'
 
 const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
@@ -61,7 +62,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const token = res.data.token
       const decodedToken = JSON.parse(atob(token.split('.')[1]))
       setRole(decodedToken.role)
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+      axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`
       setUser(res.data.userData)
       setRole(res.data.role)
       setIsAuthenticated(true)
@@ -77,7 +78,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setUser(null)
     setRole('')
     removeUserDetails()
-    delete axios.defaults.headers.common['Authorization']
+    delete axiosInstance.defaults.headers.common['Authorization']
     navigate('/login')
   }
 

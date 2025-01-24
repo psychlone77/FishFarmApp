@@ -1,9 +1,8 @@
-import axios from 'axios'
-import { baseURL } from '.'
+import axiosInstance from './axiosInstance.ts'
 import { EmployeeRequest, EmployeeResponse } from '../types/types'
 
 export default async function getEmployees(fishFarmId: string): Promise<EmployeeResponse[]> {
-  const response = await axios.get(`${baseURL}/FishFarms/${fishFarmId}/employees`)
+  const response = await axiosInstance.get(`/FishFarms/${fishFarmId}/employees`)
   return response.data
 }
 
@@ -11,7 +10,7 @@ export async function getEmployee(
   fishFarmId: string,
   employeeId: string,
 ): Promise<EmployeeResponse> {
-  const response = await axios.get(`${baseURL}/FishFarms/${fishFarmId}/employees/${employeeId}`, {
+  const response = await axiosInstance.get(`/FishFarms/${fishFarmId}/employees/${employeeId}`, {
     withCredentials: true,
   })
   return response.data
@@ -21,7 +20,7 @@ export async function createEmployee(
   employee: EmployeeRequest,
   fishFarmId: string,
 ): Promise<EmployeeResponse> {
-  const response = await axios.post(`${baseURL}/FishFarms/${fishFarmId}/employees`, employee, {
+  const response = await axiosInstance.post(`/FishFarms/${fishFarmId}/employees`, employee, {
     withCredentials: true,
   })
   return response.data
@@ -32,8 +31,8 @@ export async function updateEmployee(
   employeeId: string,
   fishFarmId: string,
 ): Promise<EmployeeResponse> {
-  const response = await axios.put(
-    `${baseURL}/FishFarms/${fishFarmId}/employees/${employeeId}`,
+  const response = await axiosInstance.put(
+    `/FishFarms/${fishFarmId}/employees/${employeeId}`,
     employee,
     {
       withCredentials: true,
@@ -43,7 +42,7 @@ export async function updateEmployee(
 }
 
 export async function deleteEmployee(employeeId: string, fishFarmId: string): Promise<void> {
-  await axios.delete(`${baseURL}/FishFarms/${fishFarmId}/employees/${employeeId}`, {
+  await axiosInstance.delete(`/FishFarms/${fishFarmId}/employees/${employeeId}`, {
     withCredentials: true,
   })
 }
