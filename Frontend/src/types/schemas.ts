@@ -25,7 +25,7 @@ export const FishFarmRequestSchema = z.object({
   imageURL: z.string().url(),
 })
 
-export const EmployeePositionEnum = z.enum(['CEO', 'Captain', 'Employee'])
+export const EmployeePositionEnum = z.enum(['CEO', 'Captain', 'Worker'])
 
 export const EmployeeResponseSchema = z.object({
   id: z.string(),
@@ -44,4 +44,5 @@ export const EmployeeRequestSchema = z.object({
   imageURL: z.union([z.string().url().optional(), z.literal('')]),
   employeePosition: EmployeePositionEnum,
   certifiedUntil: z.date(),
+  password: z.string(),
 })

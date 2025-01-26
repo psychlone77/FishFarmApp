@@ -20,7 +20,7 @@ export async function createEmployee(
   employee: EmployeeRequest,
   fishFarmId: string,
 ): Promise<EmployeeResponse> {
-  const response = await axiosInstance.post(`/FishFarms/${fishFarmId}/employees`, employee, {
+  const response = await axiosInstance.post(`Auth/employee/register`, employee, {
     withCredentials: true,
   })
   return response.data

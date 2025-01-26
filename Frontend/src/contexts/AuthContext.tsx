@@ -40,7 +40,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const authenticate = async () => {
       setIsLoading(true)
       if (token) {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+        axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`
         try {
           await checkSession()
           setRole(sessionStorage.getItem('role')!)

@@ -172,6 +172,17 @@ export default function EmployeeForm({
             ))}
           </TextField>
         </Box>
+        <Box mb={2}>
+          <TextField
+            fullWidth
+            label='Password'
+            variant='outlined'
+            defaultValue={initialValues?.password}
+            error={!!errors.password}
+            helperText={errors.password ? errors.password.message : ''}
+            {...register('password', { required: true })}
+          />
+        </Box>
         <Box display='flex' justifyContent='space-between'>
           {initialValues && (
             <Button variant='outlined' color='error' onClick={handleSecondaryAction}>
