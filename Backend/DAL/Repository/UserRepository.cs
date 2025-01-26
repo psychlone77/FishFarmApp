@@ -69,5 +69,25 @@ namespace DAL.Repository
             user.LastLogin = DateTime.Now;
             await _fishFarmAppDbContext.SaveChangesAsync();
         }
+
+        public async Task AddUserToFishFarm(Guid fishFarmId, Guid userId, int permissionLevel)
+        {
+            var fishFarm = await _fishFarmAppDbContext.FishFarms.FindAsync(fishFarmId);
+            var user = await _fishFarmAppDbContext.Users.FindAsync(userId);
+            if (fishFarm == null || user == null)
+                throw new ArgumentException("Invalid FishFarmId or UserId");
+
+            var fishFarmUser = new FishFarmUser
+            {
+                FishFarmId = fishFarmId,
+                UserId = userId,
+                PermissionLevel = permissionLevel,
+                AssignedDate = DateTime.UtcNow,
+                FishFarm = fishFarm,
+                User = user
+            };
+            await _fishFarmAppDbContext.FishFarmUser.AddAsync(fishFarmUser);
+            await _fishFarmAppDbContext.SaveChangesAsync();
+        }
     }
 }

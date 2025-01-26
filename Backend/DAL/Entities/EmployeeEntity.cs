@@ -1,10 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Entities
 {
     public class EmployeeEntity : BaseEntity
     {
-        public required string Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public string Id { get; set; } = null!;
         public required string Name { get; set; }
         public string? ImageURL { get; set; }
         public int Age { get; set; }

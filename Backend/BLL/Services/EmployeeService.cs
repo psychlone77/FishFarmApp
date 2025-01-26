@@ -56,5 +56,13 @@ namespace BLL.Services
             await _userRepository.DeleteUser(user!.Id);
             return _mapper.Map<EmployeeResponseDTO>(deletedEmployee);
         }
+
+        public async Task AddEmployeeToFishFarm(string employeeId, Guid fishFarmId, int permissionLevel)
+        {
+            var user = await _userRepository.GetUserByEmployeeId(employeeId);
+            if (user is null)
+                throw new KeyNotFoundException($"User with employee id {employeeId} not found");
+            await _userRepository.AddUserToFishFarm(fishFarmId, user.Id, permissionLevel);
+        }
     }
 }

@@ -9,6 +9,7 @@ namespace DAL.Data
         public DbSet<EmployeeEntity> Employees { get; set; }
         public DbSet<BoatEntity> Boats { get; set; }
         public DbSet<UserEntity> Users { get; set; }
+        public DbSet<FishFarmUser> FishFarmUser { get; set; }
         public DbSet<UserSessionEntity> UserSessions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -50,6 +51,7 @@ namespace DAL.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<UserEntity>().HasQueryFilter(u => u.IsDeleted == false);
+            modelBuilder.Entity<UserSessionEntity>().HasQueryFilter(us => us.User.IsDeleted == false);
 
             modelBuilder.Entity<FishFarmEntity>()
                 .HasMany(f => f.Users)
@@ -71,8 +73,53 @@ namespace DAL.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<FishFarmEntity>().HasQueryFilter(f => f.IsDeleted == false);
+            modelBuilder.Entity<FishFarmUser>().HasQueryFilter(fu => fu.FishFarm.IsDeleted == false);
 
             modelBuilder.Entity<BoatEntity>().HasQueryFilter(b => b.IsDeleted == false);
+
+        }
+        public override int SaveChanges()
+        {
+            GenerateEmployeeIds();
+            return base.SaveChanges();
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            GenerateEmployeeIds();
+            return base.SaveChangesAsync(cancellationToken);
+        }
+
+        private void GenerateEmployeeIds()
+        {
+            var entries = ChangeTracker.Entries<EmployeeEntity>()
+                .Where(e => e.State == EntityState.Added);
+
+            foreach (var entry in entries)
+            {
+                entry.Entity.Id = GenerateCustomEmployeeId();
+            }
+        }
+
+        private string GenerateCustomEmployeeId()
+        {
+            var lastEmployee = Employees
+                .OrderByDescending(e => e.Id)
+                .FirstOrDefault();
+
+            int lastIdNumber = 0;
+            if (lastEmployee != null)
+            {
+                var lastId = lastEmployee.Id;
+                if (int.TryParse(lastId.Split('-').Last(), out int result))
+                {
+                    lastIdNumber = result;
+                }
+            }
+
+            var nextIdNumber = lastIdNumber + 1;
+            return $"FF-{nextIdNumber:D4}";
         }
     }
 }
+

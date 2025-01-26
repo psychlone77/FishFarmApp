@@ -20,9 +20,14 @@
 
     public class EmployeeRegisterDTO : BaseEmployeeDTO
     {
-        public required string Id { get; set; }
         public required string Email { get; set; }
         public required string Password { get; set; }
     }
 
+    public class AssignmentRequest
+    {
+        public required string EmployeeId { get; set; }
+        public required Guid FishFarmId { get; set; }
+        public required int PermissionLevel { get; set; }
+    }
 }

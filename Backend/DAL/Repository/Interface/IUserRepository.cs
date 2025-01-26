@@ -13,5 +13,6 @@ namespace DAL.Repository.Interface
         Task<UserEntity?> DeleteUser(Guid userId);
         Task FailedLoginAttempt(Guid userId);
         Task SuccessfulLogin(Guid userId);
+        Task AddUserToFishFarm(Guid fishFarmId, Guid userId, int permissionLevel);
     }
 }

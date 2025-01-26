@@ -44,5 +44,14 @@ namespace API.Controllers
         {
             return Ok(await _employeesService.DeleteEmployee(employeeId));
         }
+
+        [HttpPost]
+        [Route("assign")]
+        [Authorize(Roles = "SuperAdmin")]
+        public async Task<ActionResult> AddEmployeeToFishFarm(AssignmentRequest ar)
+        {
+            await _employeesService.AddEmployeeToFishFarm(ar.EmployeeId, ar.FishFarmId, ar.PermissionLevel);
+            return Ok();
+        }
     }
 }

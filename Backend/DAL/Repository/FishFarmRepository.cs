@@ -58,7 +58,7 @@ namespace DAL.Repository
             await _fishFarmAppDbContext.SaveChangesAsync();
             return fishFarm;
         }
-
+        
         public async Task<FishFarmEntity?> GetFishFarmByPermissionLevel(Guid fishFarmId, string userId, PermissionLevel permissionLevel)
         {
             return await _fishFarmAppDbContext.FishFarms

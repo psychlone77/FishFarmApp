@@ -21,7 +21,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("employee/register")]
-        [Authorize(Roles = "SuperAdmin")]
+        [Authorize(Roles = "SuperAdmin,Roles")]
         public async Task<ActionResult> EmployeeRegister(EmployeeRegisterDTO registerRequest)
         {
             return Ok(await _authService.EmployeeRegister(registerRequest));
