@@ -22,4 +22,11 @@
         public Boolean HasBarge { get; set; }
         public required Uri ImageURL { get; set; }
     }
+
+    public class FishFarmUserDTO
+    {
+        public Guid FishFarmId { get; set; }
+        public Guid UserId { get; set; }
+        public int PermissionLevel { get; set; }
+    }
 }

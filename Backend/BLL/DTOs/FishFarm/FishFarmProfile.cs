@@ -10,10 +10,12 @@ namespace BLL.DTOs.FishFarm
             // DAL -> BLL
             CreateMap<FishFarmEntity, FishFarmResponseDTO>();
             CreateMap<FishFarmEntity, FishFarmRequestDTO>();
+            CreateMap<FishFarmUser, FishFarmUserDTO>();
 
             // BLL -> DAL
             CreateMap<FishFarmResponseDTO, FishFarmEntity>();
             CreateMap<FishFarmRequestDTO, FishFarmEntity>();
+            CreateMap<FishFarmUserDTO, FishFarmUser>();
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace DAL.Entities
+﻿using System.Text.Json.Serialization;
+
+namespace DAL.Entities
 {
     public class FishFarmUser
     {
