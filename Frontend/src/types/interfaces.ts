@@ -1,11 +1,9 @@
-import { FishFarmRequest, EmployeeRequest } from './types'
+import { FishFarmRequest, EmployeeRequest, Boat } from './types'
 
 export interface FishFarmFormProps {
   title: string
   open: boolean
   handleClose: () => void
-  notifySuccess: (message: string) => void
-  notifyError: (message: string) => void
   initialValues?: FishFarmRequest & { id: string }
 }
 
@@ -13,8 +11,14 @@ export interface EmployeeFormProps {
   title: string
   open: boolean
   handleClose: () => void
-  notifySuccess: (message: string) => void
-  notifyError: (message: string) => void
   fishFarmId: string
   initialValues?: EmployeeRequest & { employeeId: string }
+}
+
+export interface BoatFormProps {
+  title: string
+  open: boolean
+  handleClose: () => void
+  fishFarmId: string
+  initialValues?: Boat
 }

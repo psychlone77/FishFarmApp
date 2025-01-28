@@ -5,6 +5,7 @@ import {
   LoginRequestSchema,
   EmployeeRequestSchema,
   EmployeeResponseSchema,
+  BoatSchema,
 } from './schemas'
 import { AxiosResponse } from 'axios'
 
@@ -22,3 +23,4 @@ export type FishFarmResponse = z.infer<typeof FishFarmResponseSchema>
 export type FishFarmRequest = z.infer<typeof FishFarmRequestSchema>
 export type EmployeeResponse = z.infer<typeof EmployeeResponseSchema>
 export type EmployeeRequest = z.infer<typeof EmployeeRequestSchema>
+export type Boat = z.infer<typeof BoatSchema>

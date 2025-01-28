@@ -8,6 +8,7 @@ import { EmployeeFormProps } from '../types/interfaces'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { EmployeePositionEnum, EmployeeRequestSchema } from '../types/schemas'
 import { useNavigate } from 'react-router'
+import { toast } from 'react-toastify'
 
 const style = {
   position: 'absolute',
@@ -25,8 +26,6 @@ export default function EmployeeForm({
   title,
   open,
   handleClose,
-  notifySuccess,
-  notifyError,
   fishFarmId,
   initialValues,
 }: EmployeeFormProps) {
@@ -53,14 +52,11 @@ export default function EmployeeForm({
         queryClient.invalidateQueries(
           initialValues ? ['employee', initialValues?.employeeId] : 'employees',
         )
-        notifySuccess(
+        toast.success(
           initialValues ? 'Employee updated successfully' : 'Employee added successfully',
         )
         handleClose()
-      },
-      onError: () => {
-        notifyError(initialValues ? 'Error updating employee' : 'Error adding employee')
-      },
+      }
     })
   }
 
@@ -69,12 +65,12 @@ export default function EmployeeForm({
       mutationSecondary.mutate(undefined, {
         onSuccess: () => {
           queryClient.invalidateQueries('employees')
-          notifySuccess('Employee deleted successfully')
+          toast.success('Employee deleted successfully')
           handleClose()
           navigate(`/fish-farms/${fishFarmId}`)
         },
         onError: () => {
-          notifyError('Error deleting employee')
+          toast.error('Error deleting employee')
         },
       })
     }

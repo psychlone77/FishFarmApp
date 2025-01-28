@@ -1,12 +1,16 @@
 import { Outlet } from 'react-router'
 import CustomNavbar from './components/CustomNavbar'
+import Footer from './components/Footer'
 
 export default function Layout() {
   return (
     <>
-      <CustomNavbar />
       <main>
-        <Outlet />
+        <CustomNavbar />
+        <div style={{ marginBottom: '100px' }}>
+          <Outlet />
+        </div>
+        <Footer />
       </main>
     </>
   )

@@ -1,6 +1,7 @@
 import { useQuery } from 'react-query'
 import getEmployees from '../actions/employeeActions'
 import {
+  Box,
   Button,
   Paper,
   Skeleton,
@@ -13,21 +14,19 @@ import {
   Typography,
 } from '@mui/material'
 import { useNavigate } from 'react-router'
-import { Add, Edit } from '@mui/icons-material'
+import { Add, Edit, Link, LinkOff, Person } from '@mui/icons-material'
 import { useState } from 'react'
 import EmployeeForm from './EmployeeForm'
+import AssignEmployeeForm from './AssignEmployeeForm'
+import UnassignModal from './UnassignModal'
+import { EmployeeResponse } from '../types/types'
 
-export default function EmployeeList({
-  fishFarmId,
-  notifySuccess,
-  notifyError,
-}: {
-  fishFarmId: string | undefined
-  notifySuccess: (message: string) => void
-  notifyError: (message: string) => void
-}) {
+export default function EmployeeTable({ fishFarmId }: { fishFarmId: string | undefined }) {
   const navigate = useNavigate()
   const [showEmployeeForm, setShowEmployeeForm] = useState(false)
+  const [showAssignEmployeeForm, setShowAssignEmployeeForm] = useState(false)
+  const [showUnassignModal, setShowUnassignModal] = useState(false)
+  const [unassignEmployee, setUnassignEmployee] = useState<EmployeeResponse | null>(null)
   const {
     data: employees,
     isLoading,
@@ -37,29 +36,42 @@ export default function EmployeeList({
   })
   return (
     <TableContainer
-      sx={{ position: 'relative', width: '95%', marginTop: 2, marginLeft: 5, marginRight: 5 }}
+      sx={{
+        border: 1,
+        position: 'relative',
+        borderColor: 'primary.main',
+        width: '100%',
+      }}
       component={Paper}
     >
-      <Typography
-        variant='h4'
-        component='div'
-        align='center'
-        noWrap
-        sx={{ marginTop: 2, marginBottom: 2 }}
-      >
-        Assigned Employees
-      </Typography>
-      <Button
-        sx={{ position: 'absolute', right: 30, top: 30 }}
-        variant='contained'
-        onClick={() => setShowEmployeeForm(true)}
-      >
-        <Add />
-        Add Employee
-      </Button>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 2, padding: 2 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Person
+            sx={{
+              display: 'flex',
+              marginRight: 1,
+              fontSize: 40,
+            }}
+          />
+          <Typography variant='h5'>Assigned Employees</Typography>
+        </Box>
+        <Box
+          sx={{ display: 'flex', justifyContent: 'end', gap: 2 }}
+        >
+          <Button variant='contained' onClick={() => setShowAssignEmployeeForm(true)}>
+            <Link />
+            Assign Employee
+          </Button>
+          <Button variant='contained' onClick={() => setShowEmployeeForm(true)}>
+            <Add />
+            Add Employee
+          </Button>
+        </Box>
+      </Box>
       <Table sx={{ minWidth: 300 }}>
         <TableHead>
           <TableRow>
+            <TableCell align='center'>Employee Id</TableCell>
             <TableCell align='center'>Name</TableCell>
             <TableCell align='center'>Position</TableCell>
             <TableCell align='center'>Age</TableCell>
@@ -102,6 +114,7 @@ export default function EmployeeList({
                 navigate(`employees/${employee.id}`)
               }}
             >
+              <TableCell align='center'>{employee.id}</TableCell>
               <TableCell align='center'>{employee.name}</TableCell>
               <TableCell align='center'>{employee.employeePosition}</TableCell>
               <TableCell align='center'>{employee.age}</TableCell>
@@ -110,14 +123,22 @@ export default function EmployeeList({
                 {new Date(employee.certifiedUntil).toLocaleDateString()}
               </TableCell>
               <TableCell align='center'>
+                <LinkOff
+                  sx={{ marginRight: 2, '&:hover': { color: 'red' } }}
+                  onClick={e => {
+                    e.stopPropagation()
+                    setUnassignEmployee(employee)
+                    setShowUnassignModal(true)
+                  }}
+                />
                 <Edit />
               </TableCell>
             </TableRow>
           ))}
           {employees?.length === 0 && !isFetching && (
             <TableRow>
-              <TableCell colSpan={5} align='center'>
-                No employees found
+              <TableCell colSpan={6} align='center'>
+                No employees assigned
               </TableCell>
             </TableRow>
           )}
@@ -128,9 +149,20 @@ export default function EmployeeList({
         fishFarmId={fishFarmId!}
         open={showEmployeeForm}
         handleClose={() => setShowEmployeeForm(false)}
-        notifySuccess={notifySuccess}
-        notifyError={notifyError}
       />
+      <AssignEmployeeForm
+        open={showAssignEmployeeForm}
+        handleClose={() => setShowAssignEmployeeForm(false)}
+        fishFarmId={fishFarmId!}
+      />
+      {unassignEmployee && (
+        <UnassignModal
+          employee={unassignEmployee!}
+          fishFarmId={fishFarmId!}
+          open={showUnassignModal}
+          handleClose={() => setShowUnassignModal(false)}
+        />
+      )}
     </TableContainer>
   )
 }

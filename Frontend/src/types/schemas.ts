@@ -44,5 +44,11 @@ export const EmployeeRequestSchema = z.object({
   imageURL: z.union([z.string().url().optional(), z.literal('')]),
   employeePosition: EmployeePositionEnum,
   certifiedUntil: z.date(),
-  password: z.string(),
+  password: z.string().optional(),
+})
+
+export const BoatSchema = z.object({
+  id: z.string(),
+  model: z.string(),
+  boatType: z.string(),
 })

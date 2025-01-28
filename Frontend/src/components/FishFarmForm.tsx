@@ -18,6 +18,7 @@ import { FishFarmFormProps } from '../types/interfaces'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FishFarmRequestSchema } from '../types/schemas'
 import { useNavigate } from 'react-router'
+import { toast } from 'react-toastify'
 
 const style = {
   position: 'absolute',
@@ -35,8 +36,6 @@ export default function FishFarmForm({
   title,
   open,
   handleClose,
-  notifySuccess,
-  notifyError,
   initialValues,
 }: FishFarmFormProps) {
   const queryClient = useQueryClient()
@@ -59,15 +58,11 @@ export default function FishFarmForm({
     mutation.mutate(data, {
       onSuccess: () => {
         queryClient.invalidateQueries(initialValues ? ['fishFarm', initialValues?.id] : 'fishFarms')
-        notifySuccess(
+        toast.success(
           initialValues ? 'Fish farm updated successfully' : 'Fish farm added successfully',
         )
         handleClose()
-      },
-      onError(error) {
-        const message = (error as any).response.data.message || 'An error occurred'
-        notifyError(message as string)
-      },
+      }
     })
   }
 
@@ -76,12 +71,12 @@ export default function FishFarmForm({
       mutationSecondary.mutate(undefined, {
         onSuccess: () => {
           queryClient.invalidateQueries('fishfarms')
-          notifySuccess('Fish farm deleted successfully')
+          toast.success('Fish farm deleted successfully')
           handleClose()
           navigate('/')
         },
         onError: () => {
-          notifyError('Error deleting fish farm')
+          toast.error('Error deleting fish farm')
         },
       })
     }

@@ -1,7 +1,6 @@
 import { createContext, useEffect, useState } from 'react'
 import { AuthContextType, LoginRequest } from '../types/types'
 import { checkSession, loginAction } from '../actions/authActions'
-import axios from 'axios'
 import { useNavigate } from 'react-router'
 import axiosInstance from '../actions/axiosInstance.ts'
 
@@ -10,7 +9,7 @@ const AuthContext = createContext<AuthContextType>({
   isLoading: true,
   role: '',
   user: null,
-  login: async (data: LoginRequest) => {
+  login: async () => {
     return new Promise(() => {})
   },
   logout: () => {},

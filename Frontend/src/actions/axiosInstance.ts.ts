@@ -19,9 +19,28 @@ axiosInstance.interceptors.response.use(
     // Handle errors
     if (error.response) {
       // Server responded with a status other than 200 range
-      const message = error.response.data.message || 'An error occurred';
+      const message = error.response.data.message || 'An unknown error has occurred';
       console.error('Error response:', error.response);
-      toast.error(message);
+      switch (error.response.status) {
+        case 400:
+          toast.error('Bad Request: ' + message);
+          break;
+        case 401:
+          toast.error('Unauthorized: ' + message);
+          break;
+        case 403:
+          toast.error('Forbidden: ' + message);
+          break;
+        case 404:
+          toast.error('Not Found: ' + message);
+          break;
+        case 500:
+          toast.error('Internal Server Error: ' + message);
+          break;
+        default:
+          toast.error('Error: ' + message);
+          break;
+      }
     } else if (error.request) {
       // Request was made but no response was received
       console.error('Error request:', error.request);

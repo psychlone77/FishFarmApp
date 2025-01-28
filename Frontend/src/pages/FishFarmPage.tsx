@@ -2,16 +2,29 @@ import { useParams } from 'react-router'
 import { FishFarmResponse } from '../types/types'
 import { getFishFarm } from '../actions/fishFarmActions'
 import { useQuery } from 'react-query'
-import { Box, Button, Skeleton, Typography, useTheme } from '@mui/material'
-import EmployeeList from '../components/EmployeeList'
+import {
+  Box,
+  Button,
+  Card,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Skeleton,
+  Typography,
+} from '@mui/material'
+import LocationOnIcon from '@mui/icons-material/LocationOn'
+import DirectionsBoatFilledIcon from '@mui/icons-material/DirectionsBoatFilled'
+import ViewModuleIcon from '@mui/icons-material/ViewModule'
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
+import EmployeeTable from '../components/EmployeeTable'
 import FishFarmForm from '../components/FishFarmForm'
 import { useState } from 'react'
-import { toast, ToastContainer } from 'react-toastify'
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Tooltip } from 'react-leaflet'
 import useAuth from '../hooks/useAuth'
+import BoatTable from '../components/BoatTable'
 
 export default function FishFarmPage() {
-  const theme = useTheme()
   const { role } = useAuth()
   const { fishFarmId } = useParams<{ fishFarmId: string }>()
   const [showFishFarmForm, setShowFishFarmForm] = useState(false)
@@ -27,28 +40,8 @@ export default function FishFarmPage() {
     setShowFishFarmForm(toggle)
   }
 
-  const notifySuccess = (message: string) => {
-    toast.success(message)
-  }
-
-  const notifyError = (message: string) => {
-    toast.error(message)
-  }
-
   return (
     <>
-      <ToastContainer
-        position='top-right'
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme={theme.palette.mode}
-      />
       {isLoading && (
         <Box sx={{ display: 'flex', gap: 2, padding: 2, paddingY: 4 }}>
           <Skeleton variant='rectangular' width={350} height={350} />
@@ -56,42 +49,93 @@ export default function FishFarmPage() {
       )}
       {isError && <p>Error loading fish farm details.</p>}
       {fishFarm && (
-        <Box sx={{ display: 'flex', gap: 2, padding: 2, paddingY: 4 }}>
-          {fishFarm.imageURL && (
-            <Box maxWidth='sm'>
-              <img
-                src={fishFarm.imageURL}
-                alt={fishFarm.name}
-                style={{
-                  width: '100%',
-                  height: '350px',
-                  objectFit: 'cover',
-                  borderRadius: '8px 8px 8px 8px',
-                }}
-              />
-            </Box>
-          )}
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+        <>
+          <Card
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 2,
+              padding: 2,
+              paddingY: 4,
+              position: 'relative',
+            }}
+          >
             <Typography variant='h3' component='div' noWrap>
               {fishFarm.name}
             </Typography>
-            <Typography variant='body1'>
-              Location: {fishFarm.latitude}, {fishFarm.longitude}
-            </Typography>
-            <Typography variant='body1'>Cage Count: {fishFarm.cageCount}</Typography>
-            <Typography variant='body1'>Has Barge: {fishFarm.hasBarge ? 'Yes' : 'No'}</Typography>
-            <Typography variant='body1'>
-              Created On: {new Date(fishFarm.createdOn).toLocaleDateString()}
-            </Typography>
-          </Box>
-          <Box sx={{ marginTop: 1, marginLeft: 2 }}>
-            <Button variant='contained' onClick={() => toggleFishFarmForm(true)}>
-              Edit
-            </Button>
-          </Box>
+            <Box sx={{ display: 'flex', gap: 2 }}>
+              <Box
+              sx={{
+                backgroundImage: `url(${fishFarm.imageURL})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                height: 350,
+                width: '50%',
+                borderRadius: '8px',
+              }}
+              />
+              <Box
+              sx={{
+                border: 1,
+                position: 'relative',
+                borderColor: 'primary.main',
+                borderRadius: 2,
+                boxShadow: 3,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 2,
+                padding: 2,
+                flex: 1,
+              }}
+              >
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <List>
+                <ListItem>
+                  <ListItemIcon sx={{ minWidth: 40 }}>
+                  <LocationOnIcon color='primary' />
+                  </ListItemIcon>
+                  <ListItemText
+                  primary='Location'
+                  secondary={`${fishFarm.latitude}, ${fishFarm.longitude}`}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemIcon sx={{ minWidth: 40 }}>
+                  <ViewModuleIcon color='primary' />
+                  </ListItemIcon>
+                  <ListItemText primary='Cage Count' secondary={fishFarm.cageCount} />
+                </ListItem>
+                <ListItem>
+                  <ListItemIcon sx={{ minWidth: 40 }}>
+                  <DirectionsBoatFilledIcon color='primary' />
+                  </ListItemIcon>
+                  <ListItemText
+                  primary='Has Barge'
+                  secondary={fishFarm.hasBarge ? 'Yes' : 'No'}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemIcon sx={{ minWidth: 40 }}>
+                  <CalendarTodayIcon color='primary' />
+                  </ListItemIcon>
+                  <ListItemText
+                  primary='Created On'
+                  secondary={new Date(fishFarm.createdOn).toLocaleDateString()}
+                  />
+                </ListItem>
+                </List>
+              </Box>
+              <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
+                <Button variant='contained' onClick={() => toggleFishFarmForm(true)}>
+                Edit
+                </Button>
+              </Box>
+              </Box>
+            </Box>
+          </Card>
           <MapContainer
             center={[fishFarm.latitude, fishFarm.longitude]}
-            zoom={13}
+            zoom={8}
             scrollWheelZoom={false}
           >
             <TileLayer
@@ -99,12 +143,12 @@ export default function FishFarmPage() {
               url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
             />
             <Marker position={[fishFarm.latitude, fishFarm.longitude]}>
-              <Popup>
-                A pretty CSS3 popup. <br /> Easily customizable.
-              </Popup>
+              <Tooltip direction='top' offset={[-15, -15]} permanent>
+                {fishFarm.name}
+              </Tooltip>
             </Marker>
           </MapContainer>
-        </Box>
+        </>
       )}
       {showFishFarmForm && fishFarm && fishFarmId && (
         <FishFarmForm
@@ -112,17 +156,20 @@ export default function FishFarmPage() {
           open={showFishFarmForm}
           title='Edit Fish Farm'
           handleClose={() => toggleFishFarmForm(false)}
-          notifySuccess={notifySuccess}
-          notifyError={notifyError}
         />
       )}
-      {role === 'SuperAdmin' || role === 'Admin' ? (
-        <EmployeeList
-          fishFarmId={fishFarmId}
-          notifySuccess={notifySuccess}
-          notifyError={notifyError}
-        />
-      ) : null}
+      <Box
+        sx={{
+          display: 'flex',
+          gap: 3,
+          padding: 2,
+          paddingY: 4,
+          flexDirection: { xs: 'column', md: 'column', lg: 'row' },
+        }}
+      >
+        {role === 'SuperAdmin' || role === 'Admin' ? <EmployeeTable fishFarmId={fishFarmId} /> : null}
+        <BoatTable fishFarmId={fishFarmId} />
+      </Box>
     </>
   )
 }
