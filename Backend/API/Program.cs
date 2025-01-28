@@ -1,4 +1,6 @@
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using API.Filters;
 using Azure.Core;
 using Azure.Identity;
@@ -20,7 +22,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<ExceptionFilter>();
+}).AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
+
 
 // Add Swagger/OpenAPI services
 builder.Services.AddEndpointsApiExplorer();
@@ -63,7 +69,9 @@ else
     };
     var client = new SecretClient(new Uri("https://fish-farm-vault.vault.azure.net/"), new DefaultAzureCredential(), options);
     KeyVaultSecret secret = client.GetSecret("DatabaseConnectionString");
+    KeyVaultSecret jwtSecret = client.GetSecret("JwtKey");
     secretValue = secret.Value ?? throw new InvalidOperationException("Secret 'DatabaseConnectionString' not found in Key Vault.");
+    jwtKey = jwtSecret.Value ?? throw new InvalidOperationException("Secret 'JwtKey' not found in Key Vault.");
 }
 
 // Configure and add DbContext services
@@ -75,11 +83,32 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuer = false,
-            ValidateAudience = false,
+            ValidateIssuer = true,
+            ValidateAudience = true,
             ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+            ValidateIssuerSigningKey = false,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"]
+        };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnAuthenticationFailed = context =>
+            {
+                context.Response.StatusCode = 401;
+                context.Response.ContentType = "application/json";
+                var result = JsonSerializer.Serialize(new { message = "Authentication failed." });
+                return context.Response.WriteAsync(result);
+            },
+            OnForbidden = context =>
+            {
+                context.Response.StatusCode = 403;
+                context.Response.ContentType = "application/json";
+                var result = JsonSerializer.Serialize(new { message = "You are not authorized to perform this action" });
+                return context.Response.WriteAsync(result);
+
+            }
         };
     });
 
@@ -90,6 +119,8 @@ builder.Services.AddScoped<IFishFarmsService, FishFarmsService>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IBoatService, BoatService>();
+builder.Services.AddScoped<IBoatRepository, BoatRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 // Configure CORS policy
