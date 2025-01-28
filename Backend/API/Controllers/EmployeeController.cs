@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using BLL.DTOs.Employee;
 using BLL.Services.Interfaces;
+using DAL.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static API.Utils.Auth;
@@ -46,12 +47,30 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Route("assign")]
-        [Authorize(Roles = "SuperAdmin")]
-        public async Task<ActionResult> AddEmployeeToFishFarm(AssignmentRequest ar)
+        [Route("assign/{employeeId}")]
+        [Authorize(Roles = "SuperAdmin,Admin")]
+        public async Task<ActionResult> AddEmployeeToFishFarm(Guid fishFarmId, string employeeId)
         {
-            await _employeesService.AddEmployeeToFishFarm(ar.EmployeeId, ar.FishFarmId, ar.PermissionLevel);
-            return Ok();
+            var result = await _employeesService.AddEmployeeToFishFarm(employeeId, fishFarmId);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("unassign/{employeeId}")]
+        [Authorize(Roles = "SuperAdmin,Admin")]
+        public async Task<ActionResult> RemoveEmployeeFromFishFarm(Guid fishFarmId, string employeeId)
+        {
+            var result = await _employeesService.RemoveEmployeeFromFishFarm(employeeId, fishFarmId);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("unassigned")]
+        public async Task<ActionResult> GetUnassignedEmployees(Guid fishFarmId)
+        {
+            var (userId, userRole) = GetClaims(User);
+            var result = await _employeesService.GetUnassignedEmployeesToFishFarm(fishFarmId);
+            return Ok(result);
         }
     }
 }

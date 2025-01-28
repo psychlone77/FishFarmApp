@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BLL.DTOs.Employee;
+using BLL.DTOs.FishFarm;
 using BLL.Services.Interfaces;
 using DAL.Entities;
 using DAL.Repository.Interface;
@@ -26,7 +27,6 @@ namespace BLL.Services
             EmployeeEntity? employee = await _employeeRepository.GetEmployeeEntityById(employeeId);
             if (employee is null)
                 throw new KeyNotFoundException($"Employee with id {employeeId} not found");
-            //await CheckPermission(userId, employee.FishFarmId);
             return _mapper.Map<EmployeeResponseDTO>(employee);
         }
 
@@ -57,12 +57,41 @@ namespace BLL.Services
             return _mapper.Map<EmployeeResponseDTO>(deletedEmployee);
         }
 
-        public async Task AddEmployeeToFishFarm(string employeeId, Guid fishFarmId, int permissionLevel)
+        public async Task<FishFarmUserDTO> AddEmployeeToFishFarm(string employeeId, Guid fishFarmId)
         {
             var user = await _userRepository.GetUserByEmployeeId(employeeId);
             if (user is null)
                 throw new KeyNotFoundException($"User with employee id {employeeId} not found");
-            await _userRepository.AddUserToFishFarm(fishFarmId, user.Id, permissionLevel);
+            if (user.Role != UserRole.Employee)
+                throw new InvalidOperationException("This user is not an employee");
+            var check = await _userRepository.GetFishFarmUser(fishFarmId, user.Id);
+            if (check != null)
+                throw new ArgumentException($"User with id {user.Id} already exists in fish farm with id {fishFarmId}");
+            var fishFarmUser = await _userRepository.AddUserToFishFarm(fishFarmId, user.Id, (int)PermissionLevel.Read);
+            return _mapper.Map<FishFarmUserDTO>(fishFarmUser);
+        }
+
+        public async Task<FishFarmUserDTO> RemoveEmployeeFromFishFarm(string employeeId, Guid fishFarmId)
+        {
+            var user = await _userRepository.GetUserByEmployeeId(employeeId);
+            if (user is null)
+                throw new KeyNotFoundException($"User with employee id {employeeId} not found");
+            if (user.Role != UserRole.Employee)
+                throw new InvalidOperationException("This user is not an employee");
+            var fishFarmUser = await _userRepository.RemoveUserFromFishFarm(fishFarmId, user.Id);
+            if (fishFarmUser is null)
+                throw new KeyNotFoundException($"User with id {user.Id} not found in fish farm with id {fishFarmId}");
+            return _mapper.Map<FishFarmUserDTO>(fishFarmUser);
+        }
+
+        public async Task<IList<EmployeeResponseDTO>> GetUnassignedEmployeesToFishFarm(Guid fishFarmId)
+        {
+            var employees = await _employeeRepository.GetEmployeeEntities();
+            var unassignedEmployees = employees
+                .Where(e => e.User != null &&
+                            (e.User.FishFarmUsers == null ||
+                             e.User.FishFarmUsers.All(fu => fu.FishFarmId != fishFarmId)));
+            return _mapper.Map<IList<EmployeeResponseDTO>>(unassignedEmployees);
         }
     }
 }

@@ -9,16 +9,28 @@ namespace DAL.Repository
     {
         private readonly FishFarmAppDbContext _context = context;
 
+        public async Task<IList<EmployeeEntity>> GetEmployeeEntities()
+        {
+            return await _context.Employees
+                .Include(e => e.User)
+                .ThenInclude(u => u!.FishFarmUsers)
+                .Where(e => e.User != null && e.User.Role == UserRole.Employee)
+                .ToListAsync();
+        }
+
         public async Task<IList<EmployeeEntity>> GetEmployeeEntities(Guid fishFarmId)
         {
             return await _context.Employees
-                .Where(e => e.User != null && e.User.FishFarmUsers != null && e.User.FishFarmUsers.Any(fu => fu.FishFarmId == fishFarmId))
+                .Include(e => e.User)
+                .Where(e => e.User != null && e.User.Role == UserRole.Employee && e.User.FishFarmUsers != null && e.User.FishFarmUsers.Any(fu => fu.FishFarmId == fishFarmId))
                 .ToListAsync();
         }
 
         public async Task<EmployeeEntity?> GetEmployeeEntityById(string employeeId)
         {
-            return await _context.Employees.FindAsync(employeeId);
+            return await _context.Employees
+                .Include(e => e.User)
+                .FirstOrDefaultAsync(e => e.Id == employeeId);
         }
 
         public async Task<EmployeeEntity> AddEmployeeEntity(EmployeeEntity employeeEntity)

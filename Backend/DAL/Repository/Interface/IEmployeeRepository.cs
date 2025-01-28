@@ -4,6 +4,7 @@ namespace DAL.Repository.Interface
 {
     public interface IEmployeeRepository
     {
+        Task<IList<EmployeeEntity>> GetEmployeeEntities();
         Task<IList<EmployeeEntity>> GetEmployeeEntities(Guid fishFarmId);
         Task<EmployeeEntity?> GetEmployeeEntityById(string employeeId);
         Task<EmployeeEntity> AddEmployeeEntity(EmployeeEntity employeeEntity);

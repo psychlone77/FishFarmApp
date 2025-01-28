@@ -9,10 +9,11 @@ namespace BLL.DTOs.Employee
         {
             // DAL -> BLL
             CreateMap<EmployeeEntity, EmployeeResponseDTO>()
-                .ForMember(dest => dest.EmployeePosition, opt => opt.MapFrom(src => src.EmployeePosition.ToString()));
+                .ForMember(dest => dest.EmployeePosition, opt => opt.MapFrom(src => src.EmployeePosition.ToString()))
+                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.User!.Email));
 
             CreateMap<EmployeeEntity, EmployeeRequestDTO>()
-                .ForMember(dest => dest.EmployeePosition, opt => opt.MapFrom(src => src.EmployeePosition.ToString()));
+                    .ForMember(dest => dest.EmployeePosition, opt => opt.MapFrom(src => src.EmployeePosition.ToString()));
 
             // BLL -> DAL
             CreateMap<EmployeeResponseDTO, EmployeeEntity>()
