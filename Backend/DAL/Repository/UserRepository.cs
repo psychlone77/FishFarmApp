@@ -70,7 +70,13 @@ namespace DAL.Repository
             await _fishFarmAppDbContext.SaveChangesAsync();
         }
 
-        public async Task AddUserToFishFarm(Guid fishFarmId, Guid userId, int permissionLevel)
+        public async Task<FishFarmUser?> GetFishFarmUser(Guid fishFarmId, Guid userId)
+        {
+            var fishFarmUser = await _fishFarmAppDbContext.FishFarmUser.FirstOrDefaultAsync(fu => fu.FishFarmId == fishFarmId && fu.UserId == userId);
+            return fishFarmUser;
+        }
+
+        public async Task<FishFarmUser> AddUserToFishFarm(Guid fishFarmId, Guid userId, int permissionLevel)
         {
             var fishFarm = await _fishFarmAppDbContext.FishFarms.FindAsync(fishFarmId);
             var user = await _fishFarmAppDbContext.Users.FindAsync(userId);
@@ -88,6 +94,17 @@ namespace DAL.Repository
             };
             await _fishFarmAppDbContext.FishFarmUser.AddAsync(fishFarmUser);
             await _fishFarmAppDbContext.SaveChangesAsync();
+            return fishFarmUser;
+        }
+
+        public async Task<FishFarmUser?> RemoveUserFromFishFarm(Guid fishFarmId, Guid userId)
+        {
+            var fishFarmUser = await _fishFarmAppDbContext.FishFarmUser.FirstOrDefaultAsync(fu => fu.FishFarmId == fishFarmId && fu.UserId == userId);
+            if (fishFarmUser == null)
+                return null;
+            _fishFarmAppDbContext.FishFarmUser.Remove(fishFarmUser);
+            await _fishFarmAppDbContext.SaveChangesAsync();
+            return fishFarmUser;
         }
     }
 }
