@@ -50,8 +50,6 @@ namespace DAL.Data
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<UserEntity>().HasQueryFilter(u => u.IsDeleted == false);
-            modelBuilder.Entity<UserSessionEntity>().HasQueryFilter(us => us.User.IsDeleted == false);
 
             modelBuilder.Entity<FishFarmEntity>()
                 .HasMany(f => f.Users)
@@ -72,9 +70,11 @@ namespace DAL.Data
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<EmployeeEntity>().HasQueryFilter(e => e.IsDeleted == false);
+            modelBuilder.Entity<UserEntity>().HasQueryFilter(u => u.IsDeleted == false);
+            modelBuilder.Entity<UserSessionEntity>().HasQueryFilter(us => us.User.IsDeleted == false);
             modelBuilder.Entity<FishFarmEntity>().HasQueryFilter(f => f.IsDeleted == false);
             modelBuilder.Entity<FishFarmUser>().HasQueryFilter(fu => fu.FishFarm.IsDeleted == false);
-
             modelBuilder.Entity<BoatEntity>().HasQueryFilter(b => b.IsDeleted == false);
 
         }
