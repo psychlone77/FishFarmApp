@@ -18,7 +18,7 @@ import { Add, Edit, Link, LinkOff, Person } from '@mui/icons-material'
 import { useState } from 'react'
 import EmployeeForm from './EmployeeForm'
 import AssignEmployeeForm from './AssignEmployeeForm'
-import UnassignModal from './UnassignModal'
+import UnassignEmployeeModal from './UnassignEmployeeModal'
 import { EmployeeResponse } from '../types/types'
 
 export default function EmployeeTable({ fishFarmId }: { fishFarmId: string | undefined }) {
@@ -156,7 +156,7 @@ export default function EmployeeTable({ fishFarmId }: { fishFarmId: string | und
         fishFarmId={fishFarmId!}
       />
       {unassignEmployee && (
-        <UnassignModal
+        <UnassignEmployeeModal
           employee={unassignEmployee!}
           fishFarmId={fishFarmId!}
           open={showUnassignModal}

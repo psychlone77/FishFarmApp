@@ -11,7 +11,7 @@ interface UnassignModalProps {
   fishFarmId: string
 }
 
-export default function UnassignModal({
+export default function UnassignEmployeeModal({
   open,
   handleClose,
   employee,

@@ -47,6 +47,13 @@ export const EmployeeRequestSchema = z.object({
   password: z.string().optional(),
 })
 
+export const BoatFullResponseSchema = z.object({
+  id: z.string(),
+  model: z.string(),
+  boatType: z.string(),
+  fishFarm: FishFarmResponseSchema,
+})
+
 export const BoatSchema = z.object({
   id: z.string(),
   model: z.string(),

@@ -20,7 +20,7 @@ axiosInstance.interceptors.response.use(
     if (error.response) {
       // Server responded with a status other than 200 range
       const message = error.response.data.message || 'An unknown error has occurred';
-      console.error('Error response:', error.response);
+      console.error('This error is from axiosInstance:', error.response);
       switch (error.response.status) {
         case 400:
           toast.error('Bad Request: ' + message);

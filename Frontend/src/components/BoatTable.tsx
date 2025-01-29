@@ -18,6 +18,8 @@ import { useState } from 'react'
 import { Boat } from '../types/types'
 import { getBoats } from '../actions/boatActions'
 import BoatForm from './BoatForm'
+import AssignBoatForm from './AssignBoatForm'
+import Authorize from './Authorize'
 
 export default function BoatTable({ fishFarmId }: { fishFarmId: string | undefined }) {
   const navigate = useNavigate()
@@ -43,29 +45,48 @@ export default function BoatTable({ fishFarmId }: { fishFarmId: string | undefin
       }}
       component={Paper}
     >
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 2, padding: 2 }}>
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <DirectionsBoat
-              sx={{
-                display: 'flex',
-                marginRight: 1,
-                fontSize: 40,
-              }}
-            />
-            <Typography variant='h5'>Assigned Boats</Typography>
-          </Box>
-          <Box
-            sx={{ display: 'flex', justifyContent: 'end', gap: 2 }}
-          >
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginTop: 2,
+          padding: 2,
+        }}
+      >
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <DirectionsBoat
+            sx={{
+              display: 'flex',
+              marginRight: 1,
+              fontSize: 40,
+            }}
+          />
+          <Typography variant='h5'>Assigned Boats</Typography>
+        </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'end', gap: 2 }}>
+          <Authorize requiredAccess={2}>
             <Button variant='contained' onClick={() => setShowAssignBoatForm(true)}>
               <Link />
               Assign Boat
             </Button>
+            <AssignBoatForm
+              open={showAssignBoatForm}
+              handleClose={() => setShowAssignBoatForm(false)}
+              fishFarmId={fishFarmId!}
+            />
             <Button variant='contained' onClick={() => setShowBoatForm(true)}>
               <Add />
               Add Boat
             </Button>
-          </Box>
+            <BoatForm
+              title='Add Boat'
+              fishFarmId={fishFarmId!}
+              open={showBoatForm}
+              handleClose={() => setShowBoatForm(false)}
+            />
+          </Authorize>
+        </Box>
       </Box>
       <Table sx={{ minWidth: 300 }}>
         <TableHead>
@@ -129,17 +150,7 @@ export default function BoatTable({ fishFarmId }: { fishFarmId: string | undefin
           )}
         </TableBody>
       </Table>
-      <BoatForm
-                title='Add Boat'
-                fishFarmId={fishFarmId!}
-                open={showBoatForm}
-                handleClose={() => setShowBoatForm(false)}
-            />
-      {/*       <AssignBoatForm
-                open={showAssignBoatForm}
-                handleClose={() => setShowAssignBoatForm(false)}
-                fishFarmId={fishFarmId!}
-            />
+      {/*
             {unassignBoat && (
                 <UnassignModal
                     boat={unassignBoat!}
