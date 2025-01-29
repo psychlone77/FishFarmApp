@@ -7,6 +7,8 @@ using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 using BLL.Services;
 using BLL.Services.Interfaces;
+using BlobStorage;
+using BlobStorage.Interfaces;
 using DAL.Data;
 using DAL.Repository;
 using DAL.Repository.Interface;
@@ -46,7 +48,7 @@ builder.Services.AddSwaggerGen();
 
 // Add AutoMapper services
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
+builder.Configuration.AddUserSecrets<Program>();
 string secretValue;
 string jwtKey = "";
 
@@ -122,6 +124,8 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IBoatService, BoatService>();
 builder.Services.AddScoped<IBoatRepository, BoatRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<IBlobStorage, AzureBlobStorage>();
 
 // Configure CORS policy
 builder.Services.AddCors(options =>

@@ -1,4 +1,6 @@
-﻿namespace BLL.DTOs.FishFarm
+﻿using Microsoft.AspNetCore.Http;
+
+namespace BLL.DTOs.FishFarm
 {
     public class FishFarmResponseDTO
     {
@@ -20,7 +22,7 @@
         public double Longitude { get; set; }
         public int CageCount { get; set; }
         public Boolean HasBarge { get; set; }
-        public required Uri ImageURL { get; set; }
+        public required IFormFile Image { get; set; }
     }
 
     public class FishFarmUserDTO

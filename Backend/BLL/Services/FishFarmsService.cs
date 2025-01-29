@@ -1,14 +1,16 @@
 ﻿using AutoMapper;
 using BLL.DTOs.FishFarm;
 using BLL.Services.Interfaces;
+using BlobStorage.Interfaces;
 using DAL.Entities;
 using DAL.Repository.Interface;
 
 namespace BLL.Services
 {
-    public class FishFarmsService(IFishFarmRepository fishFarmRepository, IAuthService authService, IMapper mapper) : IFishFarmsService
+    public class FishFarmsService(IFishFarmRepository fishFarmRepository, IBlobStorage blobStorage, IAuthService authService, IMapper mapper) : IFishFarmsService
     {
         private readonly IFishFarmRepository _fishFarmRepository = fishFarmRepository;
+        private readonly IBlobStorage _blobStorage = blobStorage;
         private readonly IMapper _mapper = mapper;
         private readonly IAuthService _authService = authService;
         public async Task<IList<FishFarmResponseDTO>> GetAllFishFarms(string userId, string userRole)
@@ -45,7 +47,11 @@ namespace BLL.Services
 
         public async Task<FishFarmResponseDTO> AddFishFarm(FishFarmRequestDTO fishFarm)
         {
+            var fishFarmId = Guid.NewGuid();
+            var imageURL = await _blobStorage.UploadFile("fish-farm-images", fishFarmId.ToString(), fishFarm.Image.OpenReadStream());
             FishFarmEntity fishFarmEntity = _mapper.Map<FishFarmEntity>(fishFarm);
+            fishFarmEntity.Id = fishFarmId;
+            fishFarmEntity.ImageURL = imageURL;
             FishFarmEntity addedFishFarm = await _fishFarmRepository.AddFishFarmEntity(fishFarmEntity);
             return _mapper.Map<FishFarmResponseDTO>(addedFishFarm);
         }

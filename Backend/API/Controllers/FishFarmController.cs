@@ -30,7 +30,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Authorize(Roles = "SuperAdmin")]
-        public async Task<ActionResult<FishFarmResponseDTO>> AddFishFarm(FishFarmRequestDTO fishFarm)
+        public async Task<ActionResult<FishFarmResponseDTO>> AddFishFarm([FromForm] FishFarmRequestDTO fishFarm)
         {
             return Ok(await _fishFarmsService.AddFishFarm(fishFarm));
         }
