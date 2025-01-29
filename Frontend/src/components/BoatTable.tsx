@@ -12,21 +12,17 @@ import {
   TableRow,
   Typography,
 } from '@mui/material'
-import { useNavigate } from 'react-router'
-import { Add, DirectionsBoat, Edit, Link, LinkOff } from '@mui/icons-material'
+import { Add, DirectionsBoat, Edit, Link } from '@mui/icons-material'
 import { useState } from 'react'
-import { Boat } from '../types/types'
 import { getBoats } from '../actions/boatActions'
 import BoatForm from './BoatForm'
 import AssignBoatForm from './AssignBoatForm'
 import Authorize from './Authorize'
 
 export default function BoatTable({ fishFarmId }: { fishFarmId: string | undefined }) {
-  const navigate = useNavigate()
   const [showBoatForm, setShowBoatForm] = useState(false)
+  const [showBoatEditForm, setShowBoatEditForm] = useState(false)
   const [showAssignBoatForm, setShowAssignBoatForm] = useState(false)
-  const [showUnassignModal, setShowUnassignModal] = useState(false)
-  const [unassignBoat, setUnassignBoat] = useState<Boat | null>(null)
   const {
     data: boats,
     isLoading,
@@ -116,28 +112,31 @@ export default function BoatTable({ fishFarmId }: { fishFarmId: string | undefin
           {boats?.map(boat => (
             <TableRow
               key={boat.id}
-              hover
               sx={{
-                '&:hover': { cursor: 'pointer' },
                 '&:last-child td, &:last-child th': { border: 0 },
               }}
-              onClick={() => {
-                navigate(`boats/${boat.id}`)
-              }}
+              // onClick={() => {
+              //   navigate(`boats/${boat.id}`)
+              // }}
             >
               <TableCell align='center'>{boat.id}</TableCell>
               <TableCell align='center'>{boat.model}</TableCell>
               <TableCell align='center'>{boat.boatType}</TableCell>
               <TableCell align='center'>
-                <LinkOff
-                  sx={{ marginRight: 2, '&:hover': { color: 'red' } }}
-                  onClick={e => {
-                    e.stopPropagation()
-                    setUnassignBoat(boat)
-                    setShowUnassignModal(true)
+                <Edit
+                  sx={{
+                    cursor: 'pointer',
+                    '&:hover': { boxShadow: 2, borderRadius: 5, color: 'primary.main' }
                   }}
+                  onClick={() => setShowBoatEditForm(true)}
                 />
-                <Edit />
+                <BoatForm
+                  title='Edit Boat'
+                  initialValues={boat}
+                  fishFarmId={fishFarmId!}
+                  open={showBoatEditForm}
+                  handleClose={() => setShowBoatEditForm(false)}
+                />
               </TableCell>
             </TableRow>
           ))}
@@ -150,15 +149,6 @@ export default function BoatTable({ fishFarmId }: { fishFarmId: string | undefin
           )}
         </TableBody>
       </Table>
-      {/*
-            {unassignBoat && (
-                <UnassignModal
-                    boat={unassignBoat!}
-                    fishFarmId={fishFarmId!}
-                    open={showUnassignModal}
-                    handleClose={() => setShowUnassignModal(false)}
-                />
-            )} */}
     </TableContainer>
   )
 }
