@@ -14,6 +14,22 @@ namespace DAL.Repository
             return await _context.Boats.Where(b => b.FishFarmId == fishFarmId).ToListAsync();
         }
 
+        public async Task<IList<BoatEntity>> GetAllBoats()
+        {
+            return await _context.Boats
+                .Include(b => b.FishFarm)
+                .ToListAsync();
+        }
+
+        public async Task<IList<BoatEntity>> GetAllBoats(Guid userId)
+        {
+            return await _context.Boats
+                .Include(b => b.FishFarm)
+                .Where(b => b.FishFarm != null && b.FishFarm.FishFarmUsers != null && b.FishFarm.FishFarmUsers
+                .Any(fu => fu.UserId == userId && (fu.PermissionLevel & (int)PermissionLevel.Read) == (int)PermissionLevel.Read))
+                .ToListAsync();
+        }
+
         public async Task<BoatEntity?> GetBoat(string boatId)
         {
             return await _context.Boats.FirstOrDefaultAsync(b => b.Id == boatId);
