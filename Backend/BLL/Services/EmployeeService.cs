@@ -43,6 +43,17 @@ namespace BLL.Services
             return _mapper.Map<EmployeeResponseDTO>(employee);
         }
 
+        public async Task<IList<FishFarmUserDTO>> GetFishFarmsByEmployee(string employeeId)
+        {
+            var user = await _userRepository.GetUserByEmployeeId(employeeId);
+            if (user is null)
+                throw new KeyNotFoundException($"User with employee id {employeeId} not found");
+            if (user.Role != UserRole.Employee)
+                throw new InvalidOperationException("This user is not an employee");
+            var fishFarms = await _userRepository.GetFishFarmsByUser(user.Id);
+            return _mapper.Map<IList<FishFarmUserDTO>>(fishFarms);
+        }
+
         //public async Task<EmployeeResponseDTO> AddEmployee(EmployeeRequestDTO employee, Guid fishFarmId, string userId, string userRole)
         //{
         //    var employeeEntity = _mapper.Map<EmployeeEntity>(employee);

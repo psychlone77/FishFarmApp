@@ -30,5 +30,6 @@ namespace BLL.DTOs.FishFarm
         public Guid FishFarmId { get; set; }
         public Guid UserId { get; set; }
         public int PermissionLevel { get; set; }
+        public DateTime AssignedDate { get; set; }
     }
 }

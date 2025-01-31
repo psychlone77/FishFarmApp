@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using BLL.DTOs.Employee;
+using BLL.DTOs.FishFarm;
 using BLL.Services.Interfaces;
 using DAL.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -38,6 +39,14 @@ namespace API.Controllers
         {
             var (userId, userRole) = GetClaims(User);
             return Ok(await _employeesService.GetEmployeeById(employeeId, userId, userRole));
+        }
+
+        [HttpGet]
+        [Route("{employeeId}/fishfarms")]
+        public async Task<ActionResult<List<FishFarmUserDTO>>> GetFishFarmsByEmployee(string employeeId)
+        {
+            var (userId, userRole) = GetClaims(User);
+            return Ok(await _employeesService.GetFishFarmsByEmployee(employeeId));
         }
 
         [HttpPut]

@@ -106,5 +106,10 @@ namespace DAL.Repository
             await _fishFarmAppDbContext.SaveChangesAsync();
             return fishFarmUser;
         }
+
+        public async Task<IList<FishFarmUser>> GetFishFarmsByUser(Guid userId)
+        {
+            return await _fishFarmAppDbContext.FishFarmUser.Where(fu => fu.UserId == userId).ToListAsync();
+        }
     }
 }
