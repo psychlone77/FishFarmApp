@@ -37,7 +37,7 @@ namespace API.Controllers
 
         [HttpPut]
         [Route("{fishFarmId}")]
-        public async Task<ActionResult<FishFarmResponseDTO>> UpdateFishFarm(FishFarmRequestDTO fishFarm, Guid fishFarmId)
+        public async Task<ActionResult<FishFarmResponseDTO>> UpdateFishFarm([FromForm] FishFarmRequestDTO fishFarm, Guid fishFarmId)
         {
             var (userId, userRole) = GetClaims(User);
             return Ok(await _fishFarmsService.UpdateFishFarm(fishFarm, fishFarmId, userId, userRole));

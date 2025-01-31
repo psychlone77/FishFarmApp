@@ -2,23 +2,36 @@
 using BLL.DTOs.Employee;
 using BLL.DTOs.FishFarm;
 using BLL.Services.Interfaces;
+using BLL.Utils;
+using BlobStorage.Interfaces;
 using DAL.Entities;
 using DAL.Repository.Interface;
 
 namespace BLL.Services
 {
-    public class EmployeeService(IEmployeeRepository employeeRepository, IUserRepository userRepository, IAuthService authService, IMapper mapper) : IEmployeeService
+    public class EmployeeService(IEmployeeRepository employeeRepository, IUserRepository userRepository, IAuthService authService, IBlobStorage blobStorage, IMapper mapper) : IEmployeeService
     {
         private readonly IEmployeeRepository _employeeRepository = employeeRepository;
         private readonly IUserRepository _userRepository = userRepository;
         private readonly IAuthService _authService = authService;
+        private readonly IBlobStorage _blobStorage = blobStorage;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<IList<EmployeeResponseDTO>> GetEmployees(Guid fishFarmId, string userId, string userRole)
+        public async Task<IList<EmployeeResponseDTO>> GetEmployees(string userId, string userRole)
+        {
+            IList<EmployeeEntity> employee;
+            if (Helpers.CompareEnumDisplayName(userRole, UserRole.SuperAdmin))
+                employee = await _employeeRepository.GetEmployeeEntities(UserRole.Employee);
+            else
+                employee = await _employeeRepository.GetEmployeeEntities(UserRole.Employee, userId);
+            return _mapper.Map<IList<EmployeeResponseDTO>>(employee);
+        }
+
+        public async Task<IList<EmployeeResponseDTO>> GetEmployeesByFishFarm(Guid fishFarmId, string userId, string userRole)
         {
             if (userRole != "SuperAdmin")
                 await _authService.CheckFishFarmAccess(fishFarmId, userId, PermissionLevel.Read);
-            var employee = await _employeeRepository.GetEmployeeEntities(fishFarmId);
+            var employee = await _employeeRepository.GetEmployeeEntities(fishFarmId, UserRole.Employee);
             return _mapper.Map<IList<EmployeeResponseDTO>>(employee);
         }
                     
@@ -30,17 +43,30 @@ namespace BLL.Services
             return _mapper.Map<EmployeeResponseDTO>(employee);
         }
 
-        public async Task<EmployeeResponseDTO> AddEmployee(EmployeeRequestDTO employee, Guid fishFarmId, string userId, string userRole)
-        {
-            var employeeEntity = _mapper.Map<EmployeeEntity>(employee);
-            var addedEmployee = await _employeeRepository.AddEmployeeEntity(employeeEntity);
-            return _mapper.Map<EmployeeResponseDTO>(addedEmployee);
-        }
+        //public async Task<EmployeeResponseDTO> AddEmployee(EmployeeRequestDTO employee, Guid fishFarmId, string userId, string userRole)
+        //{
+        //    var employeeEntity = _mapper.Map<EmployeeEntity>(employee);
+        //    var addedEmployee = await _employeeRepository.AddEmployeeEntity(employeeEntity);
+        //    if (employee.Image != null)
+        //    {
+        //        await _blobStorage.DeleteFile("employee-images", addedEmployee.Id);
+        //        var imageURL = await _blobStorage.UploadFile("employee-images", addedEmployee.Id, employee.Image.OpenReadStream());
+        //        addedEmployee.ImageURL = imageURL;
+        //        addedEmployee = await _employeeRepository.UpdateEmployeeEntity(addedEmployee);
+        //    }
+        //    return _mapper.Map<EmployeeResponseDTO>(addedEmployee);
+        //}
 
         public async Task<EmployeeResponseDTO> UpdateEmployee(EmployeeRequestDTO employee, string employeeId)
         {
             var employeeEntity = _mapper.Map<EmployeeEntity>(employee);
-            employeeEntity.Id = employeeId.ToString();
+            employeeEntity.Id = employeeId;
+            if (employee.Image != null)
+            {
+                await _blobStorage.DeleteFile("employee-images", employeeId);
+                var imageURL = await _blobStorage.UploadFile("employee-images", employeeId, employee.Image.OpenReadStream());
+                employeeEntity.ImageURL = imageURL;
+            }
             var updatedEmployee = await _employeeRepository.UpdateEmployeeEntity(employeeEntity);
             if (updatedEmployee is null)
                 throw new KeyNotFoundException($"Employee with id {employeeId} not found");
@@ -86,12 +112,8 @@ namespace BLL.Services
 
         public async Task<IList<EmployeeResponseDTO>> GetUnassignedEmployeesToFishFarm(Guid fishFarmId)
         {
-            var employees = await _employeeRepository.GetEmployeeEntities();
-            var unassignedEmployees = employees
-                .Where(e => e.User != null &&
-                            (e.User.FishFarmUsers == null ||
-                             e.User.FishFarmUsers.All(fu => fu.FishFarmId != fishFarmId)));
-            return _mapper.Map<IList<EmployeeResponseDTO>>(unassignedEmployees);
+            var employees = await _employeeRepository.GetUnassignedEmployeesToFishFarm(fishFarmId, UserRole.Employee);
+            return _mapper.Map<IList<EmployeeResponseDTO>>(employees);
         }
     }
 }

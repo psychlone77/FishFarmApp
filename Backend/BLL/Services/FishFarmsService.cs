@@ -7,9 +7,10 @@ using DAL.Repository.Interface;
 
 namespace BLL.Services
 {
-    public class FishFarmsService(IFishFarmRepository fishFarmRepository, IBlobStorage blobStorage, IAuthService authService, IMapper mapper) : IFishFarmsService
+    public class FishFarmsService(IFishFarmRepository fishFarmRepository, IBoatRepository boatRepository, IBlobStorage blobStorage, IAuthService authService, IMapper mapper) : IFishFarmsService
     {
         private readonly IFishFarmRepository _fishFarmRepository = fishFarmRepository;
+        private readonly IBoatRepository _boatRepository = boatRepository;
         private readonly IBlobStorage _blobStorage = blobStorage;
         private readonly IMapper _mapper = mapper;
         private readonly IAuthService _authService = authService;
@@ -47,6 +48,8 @@ namespace BLL.Services
 
         public async Task<FishFarmResponseDTO> AddFishFarm(FishFarmRequestDTO fishFarm)
         {
+            if(fishFarm.Image is null)
+                throw new ArgumentException("Image is required");
             var fishFarmId = Guid.NewGuid();
             var imageURL = await _blobStorage.UploadFile("fish-farm-images", fishFarmId.ToString(), fishFarm.Image.OpenReadStream());
             FishFarmEntity fishFarmEntity = _mapper.Map<FishFarmEntity>(fishFarm);
@@ -62,6 +65,17 @@ namespace BLL.Services
                 await _authService.CheckFishFarmAccess(fishFarmId, userId, PermissionLevel.Write);
             FishFarmEntity fishFarmEntity = _mapper.Map<FishFarmEntity>(fishFarm);
             fishFarmEntity.Id = fishFarmId;
+            var currentFishFarm = await _fishFarmRepository.GetFishFarmEntityById(fishFarmId);
+            if (fishFarm.Image is not null)
+            {
+                await _blobStorage.DeleteFile("fish-farm-images", fishFarmId.ToString());
+                var imageURL = await _blobStorage.UploadFile("fish-farm-images", fishFarmId.ToString(), fishFarm.Image.OpenReadStream());
+                fishFarmEntity.ImageURL = imageURL;
+            }
+            else
+            {
+                fishFarmEntity.ImageURL = currentFishFarm!.ImageURL;
+            }
             FishFarmEntity? updatedFishFarm = await _fishFarmRepository.UpdateFishFarmEntity(fishFarmEntity, userId);
             if (updatedFishFarm is null)
                 throw new KeyNotFoundException($"Fish farm with id {fishFarmId} not found");
@@ -76,6 +90,12 @@ namespace BLL.Services
             if (deletedFishFarm is null)
                 throw new KeyNotFoundException($"Fish farm with id {fishFarmId} not found");
             return _mapper.Map<FishFarmResponseDTO>(deletedFishFarm);
+        }
+
+        public async Task<bool> HasBarge(Guid fishFarmId)
+        {
+            var boats =  await _boatRepository.GetBoats(fishFarmId);
+            return boats.Any(boat => boat.BoatType == BoatType.Barge);
         }
     }
 }

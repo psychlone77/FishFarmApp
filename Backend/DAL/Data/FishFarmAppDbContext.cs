@@ -104,6 +104,7 @@ namespace DAL.Data
         private string GenerateCustomEmployeeId()
         {
             var lastEmployee = Employees
+                .IgnoreQueryFilters()
                 .OrderByDescending(e => e.Id)
                 .FirstOrDefault();
 

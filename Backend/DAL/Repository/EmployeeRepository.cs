@@ -9,20 +9,40 @@ namespace DAL.Repository
     {
         private readonly FishFarmAppDbContext _context = context;
 
-        public async Task<IList<EmployeeEntity>> GetEmployeeEntities()
+        public async Task<IList<EmployeeEntity>> GetEmployeeEntities(UserRole userRole)
+        {
+            return await _context.Employees
+                .Include(e => e.User)
+                .Where(e => e.User != null && e.User.Role == userRole)
+                .ToListAsync();
+        }
+
+        public async Task<IList<EmployeeEntity>> GetEmployeeEntities(UserRole userRole, string userId)
+        {
+            return await _context.Employees
+                .Include(e => e.User)
+                .Where(e => e.User != null && e.User.Role == userRole &&
+                            e.User.FishFarms != null && e.User.FishFarms
+                            .Any(ff => ff.Users != null && ff.Users.Any(u => u.EmployeeId == userId)))
+                .ToListAsync();
+        }
+
+        public async Task<IList<EmployeeEntity>> GetEmployeeEntities(Guid fishFarmId, UserRole userRole)
+        {
+            return await _context.Employees
+                .Include(e => e.User)
+                .Where(e => e.User != null && e.User.Role == userRole && e.User.FishFarmUsers != null && e.User.FishFarmUsers.Any(fu => fu.FishFarmId == fishFarmId))
+                .ToListAsync();
+        }
+
+        public async Task<IList<EmployeeEntity>> GetUnassignedEmployeesToFishFarm(Guid fishFarmId, UserRole userRole)
         {
             return await _context.Employees
                 .Include(e => e.User)
                 .ThenInclude(u => u!.FishFarmUsers)
-                .Where(e => e.User != null && e.User.Role == UserRole.Employee)
-                .ToListAsync();
-        }
-
-        public async Task<IList<EmployeeEntity>> GetEmployeeEntities(Guid fishFarmId)
-        {
-            return await _context.Employees
-                .Include(e => e.User)
-                .Where(e => e.User != null && e.User.Role == UserRole.Employee && e.User.FishFarmUsers != null && e.User.FishFarmUsers.Any(fu => fu.FishFarmId == fishFarmId))
+                .Where(e => e.User != null && e.User.Role == userRole &&
+                            (e.User.FishFarmUsers == null ||
+                             e.User.FishFarmUsers.All(fu => fu.FishFarmId != fishFarmId)))
                 .ToListAsync();
         }
 

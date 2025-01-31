@@ -1,7 +1,6 @@
 ﻿using DAL.Data;
 using DAL.Entities;
 using DAL.Repository.Interface;
-using DAL.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repository

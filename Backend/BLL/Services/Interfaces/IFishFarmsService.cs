@@ -8,5 +8,6 @@ namespace BLL.Services.Interfaces
         Task<FishFarmResponseDTO> AddFishFarm(FishFarmRequestDTO fishFarm);
         Task<FishFarmResponseDTO> UpdateFishFarm(FishFarmRequestDTO fishFarm, Guid fishFarmId, string userId, string userRole);
         Task<FishFarmResponseDTO> DeleteFishFarm(Guid id, string userId, string userRole);
+        Task<bool> HasBarge(Guid fishFarmId);
     }
 }

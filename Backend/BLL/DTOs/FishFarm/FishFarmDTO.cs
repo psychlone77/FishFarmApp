@@ -22,7 +22,7 @@ namespace BLL.DTOs.FishFarm
         public double Longitude { get; set; }
         public int CageCount { get; set; }
         public Boolean HasBarge { get; set; }
-        public required IFormFile Image { get; set; }
+        public IFormFile? Image { get; set; }
     }
 
     public class FishFarmUserDTO

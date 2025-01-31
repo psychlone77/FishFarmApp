@@ -28,5 +28,12 @@ namespace BlobStorage
             await blobClient.UploadAsync(content);
             return blobClient.Uri;
         }
+
+        public async Task DeleteFile(string containerName, string fileName)
+        {
+            var containerClient = GetContainerClient(containerName);
+            var blobClient = containerClient.GetBlobClient(fileName);
+            await blobClient.DeleteIfExistsAsync();
+        }
     }
 }

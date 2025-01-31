@@ -22,7 +22,7 @@ namespace API.Controllers
         [HttpPost]
         [Route("employee/register")]
         [Authorize(Roles = "SuperAdmin,Roles")]
-        public async Task<ActionResult> EmployeeRegister(EmployeeRegisterDTO registerRequest)
+        public async Task<ActionResult> EmployeeRegister([FromForm] EmployeeRegisterDTO registerRequest)
         {
             return Ok(await _authService.EmployeeRegister(registerRequest));
         }
@@ -30,7 +30,7 @@ namespace API.Controllers
         [HttpPost]
         [Route("admin/register")]
         [Authorize(Roles = "SuperAdmin")]
-        public async Task<ActionResult> AdminRegister(EmployeeRegisterDTO registerRequest)
+        public async Task<ActionResult> AdminRegister([FromForm] EmployeeRegisterDTO registerRequest)
         {
             return Ok(await _authService.AdminRegister(registerRequest));
         }

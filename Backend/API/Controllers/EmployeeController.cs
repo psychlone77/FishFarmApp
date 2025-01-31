@@ -9,17 +9,27 @@ using static API.Utils.Auth;
 namespace API.Controllers
 {
     [ApiController]
-    [Route("api/FishFarms/{fishFarmId}/employees")]
+    //[Route("api/FishFarms/{fishFarmId}/employees")]
+    [Route("api/[controller]")]
     [Authorize(Roles = "SuperAdmin,Admin")]
     public class EmployeeController(IEmployeeService employeesService) : Controller
     {
         private readonly IEmployeeService _employeesService = employeesService;
 
         [HttpGet]
+        [Route("all")]
+        public async Task<ActionResult<List<EmployeeResponseDTO>>> GetEmployees()
+        {
+            var (userId, userRole) = GetClaims(User);
+            return Ok(await _employeesService.GetEmployees(userId, userRole));
+        }
+
+        [HttpGet]
+        [Route("FishFarm/{fishFarmId}")]
         public async Task<ActionResult<List<EmployeeResponseDTO>>> GetEmployees(Guid fishFarmId)
         {
             var (userId, userRole) = GetClaims(User);
-            return Ok(await _employeesService.GetEmployees(fishFarmId, userId, userRole));
+            return Ok(await _employeesService.GetEmployeesByFishFarm(fishFarmId, userId, userRole));
         }
 
         [HttpGet]
@@ -33,7 +43,7 @@ namespace API.Controllers
         [HttpPut]
         [Route("{employeeId}")]
         [Authorize(Roles = "SuperAdmin")]
-        public async Task<ActionResult<EmployeeResponseDTO>> UpdateEmployee(EmployeeRequestDTO employee, string employeeId)
+        public async Task<ActionResult<EmployeeResponseDTO>> UpdateEmployee([FromForm] EmployeeRequestDTO employee, string employeeId)
         {
             return Ok(await _employeesService.UpdateEmployee(employee, employeeId));
         }
@@ -47,7 +57,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Route("assign/{employeeId}")]
+        [Route("FishFarm/{fishFarmId}/assign/{employeeId}")]
         [Authorize(Roles = "SuperAdmin,Admin")]
         public async Task<ActionResult> AddEmployeeToFishFarm(Guid fishFarmId, string employeeId)
         {
@@ -56,7 +66,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Route("unassign/{employeeId}")]
+        [Route("FishFarm/{fishFarmId}/unassign/{employeeId}")]
         [Authorize(Roles = "SuperAdmin,Admin")]
         public async Task<ActionResult> RemoveEmployeeFromFishFarm(Guid fishFarmId, string employeeId)
         {
@@ -65,7 +75,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Route("unassigned")]
+        [Route("FishFarm/{fishFarmId}/unassigned")]
         public async Task<ActionResult> GetUnassignedEmployees(Guid fishFarmId)
         {
             var (userId, userRole) = GetClaims(User);

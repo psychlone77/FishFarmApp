@@ -9,7 +9,7 @@ namespace DAL.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Id { get; set; } = null!;
         public required string Name { get; set; }
-        public string? ImageURL { get; set; }
+        public Uri? ImageURL { get; set; }
         public int Age { get; set; }
         public EmployeePosition EmployeePosition { get; set; }
         public DateTime CertifiedUntil { get; set; }

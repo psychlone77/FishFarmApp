@@ -2,17 +2,19 @@
 using BLL.DTOs.Employee;
 using BLL.DTOs.User;
 using BLL.Services.Interfaces;
+using BlobStorage.Interfaces;
 using DAL.Entities;
 using DAL.Repository.Interface;
 using Microsoft.AspNetCore.Identity;
 
 namespace BLL.Services
 {
-    public class AuthService(IFishFarmRepository fishFarmRepository, IUserRepository userRepository, IEmployeeRepository employeeRepository, TokenProvider tokenProvider, IMapper mapper) : IAuthService
+    public class AuthService(IFishFarmRepository fishFarmRepository, IUserRepository userRepository, IEmployeeRepository employeeRepository, IBlobStorage blobStorage, TokenProvider tokenProvider, IMapper mapper) : IAuthService
     {
         private readonly IFishFarmRepository _fishFarmRepository = fishFarmRepository;
         private readonly IUserRepository _userRepository = userRepository;
         private readonly IEmployeeRepository _employeeRepository = employeeRepository;
+        private readonly IBlobStorage _blobStorage = blobStorage;
         private readonly TokenProvider _tokenProvider = tokenProvider;
         private readonly IMapper _mapper = mapper;
 
@@ -46,6 +48,9 @@ namespace BLL.Services
 
         public async Task<EmployeeResponseDTO> EmployeeRegister(EmployeeRegisterDTO registerRequest)
         {
+            var check = await _userRepository.GetUserByEmail(registerRequest.Email);
+            if (check != null)
+                throw new ArgumentException("User with this email already exists");
             var hashedPassword = new PasswordHasher<IdentityUser>().HashPassword(new IdentityUser(), registerRequest.Password);
             var addEmployee = _mapper.Map<EmployeeEntity>(registerRequest);
             var userEntity = new UserEntity
@@ -56,7 +61,14 @@ namespace BLL.Services
                 EmployeeId = addEmployee.Id,
                 Employee = addEmployee
             };
-            await _userRepository.AddUser(userEntity);
+            var addedUser = await _userRepository.AddUser(userEntity);
+            var addedEmployee = await _employeeRepository.GetEmployeeEntityById(addedUser.EmployeeId);
+            if (registerRequest.Image != null && addedEmployee != null)
+            {
+                await _blobStorage.DeleteFile("employee-images", addedEmployee.Id);
+                var imageURL = await _blobStorage.UploadFile("employee-images", addedEmployee.Id, registerRequest.Image.OpenReadStream());
+                addEmployee.ImageURL = imageURL;
+            }
             return _mapper.Map<EmployeeResponseDTO>(addEmployee);
         }
 
