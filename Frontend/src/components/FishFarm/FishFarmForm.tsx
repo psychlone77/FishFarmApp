@@ -10,15 +10,15 @@ import {
   LinearProgress,
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
-import { FishFarmRequest } from '../types/types'
-import { createFishFarm, deleteFishFarm, updateFishFarm } from '../actions/fishFarmActions'
-import { FishFarmFormProps } from '../types/interfaces'
+import { FishFarmRequest } from '../../types/types'
+import { createFishFarm, deleteFishFarm, updateFishFarm } from '../../actions/fishFarmActions'
+import { FishFarmFormProps } from '../../types/interfaces'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { FishFarmRequestSchema } from '../types/schemas'
+import { FishFarmRequestSchema } from '../../types/schemas'
 import { useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
-import ImagePicker from './ImagePicker'
-import { notifyError, notifySuccess } from '../contexts/ToastContext'
+import ImagePicker from '../ImagePicker'
+import { notifyError, notifySuccess } from '../../contexts/ToastContext'
 
 const style = {
   position: 'absolute',

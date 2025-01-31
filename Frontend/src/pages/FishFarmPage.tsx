@@ -17,13 +17,13 @@ import LocationOnIcon from '@mui/icons-material/LocationOn'
 import DirectionsBoatFilledIcon from '@mui/icons-material/DirectionsBoatFilled'
 import ViewModuleIcon from '@mui/icons-material/ViewModule'
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
-import EmployeeTable from '../components/EmployeeTable'
-import FishFarmForm from '../components/FishFarmForm'
+import EmployeeTable from '../components/Employee/EmployeeTable'
+import FishFarmForm from '../components/FishFarm/FishFarmForm'
 import { useState } from 'react'
 import { MapContainer, TileLayer, Marker, Tooltip } from 'react-leaflet'
 import Authorize from '../components/Authorize'
-import BoatTable from '../components/BoatTable'
-import AdminTable from '../components/AdminTable'
+import BoatTable from '../components/Boat/BoatTable'
+import AdminTable from '../components/Admin/AdminTable'
 
 export default function FishFarmPage() {
   const { fishFarmId } = useParams<{ fishFarmId: string }>()

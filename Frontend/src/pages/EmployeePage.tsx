@@ -21,7 +21,7 @@ import {
 import { EmployeeResponse } from '../types/types'
 import { useState } from 'react'
 import { getEmployee } from '../actions/employeeActions'
-import EmployeeForm from '../components/EmployeeForm'
+import EmployeeForm from '../components/Employee/EmployeeForm'
 // import EmployeeForm from '../components/EmployeeForm'
 
 export default function EmployeePage() {

@@ -1,5 +1,5 @@
 import { useQuery } from 'react-query'
-import { getAdmins } from '../actions/adminActions'
+import { getAdmins } from '../../actions/adminActions'
 import {
   Box,
   Button,
@@ -16,7 +16,7 @@ import {
 import { useNavigate } from 'react-router'
 import { Add, Edit, Link, LinkOff, Person } from '@mui/icons-material'
 import { useState } from 'react'
-import { EmployeeResponse as AdminResponse } from '../types/types'
+import { EmployeeResponse as AdminResponse } from '../../types/types'
 import AssignAdminForm from './AssignAdminForm'
 import UnassignAdminModal from './UnassignAdminModal'
 

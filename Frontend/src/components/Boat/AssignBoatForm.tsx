@@ -9,11 +9,11 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-import { getAllBoats, reassignBoat } from '../actions/boatActions'
+import { getAllBoats, reassignBoat } from '../../actions/boatActions'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import CloseIcon from '@mui/icons-material/Close'
 import { useEffect, useState } from 'react'
-import { BoatFull } from '../types/types'
+import { BoatFull } from '../../types/types'
 
 export default function AssignBoatForm({
   open,

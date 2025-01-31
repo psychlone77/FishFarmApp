@@ -11,13 +11,13 @@ import {
   LinearProgress,
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
-import { EmployeeRequest } from '../types/types'
-import { createEmployee, deleteEmployee, updateEmployee } from '../actions/employeeActions'
-import { EmployeeFormProps } from '../types/interfaces'
+import { EmployeeRequest } from '../../types/types'
+import { createEmployee, deleteEmployee, updateEmployee } from '../../actions/employeeActions'
+import { EmployeeFormProps } from '../../types/interfaces'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { EmployeePositionEnum, EmployeeRequestSchema } from '../types/schemas'
-import ImagePicker from './ImagePicker'
-import { notifySuccess } from '../contexts/ToastContext'
+import { EmployeePositionEnum, EmployeeRequestSchema } from '../../types/schemas'
+import ImagePicker from '../ImagePicker'
+import { notifySuccess } from '../../contexts/ToastContext'
 
 const style = {
   position: 'absolute',

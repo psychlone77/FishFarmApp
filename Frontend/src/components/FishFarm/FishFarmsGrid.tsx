@@ -1,13 +1,13 @@
 import { useQuery } from 'react-query'
-import { getFishFarms } from '../actions/fishFarmActions'
-import { FishFarmResponse } from '../types/types'
+import { getFishFarms } from '../../actions/fishFarmActions'
+import { FishFarmResponse } from '../../types/types'
 import FishFarmGridCard from './FishFarmGridCard'
 import { Box, Button, Card, CardContent, Skeleton, Typography, useTheme } from '@mui/material'
 import { useNavigate } from 'react-router'
 import { useState } from 'react'
 import { Add } from '@mui/icons-material'
 import FishFarmForm from './FishFarmForm'
-import useAuth from '../hooks/useAuth'
+import useAuth from '../../hooks/useAuth'
 
 export default function FishFarmsGrid() {
   const navigate = useNavigate()

@@ -12,10 +12,9 @@ import {
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
-import { assignAdmin, getUnassignedAdmins } from '../actions/adminActions'
-import { EmployeeResponse } from '../types/types'
-import { toast } from 'react-toastify'
-import { notifyError, notifySuccess } from '../contexts/ToastContext'
+import { assignAdmin, getUnassignedAdmins } from '../../actions/adminActions'
+import { EmployeeResponse } from '../../types/types'
+import { notifyError, notifySuccess } from '../../contexts/ToastContext'
 
 export default function AssignAdminForm({
     open,

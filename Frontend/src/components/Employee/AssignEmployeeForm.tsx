@@ -12,10 +12,10 @@ import {
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
-import { assignEmployee, getUnassignedEmployees } from '../actions/employeeActions'
-import { EmployeeResponse } from '../types/types'
+import { assignEmployee, getUnassignedEmployees } from '../../actions/employeeActions'
+import { EmployeeResponse } from '../../types/types'
 import { toast } from 'react-toastify'
-import { notifyError, notifySuccess } from '../contexts/ToastContext'
+import { notifyError, notifySuccess } from '../../contexts/ToastContext'
 
 export default function AssignEmployeeForm({
   open,

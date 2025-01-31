@@ -1,4 +1,4 @@
-import FishFarmsGrid from '../components/FishFarmsGrid'
+import FishFarmsGrid from '../components/FishFarm/FishFarmsGrid'
 
 export default function HomePage() {
   return (

@@ -14,10 +14,10 @@ import {
 } from '@mui/material'
 import { Add, DirectionsBoat, Edit, Link } from '@mui/icons-material'
 import { useState } from 'react'
-import { getBoats } from '../actions/boatActions'
+import { getBoats } from '../../actions/boatActions'
 import BoatForm from './BoatForm'
 import AssignBoatForm from './AssignBoatForm'
-import Authorize from './Authorize'
+import Authorize from '../Authorize'
 
 export default function BoatTable({ fishFarmId }: { fishFarmId: string | undefined }) {
   const [showBoatForm, setShowBoatForm] = useState(false)

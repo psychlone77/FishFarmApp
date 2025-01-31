@@ -1,9 +1,9 @@
 import { Modal, Box, Typography, Button } from '@mui/material'
 import { useMutation, useQueryClient } from 'react-query'
-import { unassignAdmin } from '../actions/adminActions'
-import { EmployeeResponse } from '../types/types'
+import { unassignAdmin } from '../../actions/adminActions'
+import { EmployeeResponse } from '../../types/types'
 import { toast } from 'react-toastify'
-import { notifyError, notifySuccess } from '../contexts/ToastContext'
+import { notifyError, notifySuccess } from '../../contexts/ToastContext'
 
 interface UnassignAdminModalProps {
     open: boolean

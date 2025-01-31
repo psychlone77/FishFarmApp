@@ -1,5 +1,5 @@
 import { useQuery } from 'react-query'
-import getEmployeesByFishFarm from '../actions/employeeActions'
+import getEmployeesByFishFarm from '../../actions/employeeActions'
 import {
   Box,
   Button,
@@ -19,7 +19,7 @@ import { useState } from 'react'
 import EmployeeForm from './EmployeeForm'
 import AssignEmployeeForm from './AssignEmployeeForm'
 import UnassignEmployeeModal from './UnassignEmployeeModal'
-import { EmployeeResponse } from '../types/types'
+import { EmployeeResponse } from '../../types/types'
 
 export default function EmployeeTable({ fishFarmId }: { fishFarmId: string | undefined }) {
   const navigate = useNavigate()

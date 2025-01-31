@@ -1,5 +1,5 @@
 import { Card, CardContent, Typography } from '@mui/material'
-import { FishFarmResponse } from '../types/types'
+import { FishFarmResponse } from '../../types/types'
 
 export default function FishFarmGridCard({
   fishFarm,

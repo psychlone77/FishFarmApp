@@ -19,7 +19,7 @@ import {
 } from '@mui/material'
 import { Add, Edit, Person } from '@mui/icons-material'
 import { useNavigate } from 'react-router'
-import EmployeeForm from '../components/EmployeeForm'
+import EmployeeForm from '../components/Employee/EmployeeForm'
 import { EmployeeResponse } from '../types/types'
 import { isDatePassed } from '../helpers/utils'
 
