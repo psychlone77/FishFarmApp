@@ -15,6 +15,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { assignEmployee, getUnassignedEmployees } from '../actions/employeeActions'
 import { EmployeeResponse } from '../types/types'
 import { toast } from 'react-toastify'
+import { notifyError, notifySuccess } from '../contexts/ToastContext'
 
 export default function AssignEmployeeForm({
   open,
@@ -42,11 +43,11 @@ export default function AssignEmployeeForm({
     onSuccess: () => {
       queryClient.invalidateQueries(['employees', fishFarmId, 'unassigned'])
       queryClient.invalidateQueries(['employees', fishFarmId])
-      toast.success('Employee assigned successfully')
+      notifySuccess('Employee assigned successfully')
       setSelectedEmployee(null)
     },
     onError: () => {
-      toast.error('Failed to assign employee')
+      notifyError('Failed to assign employee')
     },
   })
 

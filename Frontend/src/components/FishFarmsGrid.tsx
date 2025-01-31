@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router'
 import { useState } from 'react'
 import { Add } from '@mui/icons-material'
 import FishFarmForm from './FishFarmForm'
-import { toast, ToastContainer } from 'react-toastify'
 import useAuth from '../hooks/useAuth'
 
 export default function FishFarmsGrid() {
@@ -16,27 +15,9 @@ export default function FishFarmsGrid() {
   const theme = useTheme()
   const [showFishFarmForm, setShowFishFarmForm] = useState(false)
   const { data, isLoading, isError } = useQuery<FishFarmResponse[]>('fishFarms', getFishFarms)
-  const notifySuccess = (message: string) => {
-    toast.success(message)
-  }
 
-  const notifyError = (message: string) => {
-    toast.error(message)
-  }
   return (
     <Box sx={{ padding: 2 }}>
-      <ToastContainer
-        position='top-right'
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme={theme.palette.mode}
-      />
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography variant='h3'>Fish Farms</Typography>
         <Button
@@ -102,8 +83,6 @@ export default function FishFarmsGrid() {
         title='Add Fish Farm'
         open={showFishFarmForm}
         handleClose={() => setShowFishFarmForm(false)}
-        notifyError={notifyError}
-        notifySuccess={notifySuccess}
       />
     </Box>
   )

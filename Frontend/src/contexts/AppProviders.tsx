@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactNode } from 'react'
 import { BrowserRouter } from 'react-router'
 import { AuthProvider } from './AuthContext'
-import { ToastContainer } from 'react-toastify'
+import { ToastProvider } from './ToastContext'
 
 export default function AppProviders({ children }: { children: ReactNode }) {
   const theme = createTheme({
@@ -25,26 +25,18 @@ export default function AppProviders({ children }: { children: ReactNode }) {
   })
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <BrowserRouter>
-          <ToastContainer
-            position='top-right'
-            autoClose={3000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick={false}
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme={theme.palette.mode}
-          />
-          <AuthProvider>{children}</AuthProvider>
-        </BrowserRouter>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <>
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={false} />
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <ToastProvider>
+            <BrowserRouter>
+              <AuthProvider>{children}</AuthProvider>
+            </BrowserRouter>
+          </ToastProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </>
   )
 }

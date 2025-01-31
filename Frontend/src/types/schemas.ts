@@ -21,8 +21,7 @@ export const FishFarmRequestSchema = z.object({
   latitude: z.number(),
   longitude: z.number(),
   cageCount: z.number().positive(),
-  hasBarge: z.boolean(),
-  imageURL: z.string().url(),
+  imageFile: z.instanceof(File, { message: 'An image is required' }).optional(),
 })
 
 export const EmployeePositionEnum = z.enum(['CEO', 'Captain', 'Worker'])
@@ -41,7 +40,7 @@ export const EmployeeRequestSchema = z.object({
   name: z.string().min(3),
   age: z.number().positive(),
   email: z.string().email(),
-  imageURL: z.union([z.string().url().optional(), z.literal('')]),
+  imageFile: z.instanceof(File).optional(),
   employeePosition: EmployeePositionEnum,
   certifiedUntil: z.date(),
   password: z.string().optional(),

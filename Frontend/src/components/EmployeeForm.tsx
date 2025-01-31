@@ -1,14 +1,23 @@
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { useMutation, useQueryClient } from 'react-query'
-import { TextField, Button, Box, Modal, IconButton, Typography, MenuItem } from '@mui/material'
+import {
+  TextField,
+  Button,
+  Box,
+  Modal,
+  IconButton,
+  Typography,
+  MenuItem,
+  LinearProgress,
+} from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import { EmployeeRequest } from '../types/types'
 import { createEmployee, deleteEmployee, updateEmployee } from '../actions/employeeActions'
 import { EmployeeFormProps } from '../types/interfaces'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { EmployeePositionEnum, EmployeeRequestSchema } from '../types/schemas'
-import { useNavigate } from 'react-router'
-import { toast } from 'react-toastify'
+import ImagePicker from './ImagePicker'
+import { notifySuccess } from '../contexts/ToastContext'
 
 const style = {
   position: 'absolute',
@@ -26,54 +35,35 @@ export default function EmployeeForm({
   title,
   open,
   handleClose,
-  fishFarmId,
   initialValues,
 }: EmployeeFormProps) {
   const queryClient = useQueryClient()
-  const navigate = useNavigate()
   const {
     register,
+    control,
+    setValue,
     handleSubmit,
     formState: { errors },
   } = useForm<EmployeeRequest>({ resolver: zodResolver(EmployeeRequestSchema) })
   const mutation = useMutation(
     initialValues
-      ? (employee: EmployeeRequest) =>
-          updateEmployee(employee, initialValues.employeeId, fishFarmId)
-      : (employee: EmployeeRequest) => createEmployee(employee, fishFarmId),
+      ? (employee: EmployeeRequest) => updateEmployee(employee, initialValues.id)
+      : (employee: EmployeeRequest) => createEmployee(employee),
   )
   const mutationSecondary = useMutation(() =>
-    initialValues ? deleteEmployee(initialValues?.employeeId, fishFarmId) : Promise.resolve(),
+    initialValues ? deleteEmployee(initialValues?.id) : Promise.resolve(),
   )
 
   const onSubmit: SubmitHandler<EmployeeRequest> = data => {
     mutation.mutate(data, {
       onSuccess: () => {
-        queryClient.invalidateQueries(
-          initialValues ? ['employee', initialValues?.employeeId] : 'employees',
-        )
-        toast.success(
+        queryClient.invalidateQueries(initialValues ? ['employee', initialValues?.id] : 'employees')
+        notifySuccess(
           initialValues ? 'Employee updated successfully' : 'Employee added successfully',
         )
         handleClose()
-      }
+      },
     })
-  }
-
-  const handleSecondaryAction = () => {
-    if (mutationSecondary) {
-      mutationSecondary.mutate(undefined, {
-        onSuccess: () => {
-          queryClient.invalidateQueries('employees')
-          toast.success('Employee deleted successfully')
-          handleClose()
-          navigate(`/fish-farms/${fishFarmId}`)
-        },
-        onError: () => {
-          toast.error('Error deleting employee')
-        },
-      })
-    }
   }
 
   return (
@@ -88,6 +78,15 @@ export default function EmployeeForm({
               <CloseIcon color='error' />
             </IconButton>
           </Box>
+        </Box>
+        <Box mb={2}>
+          <ImagePicker
+            control={control}
+            setValue={setValue}
+            name='imageFile'
+            imageUrl={initialValues?.imageURL}
+            required={true}
+          />
         </Box>
         <Box mb={2}>
           <TextField
@@ -120,17 +119,6 @@ export default function EmployeeForm({
             error={!!errors.email}
             helperText={errors.email ? errors.email.message : ''}
             {...register('email', { required: true })}
-          />
-        </Box>
-        <Box mb={2}>
-          <TextField
-            fullWidth
-            label='Image URL'
-            variant='outlined'
-            defaultValue={initialValues?.imageURL}
-            error={!!errors.imageURL}
-            helperText={errors.imageURL ? errors.imageURL.message : ''}
-            {...register('imageURL', { required: false })}
           />
         </Box>
         <Box mb={2}>
@@ -169,25 +157,27 @@ export default function EmployeeForm({
           </TextField>
         </Box>
         <Box mb={2}>
-          <TextField
-            fullWidth
-            label='Password'
-            variant='outlined'
-            defaultValue={initialValues?.password}
-            error={!!errors.password}
-            helperText={errors.password ? errors.password.message : ''}
-            {...register('password', { required: true })}
-          />
+          {initialValues === undefined && (
+            <TextField
+              fullWidth
+              label='Default Password'
+              variant='outlined'
+              error={!!errors.password}
+              helperText={errors.password ? errors.password.message : ''}
+              {...register('password', { required: true })}
+            />
+          )}
         </Box>
-        <Box display='flex' justifyContent='space-between'>
-          {initialValues && (
-            <Button variant='outlined' color='error' onClick={handleSecondaryAction}>
-              Delete Employee
+        <Box display='flex' justifyContent='space-between' width={'100%'}>
+          {mutation.isLoading || mutationSecondary.isLoading ? (
+            <Box sx={{ width: '100%', height: 37, display: 'flex', alignItems: 'center' }}>
+              <LinearProgress sx={{ flexGrow: 1 }} />
+            </Box>
+          ) : (
+            <Button sx={{ marginLeft: 'auto' }} variant='contained' color='primary' type='submit'>
+              {initialValues ? 'Update' : 'Add'}
             </Button>
           )}
-          <Button sx={{ marginLeft: 'auto' }} variant='contained' color='primary' type='submit'>
-            {initialValues ? 'Update' : 'Add'}
-          </Button>
         </Box>
       </Box>
     </Modal>

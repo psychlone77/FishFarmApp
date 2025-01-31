@@ -1,5 +1,5 @@
 import { useQuery } from 'react-query'
-import getEmployeesByFishFarm from '../actions/employeeActions'
+import { getAdmins } from '../actions/adminActions'
 import {
   Box,
   Button,
@@ -16,22 +16,21 @@ import {
 import { useNavigate } from 'react-router'
 import { Add, Edit, Link, LinkOff, Person } from '@mui/icons-material'
 import { useState } from 'react'
-import EmployeeForm from './EmployeeForm'
-import AssignEmployeeForm from './AssignEmployeeForm'
-import UnassignEmployeeModal from './UnassignEmployeeModal'
-import { EmployeeResponse } from '../types/types'
+import { EmployeeResponse as AdminResponse } from '../types/types'
+import AssignAdminForm from './AssignAdminForm'
+import UnassignAdminModal from './UnassignAdminModal'
 
-export default function EmployeeTable({ fishFarmId }: { fishFarmId: string | undefined }) {
+export default function AdminTable({ fishFarmId }: { fishFarmId: string | undefined }) {
   const navigate = useNavigate()
-  const [showEmployeeForm, setShowEmployeeForm] = useState(false)
-  const [showAssignEmployeeForm, setShowAssignEmployeeForm] = useState(false)
+  const [showAdminForm, setShowAdminForm] = useState(false)
+  const [showAssignAdminForm, setShowAssignAdminForm] = useState(false)
   const [showUnassignModal, setShowUnassignModal] = useState(false)
-  const [unassignEmployee, setUnassignEmployee] = useState<EmployeeResponse | null>(null)
+  const [unassignAdmin, setUnassignAdmin] = useState<AdminResponse | null>(null)
   const {
-    data: employees,
+    data: admins,
     isLoading,
     isFetching,
-  } = useQuery(['employees', fishFarmId], () => getEmployeesByFishFarm(fishFarmId!), {
+  } = useQuery(['admins', fishFarmId], () => getAdmins(fishFarmId!), {
     enabled: !!fishFarmId,
   })
   return (
@@ -44,7 +43,15 @@ export default function EmployeeTable({ fishFarmId }: { fishFarmId: string | und
       }}
       component={Paper}
     >
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 2, padding: 2 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginTop: 2,
+          padding: 2,
+        }}
+      >
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <Person
             sx={{
@@ -53,25 +60,23 @@ export default function EmployeeTable({ fishFarmId }: { fishFarmId: string | und
               fontSize: 40,
             }}
           />
-          <Typography variant='h5'>Assigned Employees</Typography>
+          <Typography variant='h5'>Assigned Admins</Typography>
         </Box>
-        <Box
-          sx={{ display: 'flex', justifyContent: 'end', gap: 2 }}
-        >
-          <Button variant='contained' onClick={() => setShowAssignEmployeeForm(true)}>
+        <Box sx={{ display: 'flex', justifyContent: 'end', gap: 2 }}>
+          <Button variant='contained' onClick={() => setShowAssignAdminForm(true)}>
             <Link />
-            Assign Employee
+            Assign Admin
           </Button>
-          <Button variant='contained' onClick={() => setShowEmployeeForm(true)}>
+          <Button variant='contained' onClick={() => setShowAdminForm(true)}>
             <Add />
-            Add Employee
+            Add Admin
           </Button>
         </Box>
       </Box>
       <Table sx={{ minWidth: 300 }}>
         <TableHead>
           <TableRow>
-            <TableCell align='center'>Employee Id</TableCell>
+            <TableCell align='center'>Admin Id</TableCell>
             <TableCell align='center'>Name</TableCell>
             <TableCell align='center'>Position</TableCell>
             <TableCell align='center'>Age</TableCell>
@@ -102,32 +107,32 @@ export default function EmployeeTable({ fishFarmId }: { fishFarmId: string | und
                 </TableRow>
               ))
             : null}
-          {employees?.map(employee => (
+          {admins?.map(admin => (
             <TableRow
-              key={employee.id}
+              key={admin.id}
               hover
               sx={{
                 '&:hover': { cursor: 'pointer' },
                 '&:last-child td, &:last-child th': { border: 0 },
               }}
               onClick={() => {
-                navigate(`employees/${employee.id}`)
+                navigate(`admins/${admin.id}`)
               }}
             >
-              <TableCell align='center'>{employee.id}</TableCell>
-              <TableCell align='center'>{employee.name}</TableCell>
-              <TableCell align='center'>{employee.employeePosition}</TableCell>
-              <TableCell align='center'>{employee.age}</TableCell>
-              <TableCell align='center'>{employee.email}</TableCell>
+              <TableCell align='center'>{admin.id}</TableCell>
+              <TableCell align='center'>{admin.name}</TableCell>
+              <TableCell align='center'>{admin.employeePosition}</TableCell>
+              <TableCell align='center'>{admin.age}</TableCell>
+              <TableCell align='center'>{admin.email}</TableCell>
               <TableCell align='center'>
-                {new Date(employee.certifiedUntil).toLocaleDateString()}
+                {new Date(admin.certifiedUntil).toLocaleDateString()}
               </TableCell>
               <TableCell align='center'>
                 <LinkOff
                   sx={{ marginRight: 2, '&:hover': { color: 'red' } }}
                   onClick={e => {
                     e.stopPropagation()
-                    setUnassignEmployee(employee)
+                    setUnassignAdmin(admin)
                     setShowUnassignModal(true)
                   }}
                 />
@@ -135,34 +140,36 @@ export default function EmployeeTable({ fishFarmId }: { fishFarmId: string | und
               </TableCell>
             </TableRow>
           ))}
-          {employees?.length === 0 && !isFetching && (
+          {admins?.length === 0 && !isFetching && (
             <TableRow>
               <TableCell colSpan={6} align='center'>
-                No employees assigned
+                No admins assigned
               </TableCell>
             </TableRow>
           )}
         </TableBody>
       </Table>
-      <EmployeeForm
-        title='Add Employee'
-        fishFarmId={fishFarmId!}
-        open={showEmployeeForm}
-        handleClose={() => setShowEmployeeForm(false)}
-      />
-      <AssignEmployeeForm
-        open={showAssignEmployeeForm}
-        handleClose={() => setShowAssignEmployeeForm(false)}
+      <AssignAdminForm
+        open={showAssignAdminForm}
+        handleClose={() => setShowAssignAdminForm(false)}
         fishFarmId={fishFarmId!}
       />
-      {unassignEmployee && (
-        <UnassignEmployeeModal
-          employee={unassignEmployee!}
+      {unassignAdmin && (
+        <UnassignAdminModal
+          admin={unassignAdmin!}
           fishFarmId={fishFarmId!}
           open={showUnassignModal}
           handleClose={() => setShowUnassignModal(false)}
         />
       )}
+      {/* <AdminForm
+        title='Add Admin'
+        fishFarmId={fishFarmId!}
+        open={showAdminForm}
+        handleClose={() => setShowAdminForm(false)}
+      />
+
+      )} */}
     </TableContainer>
   )
 }

@@ -21,11 +21,11 @@ import EmployeeTable from '../components/EmployeeTable'
 import FishFarmForm from '../components/FishFarmForm'
 import { useState } from 'react'
 import { MapContainer, TileLayer, Marker, Tooltip } from 'react-leaflet'
-import useAuth from '../hooks/useAuth'
+import Authorize from '../components/Authorize'
 import BoatTable from '../components/BoatTable'
+import AdminTable from '../components/AdminTable'
 
 export default function FishFarmPage() {
-  const { role } = useAuth()
   const { fishFarmId } = useParams<{ fishFarmId: string }>()
   const [showFishFarmForm, setShowFishFarmForm] = useState(false)
   const {
@@ -65,71 +65,73 @@ export default function FishFarmPage() {
             </Typography>
             <Box sx={{ display: 'flex', gap: 2 }}>
               <Box
-              sx={{
-                backgroundImage: `url(${fishFarm.imageURL})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                height: 350,
-                width: '50%',
-                borderRadius: '8px',
-              }}
+                sx={{
+                  backgroundImage: `url(${fishFarm.imageURL})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  height: 350,
+                  width: '50%',
+                  borderRadius: '8px',
+                }}
               />
               <Box
-              sx={{
-                border: 1,
-                position: 'relative',
-                borderColor: 'primary.main',
-                borderRadius: 2,
-                boxShadow: 3,
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 2,
-                padding: 2,
-                flex: 1,
-              }}
+                sx={{
+                  border: 1,
+                  position: 'relative',
+                  borderColor: 'primary.main',
+                  borderRadius: 2,
+                  boxShadow: 3,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 2,
+                  padding: 2,
+                  flex: 1,
+                }}
               >
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                <List>
-                <ListItem>
-                  <ListItemIcon sx={{ minWidth: 40 }}>
-                  <LocationOnIcon color='primary' />
-                  </ListItemIcon>
-                  <ListItemText
-                  primary='Location'
-                  secondary={`${fishFarm.latitude}, ${fishFarm.longitude}`}
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemIcon sx={{ minWidth: 40 }}>
-                  <ViewModuleIcon color='primary' />
-                  </ListItemIcon>
-                  <ListItemText primary='Cage Count' secondary={fishFarm.cageCount} />
-                </ListItem>
-                <ListItem>
-                  <ListItemIcon sx={{ minWidth: 40 }}>
-                  <DirectionsBoatFilledIcon color='primary' />
-                  </ListItemIcon>
-                  <ListItemText
-                  primary='Has Barge'
-                  secondary={fishFarm.hasBarge ? 'Yes' : 'No'}
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemIcon sx={{ minWidth: 40 }}>
-                  <CalendarTodayIcon color='primary' />
-                  </ListItemIcon>
-                  <ListItemText
-                  primary='Created On'
-                  secondary={new Date(fishFarm.createdOn).toLocaleDateString()}
-                  />
-                </ListItem>
-                </List>
-              </Box>
-              <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
-                <Button variant='contained' onClick={() => toggleFishFarmForm(true)}>
-                Edit
-                </Button>
-              </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <List>
+                    <ListItem>
+                      <ListItemIcon sx={{ minWidth: 40 }}>
+                        <LocationOnIcon color='primary' />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary='Location'
+                        secondary={`${fishFarm.latitude}, ${fishFarm.longitude}`}
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemIcon sx={{ minWidth: 40 }}>
+                        <ViewModuleIcon color='primary' />
+                      </ListItemIcon>
+                      <ListItemText primary='Cage Count' secondary={fishFarm.cageCount} />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemIcon sx={{ minWidth: 40 }}>
+                        <DirectionsBoatFilledIcon color='primary' />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary='Has Barge'
+                        secondary={fishFarm.hasBarge ? 'Yes' : 'No'}
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemIcon sx={{ minWidth: 40 }}>
+                        <CalendarTodayIcon color='primary' />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary='Created On'
+                        secondary={new Date(fishFarm.createdOn).toLocaleDateString()}
+                      />
+                    </ListItem>
+                  </List>
+                </Box>
+                <Authorize requiredAccess={2}>
+                  <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
+                    <Button variant='contained' onClick={() => toggleFishFarmForm(true)}>
+                      Edit
+                    </Button>
+                  </Box>
+                </Authorize>
               </Box>
             </Box>
           </Card>
@@ -158,6 +160,19 @@ export default function FishFarmPage() {
           handleClose={() => toggleFishFarmForm(false)}
         />
       )}
+      <Authorize requiredAccess={1}>
+        <Box
+          sx={{
+            display: 'flex',
+            gap: 3,
+            padding: 2,
+            paddingY: 4,
+            flexDirection: { xs: 'column', md: 'column', lg: 'row' },
+          }}
+        >
+          <AdminTable fishFarmId={fishFarmId} />
+        </Box>
+      </Authorize>
       <Box
         sx={{
           display: 'flex',
@@ -167,7 +182,9 @@ export default function FishFarmPage() {
           flexDirection: { xs: 'column', md: 'column', lg: 'row' },
         }}
       >
-        {role === 'SuperAdmin' || role === 'Admin' ? <EmployeeTable fishFarmId={fishFarmId} /> : null}
+        <Authorize requiredAccess={2}>
+          <EmployeeTable fishFarmId={fishFarmId} />
+        </Authorize>
         <BoatTable fishFarmId={fishFarmId} />
       </Box>
     </>

@@ -7,8 +7,6 @@ import {
   Modal,
   IconButton,
   Typography,
-  FormControlLabel,
-  Checkbox,
   LinearProgress,
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
@@ -19,6 +17,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { FishFarmRequestSchema } from '../types/schemas'
 import { useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
+import ImagePicker from './ImagePicker'
+import { notifyError, notifySuccess } from '../contexts/ToastContext'
 
 const style = {
   position: 'absolute',
@@ -43,6 +43,8 @@ export default function FishFarmForm({
   const {
     register,
     handleSubmit,
+    control,
+    setValue,
     formState: { errors },
   } = useForm<FishFarmRequest>({ resolver: zodResolver(FishFarmRequestSchema) })
   const mutation = useMutation({
@@ -58,11 +60,11 @@ export default function FishFarmForm({
     mutation.mutate(data, {
       onSuccess: () => {
         queryClient.invalidateQueries(initialValues ? ['fishFarm', initialValues?.id] : 'fishFarms')
-        toast.success(
+        notifySuccess(
           initialValues ? 'Fish farm updated successfully' : 'Fish farm added successfully',
         )
         handleClose()
-      }
+      },
     })
   }
 
@@ -71,12 +73,12 @@ export default function FishFarmForm({
       mutationSecondary.mutate(undefined, {
         onSuccess: () => {
           queryClient.invalidateQueries('fishfarms')
-          toast.success('Fish farm deleted successfully')
+          notifySuccess('Fish farm deleted successfully')
           handleClose()
           navigate('/')
         },
         onError: () => {
-          toast.error('Error deleting fish farm')
+          notifyError('Error deleting fish farm')
         },
       })
     }
@@ -140,23 +142,12 @@ export default function FishFarmForm({
           />
         </Box>
         <Box mb={2}>
-          <FormControlLabel
-            control={
-              <Checkbox defaultChecked={initialValues?.hasBarge} {...register('hasBarge')} />
-            }
-            label='Has Barge'
-          />
-          {errors.hasBarge && <Typography color='error'>{errors.hasBarge.message}</Typography>}
-        </Box>
-        <Box mb={2}>
-          <TextField
-            fullWidth
-            label='Image URL'
-            variant='outlined'
-            defaultValue={initialValues?.imageURL}
-            error={!!errors.imageURL}
-            helperText={errors.imageURL ? errors.imageURL.message : ''}
-            {...register('imageURL', { required: true })}
+          <ImagePicker
+            control={control}
+            setValue={setValue}
+            name='imageFile'
+            imageUrl={initialValues?.imageURL}
+            required={initialValues?.imageURL ? false : true}
           />
         </Box>
         <Box display='flex' justifyContent='space-between' width={'100%'}>

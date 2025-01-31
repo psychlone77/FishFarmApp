@@ -46,7 +46,7 @@ export default function BoatForm({
                 queryClient.invalidateQueries(
                     initialValues ? ['boat', initialValues?.id] : 'boats',
                 )
-                toast.success(
+                notifySuccess(
                     initialValues ? 'Boat updated successfully' : 'Boat added successfully',
                 )
                 handleClose()

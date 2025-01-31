@@ -90,7 +90,9 @@ export default function BoatTable({ fishFarmId }: { fishFarmId: string | undefin
             <TableCell align='center'>Boat Id</TableCell>
             <TableCell align='center'>Model</TableCell>
             <TableCell align='center'>Boat Type</TableCell>
-            <TableCell align='center'></TableCell>
+            <Authorize requiredAccess={2}>
+              <TableCell align='center'></TableCell>
+            </Authorize>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -122,22 +124,24 @@ export default function BoatTable({ fishFarmId }: { fishFarmId: string | undefin
               <TableCell align='center'>{boat.id}</TableCell>
               <TableCell align='center'>{boat.model}</TableCell>
               <TableCell align='center'>{boat.boatType}</TableCell>
+                <Authorize requiredAccess={2}>
               <TableCell align='center'>
-                <Edit
-                  sx={{
-                    cursor: 'pointer',
-                    '&:hover': { boxShadow: 2, borderRadius: 5, color: 'primary.main' }
-                  }}
-                  onClick={() => setShowBoatEditForm(true)}
-                />
-                <BoatForm
-                  title='Edit Boat'
-                  initialValues={boat}
-                  fishFarmId={fishFarmId!}
-                  open={showBoatEditForm}
-                  handleClose={() => setShowBoatEditForm(false)}
-                />
+                  <Edit
+                    sx={{
+                      cursor: 'pointer',
+                      '&:hover': { boxShadow: 2, borderRadius: 5, color: 'primary.main' }
+                    }}
+                    onClick={() => setShowBoatEditForm(true)}
+                  />
+                  <BoatForm
+                    title='Edit Boat'
+                    initialValues={boat}
+                    fishFarmId={fishFarmId!}
+                    open={showBoatEditForm}
+                    handleClose={() => setShowBoatEditForm(false)}
+                  />
               </TableCell>
+                </Authorize>
             </TableRow>
           ))}
           {boats?.length === 0 && !isFetching && (

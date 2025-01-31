@@ -7,14 +7,16 @@ import HomePage from '../pages/HomePage'
 import FishFarmPage from '../pages/FishFarmPage'
 import EmployeePage from '../pages/EmployeePage'
 import NotFoundPage from '../pages/NotFoundPage'
+import EmployeesPage from '../pages/EmployeesPage'
 
 export default function AppRoutes() {
   return (
     <Routes>
       <Route path='/' element={<PrivateRoute element={<Layout />} />}>
         <Route index element={<HomePage />} />
+        <Route path='employees' element={<EmployeesPage />} />
         <Route path='fish-farms/:fishFarmId' element={<FishFarmPage />} />
-        <Route path='fish-farms/:fishFarmId/employees/:employeeId' element={<EmployeePage />} />
+        <Route path='employees/:employeeId' element={<EmployeePage />} />
       </Route>
       <Route path='/login' element={<LoginPage />} />
       <Route path='/logout' element={<LogoutPage />} />

@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from 'react-query'
 import { unassignEmployee } from '../actions/employeeActions'
 import { EmployeeResponse } from '../types/types'
 import { toast } from 'react-toastify'
+import { notifyError, notifySuccess } from '../contexts/ToastContext'
 
 interface UnassignModalProps {
   open: boolean
@@ -22,10 +23,10 @@ export default function UnassignEmployeeModal({
     onSuccess: () => {
       queryClient.invalidateQueries(['employees', fishFarmId, 'unassigned'])
       queryClient.invalidateQueries(['employees', fishFarmId])
-      toast.success('Employee unassigned successfully')
+      notifySuccess('Employee unassigned successfully')
     },
     onError: () => {
-      toast.error('Failed to unassign employee')
+      notifyError('Failed to unassign employee')
     },
   })
   const handleConfirm = () => {

@@ -12,10 +12,9 @@ import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import { Phishing } from '@mui/icons-material'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import useAuth from '../hooks/useAuth'
 
-const pages = ['']
 const settings = [
   { name: 'Profile', path: '/profile', isDisabled: true },
   { name: 'Account', path: '/account', isDisabled: true },
@@ -24,6 +23,7 @@ const settings = [
 
 function CustomNavbar() {
   const { user } = useAuth()
+  const navigate = useNavigate()
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null)
 
@@ -100,11 +100,11 @@ function CustomNavbar() {
               onClose={handleCloseNavMenu}
               sx={{ display: { xs: 'block', md: 'none' } }}
             >
-              {pages.map(page => (
+              {/* {pages.map(page => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
                   <Typography sx={{ textAlign: 'center' }}>{page}</Typography>
                 </MenuItem>
-              ))}
+              ))} */}
             </Menu>
           </Box>
           <Phishing sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
@@ -128,10 +128,8 @@ function CustomNavbar() {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             <Box sx={{ display: 'flex', margin: 'auto', paddingRight: 8 }}>
-              {pages.map(page => (
                 <Button
-                  key={page}
-                  onClick={handleCloseNavMenu}
+                  onClick={() => navigate('/employees')}
                   sx={{
                     fontSize: 16,
                     fontWeight: 300,
@@ -140,9 +138,8 @@ function CustomNavbar() {
                     display: 'block',
                   }}
                 >
-                  {page}
+                  Employees
                 </Button>
-              ))}
             </Box>
           </Box>
           <Box sx={{ display: { xs: 'none', md: 'flex'},  marginRight: 2, flexDirection: 'column', alignItems: 'end' }}>

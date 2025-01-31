@@ -35,7 +35,7 @@ export default function EmployeePage() {
     isError,
   } = useQuery<EmployeeResponse>(
     ['employee', employeeId],
-    () => getEmployee(fishFarmId!, employeeId!),
+    () => getEmployee(employeeId!),
     {
       enabled: !!employeeId,
     },
@@ -173,8 +173,7 @@ export default function EmployeePage() {
       )}
       {showEmployeeForm && employee && employeeId && (
         <EmployeeForm
-          initialValues={{ ...employee, employeeId }}
-          fishFarmId={fishFarmId!}
+          initialValues={employee}
           open={showEmployeeForm}
           title='Edit Employee'
           handleClose={() => toggleEmployeeForm(false)}
