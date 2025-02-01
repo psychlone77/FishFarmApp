@@ -12,12 +12,12 @@ import {
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import { EmployeeRequest } from '../../types/types'
-import { createEmployee, deleteEmployee, updateEmployee } from '../../actions/employeeActions'
+import { createEmployee, updateEmployee } from '../../actions/employeeActions'
 import { EmployeeFormProps } from '../../types/interfaces'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { EmployeePositionEnum, EmployeeRequestSchema } from '../../types/schemas'
 import ImagePicker from '../ImagePicker'
-import { notifySuccess } from '../../contexts/ToastContext'
+import { useToast } from '../../contexts/ToastContext'
 
 const style = {
   position: 'absolute',
@@ -37,6 +37,7 @@ export default function EmployeeForm({
   handleClose,
   initialValues,
 }: EmployeeFormProps) {
+  const { notifySuccess } = useToast()
   const queryClient = useQueryClient()
   const {
     register,
@@ -49,9 +50,6 @@ export default function EmployeeForm({
     initialValues
       ? (employee: EmployeeRequest) => updateEmployee(employee, initialValues.id)
       : (employee: EmployeeRequest) => createEmployee(employee),
-  )
-  const mutationSecondary = useMutation(() =>
-    initialValues ? deleteEmployee(initialValues?.id) : Promise.resolve(),
   )
 
   const onSubmit: SubmitHandler<EmployeeRequest> = data => {
@@ -169,7 +167,7 @@ export default function EmployeeForm({
           )}
         </Box>
         <Box display='flex' justifyContent='space-between' width={'100%'}>
-          {mutation.isLoading || mutationSecondary.isLoading ? (
+          {mutation.isLoading ? (
             <Box sx={{ width: '100%', height: 37, display: 'flex', alignItems: 'center' }}>
               <LinearProgress sx={{ flexGrow: 1 }} />
             </Box>

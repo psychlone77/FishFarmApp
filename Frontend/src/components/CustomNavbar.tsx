@@ -5,8 +5,6 @@ import Toolbar from '@mui/material/Toolbar'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import Menu from '@mui/material/Menu'
-import MenuIcon from '@mui/icons-material/Menu'
-import Container from '@mui/material/Container'
 import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
@@ -14,38 +12,33 @@ import MenuItem from '@mui/material/MenuItem'
 import { Phishing } from '@mui/icons-material'
 import { Link, useNavigate } from 'react-router'
 import useAuth from '../hooks/useAuth'
-
-const settings = [
-  { name: 'Profile', path: '/profile', isDisabled: true },
-  { name: 'Account', path: '/account', isDisabled: true },
-  { name: 'Logout', path: '/logout', isDisabled: false },
-]
+import Authorize from './Authorize'
+import MyDetailsModal from './MyDetailsModal'
 
 function CustomNavbar() {
   const { user } = useAuth()
   const navigate = useNavigate()
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null)
+  const [openDetailsModal, setOpenDetailsModal] = React.useState(false)
 
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget)
-  }
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget)
   }
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null)
-  }
-
   const handleCloseUserMenu = () => {
     setAnchorElUser(null)
   }
+  const handleOpenDetails = () => {
+    setOpenDetailsModal(true)
+    handleCloseUserMenu()
+  }
+  const handleCloseDetails = () => {
+    setOpenDetailsModal(false)
+  }
 
   return (
-    <AppBar position='static'>
-      <Container maxWidth={false} sx={{ backgroundColor: 'primary.dark' }}>
-        <Toolbar disableGutters>
+    <>
+      <AppBar position='static' sx={{ backgroundColor: 'primary.dark' }}>
+        <Toolbar>
           <Link
             to='/'
             style={{
@@ -55,13 +48,11 @@ function CustomNavbar() {
               color: 'inherit',
             }}
           >
-            <Phishing sx={{ display: { xs: 'none', md: 'flex' }, marginRight: 1 }} />
+            <Phishing sx={{ marginRight: 1 }} />
             <Typography
               variant='h6'
               noWrap
               sx={{
-                marginRight: 2,
-                display: { xs: 'none', md: 'flex' },
                 fontSize: 22,
                 fontWeight: 500,
                 letterSpacing: '0.1rem',
@@ -72,77 +63,33 @@ function CustomNavbar() {
               Fish Farms
             </Typography>
           </Link>
-
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size='large'
-              aria-label='account of current user'
-              aria-controls='menu-appbar'
-              aria-haspopup='true'
-              onClick={handleOpenNavMenu}
-              color='inherit'
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id='menu-appbar'
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{ display: { xs: 'block', md: 'none' } }}
-            >
-              {/* {pages.map(page => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{page}</Typography>
-                </MenuItem>
-              ))} */}
-            </Menu>
-          </Box>
-          <Phishing sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-          <Typography
-            variant='h5'
-            noWrap
-            component='a'
-            href='#app-bar-with-responsive-menu'
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            Fish Farms
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            <Box sx={{ display: 'flex', margin: 'auto', paddingRight: 8 }}>
+          <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center' }}>
+            <Authorize requiredAccess={1}>
+              <Box sx={{ display: 'flex' }}>
                 <Button
                   onClick={() => navigate('/employees')}
                   sx={{
                     fontSize: 16,
                     fontWeight: 300,
-                    my: 'auto',
                     color: 'white',
-                    display: 'block',
                   }}
                 >
                   Employees
                 </Button>
-            </Box>
+                <Button
+                  onClick={() => navigate('/admins')}
+                  sx={{
+                    fontSize: 16,
+                    fontWeight: 300,
+                    color: 'white',
+                  }}
+                >
+                  Admins
+                </Button>
+              </Box>
+            </Authorize>
           </Box>
-          <Box sx={{ display: { xs: 'none', md: 'flex'},  marginRight: 2, flexDirection: 'column', alignItems: 'end' }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'end', marginRight: 2 }}>
             <Typography variant='body1'>{user?.name}</Typography>
             <Typography variant='caption'>{user?.employeePosition}</Typography>
           </Box>
@@ -168,22 +115,15 @@ function CustomNavbar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map(setting => (
-                <Link
-                  key={setting.name}
-                  to={setting.isDisabled ? '#' : setting.path}
-                  style={{ textDecoration: 'none', color: 'inherit' }}
-                >
-                  <MenuItem disabled={setting.isDisabled} onClick={handleCloseUserMenu}>
-                    <Typography sx={{ textAlign: 'center' }}>{setting.name}</Typography>
-                  </MenuItem>
-                </Link>
-              ))}
+              <MenuItem onClick={handleOpenDetails}>My Details</MenuItem>
+              <MenuItem onClick={() => navigate('/logout')}>Logout</MenuItem>
             </Menu>
           </Box>
         </Toolbar>
-      </Container>
-    </AppBar>
+      </AppBar>
+      <MyDetailsModal open={openDetailsModal} handleClose={handleCloseDetails} user={user!} />
+    </>
   )
 }
+
 export default CustomNavbar

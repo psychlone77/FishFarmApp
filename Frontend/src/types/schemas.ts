@@ -24,6 +24,14 @@ export const FishFarmRequestSchema = z.object({
   imageFile: z.instanceof(File, { message: 'An image is required' }).optional(),
 })
 
+export const FishFarmUserSchema = z.object({
+  fishFarmId: z.string().uuid(),
+  userId: z.string().uuid(),
+  permissionLevel: z.string(),
+  assignedDate: z.date(),
+  fishFarm: FishFarmResponseSchema,
+})
+
 export const EmployeePositionEnum = z.enum(['CEO', 'Captain', 'Worker'])
 
 export const EmployeeResponseSchema = z.object({

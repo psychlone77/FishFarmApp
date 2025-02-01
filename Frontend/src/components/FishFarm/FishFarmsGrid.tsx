@@ -1,5 +1,3 @@
-import { useQuery } from 'react-query'
-import { getFishFarms } from '../../actions/fishFarmActions'
 import { FishFarmResponse } from '../../types/types'
 import FishFarmGridCard from './FishFarmGridCard'
 import { Box, Button, Card, CardContent, Skeleton, Typography, useTheme } from '@mui/material'
@@ -8,26 +6,35 @@ import { useState } from 'react'
 import { Add } from '@mui/icons-material'
 import FishFarmForm from './FishFarmForm'
 import useAuth from '../../hooks/useAuth'
+import Authorize from '../Authorize'
 
-export default function FishFarmsGrid() {
+export default function FishFarmsGrid({
+  data,
+  isLoading,
+  isError,
+}: {
+  data: FishFarmResponse[] | undefined
+  isLoading: boolean
+  isError: boolean
+}) {
   const navigate = useNavigate()
-  const { role } = useAuth()
   const theme = useTheme()
   const [showFishFarmForm, setShowFishFarmForm] = useState(false)
-  const { data, isLoading, isError } = useQuery<FishFarmResponse[]>('fishFarms', getFishFarms)
 
   return (
     <Box sx={{ padding: 2 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography variant='h3'>Fish Farms</Typography>
-        <Button
-          variant='contained'
-          onClick={() => setShowFishFarmForm(true)}
-          sx={{ marginLeft: 2, display: role === 'SuperAdmin' ? 'flex' : 'none' }}
-        >
-          <Add />
-          Add Fish Farm
-        </Button>
+        <Authorize requiredAccess={1}>
+          <Button
+            variant='contained'
+            onClick={() => setShowFishFarmForm(true)}
+            sx={{ marginLeft: 2 }}
+          >
+            <Add />
+            Add Fish Farm
+          </Button>
+        </Authorize>
       </Box>
       <Box sx={{ marginTop: 2 }}>
         {isLoading && (

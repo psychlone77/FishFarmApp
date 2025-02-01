@@ -24,6 +24,7 @@ import { MapContainer, TileLayer, Marker, Tooltip } from 'react-leaflet'
 import Authorize from '../components/Authorize'
 import BoatTable from '../components/Boat/BoatTable'
 import AdminTable from '../components/Admin/AdminTable'
+import CustomMapContainer from '../components/CustomMapContainer'
 
 export default function FishFarmPage() {
   const { fishFarmId } = useParams<{ fishFarmId: string }>()
@@ -135,21 +136,7 @@ export default function FishFarmPage() {
               </Box>
             </Box>
           </Card>
-          <MapContainer
-            center={[fishFarm.latitude, fishFarm.longitude]}
-            zoom={8}
-            scrollWheelZoom={false}
-          >
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-            />
-            <Marker position={[fishFarm.latitude, fishFarm.longitude]}>
-              <Tooltip direction='top' offset={[-15, -15]} permanent>
-                {fishFarm.name}
-              </Tooltip>
-            </Marker>
-          </MapContainer>
+          <CustomMapContainer fishFarms={[fishFarm]} />
         </>
       )}
       {showFishFarmForm && fishFarm && fishFarmId && (

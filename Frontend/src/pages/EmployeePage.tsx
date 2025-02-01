@@ -22,10 +22,11 @@ import { EmployeeResponse } from '../types/types'
 import { useState } from 'react'
 import { getEmployee } from '../actions/employeeActions'
 import EmployeeForm from '../components/Employee/EmployeeForm'
+import EmployeeFishFarmsTable from '../components/Employee/EmployeeFishFarmsTable'
 // import EmployeeForm from '../components/EmployeeForm'
 
 export default function EmployeePage() {
-  const { fishFarmId, employeeId } = useParams<{ fishFarmId: string; employeeId: string }>()
+  const { employeeId } = useParams<{ employeeId: string }>()
   const [showEmployeeForm, setShowEmployeeForm] = useState(false)
 
   const {
@@ -171,6 +172,9 @@ export default function EmployeePage() {
           </Box>
         )
       )}
+      <Box sx={{ padding: 2 }}>
+        <EmployeeFishFarmsTable employeeId={employeeId} />
+      </Box>
       {showEmployeeForm && employee && employeeId && (
         <EmployeeForm
           initialValues={employee}

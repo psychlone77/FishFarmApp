@@ -19,7 +19,10 @@ axiosInstance.interceptors.response.use(
     // Handle errors
     if (error.response) {
       // Server responded with a status other than 200 range
-      const message = error.response.data.message || 'An unknown error has occurred';
+      let message = error.response.data.message || 'An unknown error has occurred';
+      if (message.length > 50) {
+        message = message.substring(0, 47) + '...';
+      }
       console.error('This error is from axiosInstance:', error.response);
       switch (error.response.status) {
         case 400:
@@ -35,10 +38,10 @@ axiosInstance.interceptors.response.use(
           toast.error('Not Found: ' + message);
           break;
         case 500:
-          toast.error('Internal Server Error: ' + message);
+          toast.error('Internal Server Error');
           break;
         default:
-          toast.error('Error: ' + message);
+          toast.error('An Unknow Error has occured: ' + message);
           break;
       }
     } else if (error.request) {

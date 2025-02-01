@@ -3,6 +3,7 @@ import { AuthContextType, LoginRequest } from '../types/types'
 import { checkSession, loginAction } from '../actions/authActions'
 import { useNavigate } from 'react-router'
 import axiosInstance from '../actions/axiosInstance.ts'
+import { useQueryClient } from 'react-query'
 
 const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
@@ -16,6 +17,7 @@ const AuthContext = createContext<AuthContextType>({
 })
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const queryClient = useQueryClient()
   const navigate = useNavigate()
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
@@ -76,8 +78,9 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setToken('')
     setUser(null)
     setRole('')
-    removeUserDetails()
-    delete axiosInstance.defaults.headers.common['Authorization']
+    removeUserDetails();
+    delete axiosInstance.defaults.headers.common['Authorization'];
+    queryClient.invalidateQueries();
     navigate('/login')
   }
 

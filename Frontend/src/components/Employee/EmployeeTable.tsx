@@ -111,7 +111,7 @@ export default function EmployeeTable({ fishFarmId }: { fishFarmId: string | und
                 '&:last-child td, &:last-child th': { border: 0 },
               }}
               onClick={() => {
-                navigate(`employees/${employee.id}`)
+                navigate(`/employees/${employee.id}`, {preventScrollReset: false})
               }}
             >
               <TableCell align='center'>{employee.id}</TableCell>
@@ -146,7 +146,6 @@ export default function EmployeeTable({ fishFarmId }: { fishFarmId: string | und
       </Table>
       <EmployeeForm
         title='Add Employee'
-        fishFarmId={fishFarmId!}
         open={showEmployeeForm}
         handleClose={() => setShowEmployeeForm(false)}
       />

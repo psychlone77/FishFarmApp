@@ -8,6 +8,7 @@ import FishFarmPage from '../pages/FishFarmPage'
 import EmployeePage from '../pages/EmployeePage'
 import NotFoundPage from '../pages/NotFoundPage'
 import EmployeesPage from '../pages/EmployeesPage'
+import AdminsPage from '../pages/AdminsPage'
 
 export default function AppRoutes() {
   return (
@@ -15,6 +16,7 @@ export default function AppRoutes() {
       <Route path='/' element={<PrivateRoute element={<Layout />} />}>
         <Route index element={<HomePage />} />
         <Route path='employees' element={<EmployeesPage />} />
+        <Route path='admins' element={<AdminsPage />} />
         <Route path='fish-farms/:fishFarmId' element={<FishFarmPage />} />
         <Route path='employees/:employeeId' element={<EmployeePage />} />
       </Route>

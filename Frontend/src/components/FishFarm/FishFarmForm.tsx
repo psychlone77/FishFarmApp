@@ -16,9 +16,8 @@ import { FishFarmFormProps } from '../../types/interfaces'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FishFarmRequestSchema } from '../../types/schemas'
 import { useNavigate } from 'react-router'
-import { toast } from 'react-toastify'
 import ImagePicker from '../ImagePicker'
-import { notifyError, notifySuccess } from '../../contexts/ToastContext'
+import { useToast } from '../../contexts/ToastContext'
 
 const style = {
   position: 'absolute',
@@ -39,6 +38,7 @@ export default function FishFarmForm({
   initialValues,
 }: FishFarmFormProps) {
   const queryClient = useQueryClient()
+  const { notifySuccess } = useToast()
   const navigate = useNavigate()
   const {
     register,
@@ -76,9 +76,6 @@ export default function FishFarmForm({
           notifySuccess('Fish farm deleted successfully')
           handleClose()
           navigate('/')
-        },
-        onError: () => {
-          notifyError('Error deleting fish farm')
         },
       })
     }

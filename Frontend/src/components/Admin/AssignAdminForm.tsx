@@ -14,7 +14,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { assignAdmin, getUnassignedAdmins } from '../../actions/adminActions'
 import { EmployeeResponse } from '../../types/types'
-import { notifyError, notifySuccess } from '../../contexts/ToastContext'
+import { useToast } from '../../contexts/ToastContext'
 
 export default function AssignAdminForm({
     open,
@@ -26,6 +26,7 @@ export default function AssignAdminForm({
     fishFarmId: string
 }) {
     const queryClient = useQueryClient()
+    const { notifySuccess } = useToast()
     const [searchTerm, setSearchTerm] = useState('')
     const [selectedAdmin, setSelectedAdmin] = useState<EmployeeResponse | null>(null)
     const [filteredAdmins, setFilteredAdmins] = useState<EmployeeResponse[]>([])
@@ -44,9 +45,6 @@ export default function AssignAdminForm({
             queryClient.invalidateQueries(['admins', fishFarmId])
             notifySuccess('Admin assigned successfully')
             setSelectedAdmin(null)
-        },
-        onError: () => {
-            notifyError('Failed to assign admin')
         },
     })
 

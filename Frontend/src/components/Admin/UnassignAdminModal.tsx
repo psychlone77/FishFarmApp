@@ -2,8 +2,7 @@ import { Modal, Box, Typography, Button } from '@mui/material'
 import { useMutation, useQueryClient } from 'react-query'
 import { unassignAdmin } from '../../actions/adminActions'
 import { EmployeeResponse } from '../../types/types'
-import { toast } from 'react-toastify'
-import { notifyError, notifySuccess } from '../../contexts/ToastContext'
+import { useToast } from '../../contexts/ToastContext'
 
 interface UnassignAdminModalProps {
     open: boolean
@@ -19,14 +18,12 @@ export default function UnassignAdminModal({
     fishFarmId,
 }: UnassignAdminModalProps) {
     const queryClient = useQueryClient()
+    const { notifySuccess } = useToast()
     const mutation = useMutation(() => unassignAdmin(fishFarmId, admin.id), {
         onSuccess: () => {
             queryClient.invalidateQueries(['admins', fishFarmId, 'unassigned'])
             queryClient.invalidateQueries(['admins', fishFarmId])
             notifySuccess('Admin unassigned successfully')
-        },
-        onError: () => {
-            notifyError('Failed to unassign admin')
         },
     })
     const handleConfirm = () => {

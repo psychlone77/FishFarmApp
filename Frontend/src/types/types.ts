@@ -7,6 +7,7 @@ import {
   EmployeeResponseSchema,
   BoatSchema,
   BoatFullResponseSchema,
+  FishFarmUserSchema,
 } from './schemas'
 import { AxiosResponse } from 'axios'
 
@@ -22,6 +23,7 @@ export type AuthContextType = {
 export type LoginRequest = z.infer<typeof LoginRequestSchema>
 export type FishFarmResponse = z.infer<typeof FishFarmResponseSchema>
 export type FishFarmRequest = z.infer<typeof FishFarmRequestSchema>
+export type FishFarmUser = z.infer<typeof FishFarmUserSchema>
 export type EmployeeResponse = z.infer<typeof EmployeeResponseSchema>
 export type EmployeeRequest = z.infer<typeof EmployeeRequestSchema>
 export type Boat = z.infer<typeof BoatSchema>

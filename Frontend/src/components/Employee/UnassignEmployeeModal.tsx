@@ -2,8 +2,7 @@ import { Modal, Box, Typography, Button } from '@mui/material'
 import { useMutation, useQueryClient } from 'react-query'
 import { unassignEmployee } from '../../actions/employeeActions'
 import { EmployeeResponse } from '../../types/types'
-import { toast } from 'react-toastify'
-import { notifyError, notifySuccess } from '../../contexts/ToastContext'
+import { useToast } from '../../contexts/ToastContext'
 
 interface UnassignModalProps {
   open: boolean
@@ -19,14 +18,12 @@ export default function UnassignEmployeeModal({
   fishFarmId,
 }: UnassignModalProps) {
   const queryClient = useQueryClient()
+  const { notifySuccess } = useToast()
   const mutation = useMutation(() => unassignEmployee(fishFarmId, employee.id), {
     onSuccess: () => {
       queryClient.invalidateQueries(['employees', fishFarmId, 'unassigned'])
       queryClient.invalidateQueries(['employees', fishFarmId])
       notifySuccess('Employee unassigned successfully')
-    },
-    onError: () => {
-      notifyError('Failed to unassign employee')
     },
   })
   const handleConfirm = () => {

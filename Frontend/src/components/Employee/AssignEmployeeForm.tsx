@@ -14,8 +14,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { assignEmployee, getUnassignedEmployees } from '../../actions/employeeActions'
 import { EmployeeResponse } from '../../types/types'
-import { toast } from 'react-toastify'
-import { notifyError, notifySuccess } from '../../contexts/ToastContext'
+import { useToast } from '../../contexts/ToastContext'
 
 export default function AssignEmployeeForm({
   open,
@@ -27,6 +26,7 @@ export default function AssignEmployeeForm({
   fishFarmId: string
 }) {
   const queryClient = useQueryClient()
+  const { notifySuccess } = useToast()
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedEmployee, setSelectedEmployee] = useState<EmployeeResponse | null>(null)
   const [filteredEmployees, setFilteredEmployees] = useState<EmployeeResponse[]>([])
@@ -45,9 +45,6 @@ export default function AssignEmployeeForm({
       queryClient.invalidateQueries(['employees', fishFarmId])
       notifySuccess('Employee assigned successfully')
       setSelectedEmployee(null)
-    },
-    onError: () => {
-      notifyError('Failed to assign employee')
     },
   })
 

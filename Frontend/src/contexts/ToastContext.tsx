@@ -17,7 +17,9 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   }
 
   const notifyError = (message: string) => {
-    toast.error(message)
+    toast.error(message, {
+      toastId: message,
+    })
   }
 
   return (
@@ -45,14 +47,4 @@ export const useToast = (): ToastContextProps => {
     throw new Error('useToast must be used within a ToastProvider')
   }
   return context
-}
-
-export const notifySuccess = (message: string) => {
-    const { notifySuccess } = useToast()
-    return notifySuccess(message)
-}
-
-export const notifyError = (message: string) => {
-    const { notifyError } = useToast()
-    return notifyError(message)
 }

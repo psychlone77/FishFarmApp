@@ -1,5 +1,5 @@
 import axiosInstance from './axiosInstance.ts'
-import { EmployeeRequest, EmployeeResponse } from '../types/types'
+import { EmployeeRequest, EmployeeResponse, FishFarmUser } from '../types/types'
 
 export async function getEmployees(): Promise<EmployeeResponse[]> {
   const response = await axiosInstance.get('Employee/all')
@@ -96,5 +96,10 @@ export async function unassignEmployee(
   const response = await axiosInstance.post(
     `Employee/FishFarm/${fishFarmId}/unassign/${employeeId}`
   )
+  return response.data
+}
+
+export async function getFishFarmsByEmployee(employeeId: string): Promise<FishFarmUser[]> {
+  const response = await axiosInstance.get(`Employee/${employeeId}/fishfarms`)
   return response.data
 }

@@ -116,7 +116,7 @@ export default function AdminTable({ fishFarmId }: { fishFarmId: string | undefi
                 '&:last-child td, &:last-child th': { border: 0 },
               }}
               onClick={() => {
-                navigate(`admins/${admin.id}`)
+                navigate(`/employees/${admin.id}`)
               }}
             >
               <TableCell align='center'>{admin.id}</TableCell>
