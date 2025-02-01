@@ -109,7 +109,9 @@ namespace DAL.Repository
 
         public async Task<IList<FishFarmUser>> GetFishFarmsByUser(Guid userId)
         {
-            return await _fishFarmAppDbContext.FishFarmUser.Where(fu => fu.UserId == userId).ToListAsync();
+            return await _fishFarmAppDbContext.FishFarmUser
+                .Include(f => f.FishFarm)
+                .Where(fu => fu.UserId == userId).ToListAsync();
         }
     }
 }

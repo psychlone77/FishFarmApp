@@ -13,6 +13,12 @@ namespace BLL.Services
         private readonly IUserRepository _userRepository = userRepository;
         private readonly IMapper _mapper = mapper;
 
+        public async Task<IList<EmployeeResponseDTO>> GetAdmins()
+        {
+            var admins = await _employeeRepository.GetEmployeeEntities(UserRole.Admin);
+            return _mapper.Map<IList<EmployeeResponseDTO>>(admins);
+        }
+
         public async Task<IList<EmployeeResponseDTO>> GetAdmins(Guid fishFarmId)
         {
             var admins = await _employeeRepository.GetEmployeeEntities(fishFarmId, UserRole.Admin);

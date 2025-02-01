@@ -15,15 +15,30 @@ namespace API.Controllers
         private readonly IAdminService _adminService = adminService;
 
         [HttpGet]
-        [Route("{fishFarm}")]
+        [Route("all")]
+        public async Task<ActionResult<IList<EmployeeResponseDTO>>> GetAllAdmins()
+        {
+            var result = await _adminService.GetAdmins();
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("fishfarms/{fishFarm}")]
         public async Task<ActionResult<IList<EmployeeResponseDTO>>> GetAdmins(Guid fishFarm)
         {
             var result = await _adminService.GetAdmins(fishFarm);
             return Ok(result);
         }
 
+        //[HttpGet]
+        //[Route("{adminId}")]
+        //public async Task<ActionResult> GetAdmin(string adminId)
+        //{
+
+        //}
+
         [HttpPost]
-        [Route("{fishFarm}/assign/{adminId}")]
+        [Route("fishfarms/{fishFarm}/assign/{adminId}")]
         public async Task<ActionResult<FishFarmUser>> AssignAdmin(Guid fishFarm, string adminId)
         {
             var result = await _adminService.AddAdminToFishFarm(adminId, fishFarm);
@@ -31,7 +46,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Route("{fishFarm}/unassign/{adminId}")]
+        [Route("fishfarms/{fishFarm}/unassign/{adminId}")]
         public async Task<ActionResult<FishFarmUser>> UnassignAdmin(Guid fishFarm, string adminId)
         {
             var result = await _adminService.RemoveAdminFromFishFarm(adminId, fishFarm);
@@ -39,8 +54,8 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Route("{fishFarm}/unassigned")]
-        public async Task<ActionResult> GetUnassignedEmployees(Guid fishFarmId)
+        [Route("fishfarms/{fishFarmId}/unassigned")]
+        public async Task<ActionResult> GetUnassignedAdmins(Guid fishFarmId)
         {
             var result = await _adminService.GetUnassignedAdminsToFishFarm(fishFarmId);
             return Ok(result);

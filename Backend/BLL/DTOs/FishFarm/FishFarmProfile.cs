@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BLL.Services.Interfaces;
 using DAL.Entities;
+using static BLL.Utils.Helpers;
 
 namespace BLL.DTOs.FishFarm
 {
@@ -12,12 +13,12 @@ namespace BLL.DTOs.FishFarm
             CreateMap<FishFarmEntity, FishFarmResponseDTO>()
                             .ForMember(dest => dest.HasBarge, opt => opt.MapFrom<HasBargeResolver>());
             CreateMap<FishFarmEntity, FishFarmRequestDTO>();
-            CreateMap<FishFarmUser, FishFarmUserDTO>();
+            CreateMap<FishFarmUser, FishFarmUserDTO>()
+                .ForMember(dest => dest.PermissionLevel, opt => opt.MapFrom(src => GetPermissionsString(src.PermissionLevel)));
 
             // BLL -> DAL
             CreateMap<FishFarmResponseDTO, FishFarmEntity>();
             CreateMap<FishFarmRequestDTO, FishFarmEntity>();
-            CreateMap<FishFarmUserDTO, FishFarmUser>();
         }
     }
 

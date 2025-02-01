@@ -16,6 +16,6 @@ namespace DAL.Repository.Interface
         Task<FishFarmUser?> GetFishFarmUser(Guid fishFarmId, Guid userId);
         Task<FishFarmUser> AddUserToFishFarm(Guid fishFarmId, Guid userId, int permissionLevel);
         Task<FishFarmUser?> RemoveUserFromFishFarm(Guid fishFarmId, Guid userId);
-        Task<IList<FishFarmEntity>> GetFishFarmsByUser(Guid userId);
+        Task<IList<FishFarmUser>> GetFishFarmsByUser(Guid userId);
     }
 }

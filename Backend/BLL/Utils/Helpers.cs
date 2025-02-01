@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Reflection;
+using DAL.Entities;
 
 namespace BLL.Utils
 {
@@ -24,6 +25,16 @@ namespace BLL.Utils
         public static bool CompareEnumDisplayName<TEnum>(string displayName, TEnum enumValue) where TEnum : struct, Enum
         {
             return GetEnumDisplayName(enumValue) == displayName;
+        }
+
+        public static string GetPermissionsString(int permissionLevel)
+        {
+            var permissions = Enum.GetValues(typeof(PermissionLevel))
+                                  .Cast<PermissionLevel>()
+                                  .Where(p => (permissionLevel & (int)p) != 0)
+                                  .Select(p => GetEnumDisplayName(p))
+                                  .ToArray();
+            return string.Join(", ", permissions);
         }
     }
 }

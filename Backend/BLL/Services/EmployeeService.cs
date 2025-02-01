@@ -17,13 +17,9 @@ namespace BLL.Services
         private readonly IBlobStorage _blobStorage = blobStorage;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<IList<EmployeeResponseDTO>> GetEmployees(string userId, string userRole)
+        public async Task<IList<EmployeeResponseDTO>> GetEmployees()
         {
-            IList<EmployeeEntity> employee;
-            if (Helpers.CompareEnumDisplayName(userRole, UserRole.SuperAdmin))
-                employee = await _employeeRepository.GetEmployeeEntities(UserRole.Employee);
-            else
-                employee = await _employeeRepository.GetEmployeeEntities(UserRole.Employee, userId);
+            var employee = await _employeeRepository.GetEmployeeEntities(UserRole.Employee);
             return _mapper.Map<IList<EmployeeResponseDTO>>(employee);
         }
 
@@ -48,8 +44,6 @@ namespace BLL.Services
             var user = await _userRepository.GetUserByEmployeeId(employeeId);
             if (user is null)
                 throw new KeyNotFoundException($"User with employee id {employeeId} not found");
-            if (user.Role != UserRole.Employee)
-                throw new InvalidOperationException("This user is not an employee");
             var fishFarms = await _userRepository.GetFishFarmsByUser(user.Id);
             return _mapper.Map<IList<FishFarmUserDTO>>(fishFarms);
         }
@@ -77,6 +71,14 @@ namespace BLL.Services
                 await _blobStorage.DeleteFile("employee-images", employeeId);
                 var imageURL = await _blobStorage.UploadFile("employee-images", employeeId, employee.Image.OpenReadStream());
                 employeeEntity.ImageURL = imageURL;
+            }
+            else
+            {
+                var existingEmployee = await _employeeRepository.GetEmployeeEntityById(employeeId);
+                if (existingEmployee != null)
+                {
+                    employeeEntity.ImageURL = existingEmployee.ImageURL;
+                }
             }
             var updatedEmployee = await _employeeRepository.UpdateEmployeeEntity(employeeEntity);
             if (updatedEmployee is null)

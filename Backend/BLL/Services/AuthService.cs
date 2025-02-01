@@ -46,7 +46,7 @@ namespace BLL.Services
             };
         }
 
-        public async Task<EmployeeResponseDTO> EmployeeRegister(EmployeeRegisterDTO registerRequest)
+        public async Task<EmployeeResponseDTO> EmployeeRegister(EmployeeRegisterDTO registerRequest, UserRole userRole)
         {
             var check = await _userRepository.GetUserByEmail(registerRequest.Email);
             if (check != null)
@@ -57,7 +57,7 @@ namespace BLL.Services
             {
                 Email = registerRequest.Email,
                 PasswordHash = hashedPassword,
-                Role = UserRole.Employee,
+                Role = userRole,
                 EmployeeId = addEmployee.Id,
                 Employee = addEmployee
             };
@@ -67,25 +67,21 @@ namespace BLL.Services
             {
                 await _blobStorage.DeleteFile("employee-images", addedEmployee.Id);
                 var imageURL = await _blobStorage.UploadFile("employee-images", addedEmployee.Id, registerRequest.Image.OpenReadStream());
-                addEmployee.ImageURL = imageURL;
+                addedEmployee.ImageURL = imageURL;
+                addedEmployee = await _employeeRepository.UpdateEmployeeEntity(addedEmployee);
             }
-            return _mapper.Map<EmployeeResponseDTO>(addEmployee);
+            return _mapper.Map<EmployeeResponseDTO>(addedEmployee);
         }
 
-        public async Task<EmployeeResponseDTO> AdminRegister(EmployeeRegisterDTO registerRequest)
+        public async Task<EmployeeResponseDTO> GetMyDetails(Guid userId)
         {
-            var hashedPassword = new PasswordHasher<IdentityUser>().HashPassword(new IdentityUser(), registerRequest.Password);
-            var addEmployee = _mapper.Map<EmployeeEntity>(registerRequest);
-            var userEntity = new UserEntity
-            {
-                Email = registerRequest.Email,
-                PasswordHash = hashedPassword,
-                Role = UserRole.Admin,
-                EmployeeId = addEmployee.Id,
-                Employee = addEmployee
-            };
-            await _userRepository.AddUser(userEntity);
-            return _mapper.Map<EmployeeResponseDTO>(addEmployee);
+            var user = await _userRepository.GetUserById(userId);
+            if (user == null)
+                throw new KeyNotFoundException("User not found");
+            var employee = await _employeeRepository.GetEmployeeEntityById(user.EmployeeId);
+            if (employee == null)
+                throw new KeyNotFoundException("Employee not found");
+            return _mapper.Map<EmployeeResponseDTO>(employee);
         }
 
         public async Task CheckFishFarmAccess(Guid fishFarmId, string userId, PermissionLevel permissionLevel)

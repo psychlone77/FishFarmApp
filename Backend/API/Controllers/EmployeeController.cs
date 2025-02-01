@@ -19,10 +19,10 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("all")]
+        [Authorize(Roles = "SuperAdmin")]
         public async Task<ActionResult<List<EmployeeResponseDTO>>> GetEmployees()
         {
-            var (userId, userRole) = GetClaims(User);
-            return Ok(await _employeesService.GetEmployees(userId, userRole));
+            return Ok(await _employeesService.GetEmployees());
         }
 
         [HttpGet]

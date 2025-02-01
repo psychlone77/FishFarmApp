@@ -17,14 +17,19 @@ namespace DAL.Repository
                 .ToListAsync();
         }
 
-        public async Task<IList<EmployeeEntity>> GetEmployeeEntities(UserRole userRole, string userId)
+        public async Task<IList<EmployeeEntity>> GetEmployeeEntities(UserRole userRole, Guid userId)
         {
-            return await _context.Employees
-                .Include(e => e.User)
-                .Where(e => e.User != null && e.User.Role == userRole &&
-                            e.User.FishFarms != null && e.User.FishFarms
-                            .Any(ff => ff.Users != null && ff.Users.Any(u => u.EmployeeId == userId)))
+            var employees = await _context.Employees
+                .Include(e => e.User!)
+                .ThenInclude(u => u.FishFarms!)
+                .ThenInclude(ff => ff.Users)
+                .Where(e => e.User != null && e.User.Role == userRole)
                 .ToListAsync();
+
+            return employees
+                .Where(e => e.User != null && e.User.FishFarms != null &&
+                            e.User.FishFarms.Any(ff => ff.Users != null && ff.Users.Any(u => u.Id == userId)))
+                .ToList();
         }
 
         public async Task<IList<EmployeeEntity>> GetEmployeeEntities(Guid fishFarmId, UserRole userRole)

@@ -1,5 +1,6 @@
 ﻿using BLL.DTOs.Employee;
 using BLL.DTOs.User;
+using static API.Utils.Auth;
 using BLL.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +25,7 @@ namespace API.Controllers
         [Authorize(Roles = "SuperAdmin,Roles")]
         public async Task<ActionResult> EmployeeRegister([FromForm] EmployeeRegisterDTO registerRequest)
         {
-            return Ok(await _authService.EmployeeRegister(registerRequest));
+            return Ok(await _authService.EmployeeRegister(registerRequest, DAL.Entities.UserRole.Employee));
         }
 
         [HttpPost]
@@ -32,7 +33,16 @@ namespace API.Controllers
         [Authorize(Roles = "SuperAdmin")]
         public async Task<ActionResult> AdminRegister([FromForm] EmployeeRegisterDTO registerRequest)
         {
-            return Ok(await _authService.AdminRegister(registerRequest));
+            return Ok(await _authService.EmployeeRegister(registerRequest, DAL.Entities.UserRole.Admin));
+        }
+
+        [HttpGet]
+        [Route("my-details")]
+        [Authorize]
+        public async Task<ActionResult> GetMyDetails()
+        {
+            var (userId, userRole) = GetClaims(User);
+            return Ok(await _authService.GetMyDetails(Guid.Parse(userId)));
         }
 
         [HttpGet]

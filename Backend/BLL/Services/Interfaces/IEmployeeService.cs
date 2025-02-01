@@ -6,7 +6,7 @@ namespace BLL.Services.Interfaces
 {
     public interface IEmployeeService
     {
-        Task<IList<EmployeeResponseDTO>> GetEmployees(string userId, string userRole);
+        Task<IList<EmployeeResponseDTO>> GetEmployees();
         Task<IList<EmployeeResponseDTO>> GetEmployeesByFishFarm(Guid fishFarmId, string userId, string userRole);
         Task<EmployeeResponseDTO> GetEmployeeById(string employeeId, string userId, string userRole);
         Task<IList<FishFarmUserDTO>> GetFishFarmsByEmployee(string employeeId);
