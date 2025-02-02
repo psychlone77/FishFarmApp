@@ -65,6 +65,13 @@ namespace API.Controllers
             return Ok(await _employeesService.DeleteEmployee(employeeId));
         }
 
+        [HttpGet]
+        [Route("positions")]
+        public ActionResult GetPositions()
+        {
+            return Ok(_employeesService.GetEmployeePositions());
+        }
+
         [HttpPost]
         [Route("FishFarm/{fishFarmId}/assign/{employeeId}")]
         [Authorize(Roles = "SuperAdmin,Admin")]

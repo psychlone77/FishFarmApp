@@ -96,6 +96,14 @@ namespace BLL.Services
             return _mapper.Map<EmployeeResponseDTO>(deletedEmployee);
         }
 
+        public IList<string> GetEmployeePositions()
+        {
+            return Enum.GetValues(typeof(EmployeePosition))
+                       .Cast<EmployeePosition>()
+                       .Select(position => Helpers.GetEnumDisplayName(position))
+                       .ToList();
+        }
+
         public async Task<FishFarmUserDTO> AddEmployeeToFishFarm(string employeeId, Guid fishFarmId)
         {
             var user = await _userRepository.GetUserByEmployeeId(employeeId);

@@ -4,7 +4,6 @@
     {
         public required string Email { get; set; }
         public required string Password { get; set; }
-
     }
 
     public class  LoginSuccess<T>
@@ -13,6 +12,23 @@
         public required string Email { get; set; }
         public required string Role { get; set; }
         public required T UserData { get; set; }
+    }
 
+    public class UserResponse<T>
+    {
+        public required string Role { get; set; }
+        public required string Email { get; set; }
+        public required T User { get; set; }
+    }
+
+    public class UpdateEmailRequest
+    {
+        public required string Email { get; set; }
+    }
+
+    public class UpdatePasswordRequest
+    {
+        public required string OldPassword { get; set; }
+        public required string NewPassword { get; set; }
     }
 }

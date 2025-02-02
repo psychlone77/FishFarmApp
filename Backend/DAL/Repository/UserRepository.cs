@@ -32,7 +32,7 @@ namespace DAL.Repository
 
         public Task<UserEntity?> GetUserById(Guid userId)
         {
-            throw new NotImplementedException();
+            return _fishFarmAppDbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
         }
 
         public Task<UserEntity?> GetUserByEmployeeId(string employeeId)
@@ -45,9 +45,11 @@ namespace DAL.Repository
             throw new NotImplementedException();
         }
 
-        public Task<UserEntity?> UpdateUser(UserEntity user)
+        public Task<UserEntity> UpdateUser(UserEntity user)
         {
-            throw new NotImplementedException();
+            var updatedUser = _fishFarmAppDbContext.Users.Update(user);
+            _fishFarmAppDbContext.SaveChanges();
+            return Task.FromResult(updatedUser.Entity);
         }
 
         public async Task FailedLoginAttempt(Guid userId)

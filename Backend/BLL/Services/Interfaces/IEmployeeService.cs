@@ -12,6 +12,7 @@ namespace BLL.Services.Interfaces
         Task<IList<FishFarmUserDTO>> GetFishFarmsByEmployee(string employeeId);
         Task<EmployeeResponseDTO> UpdateEmployee(EmployeeRequestDTO employee, string employeeId);
         Task<EmployeeResponseDTO> DeleteEmployee(string employeeId);
+        IList<string> GetEmployeePositions();
         Task<FishFarmUserDTO> AddEmployeeToFishFarm(string employeeId, Guid fishFarmId);
         Task<FishFarmUserDTO> RemoveEmployeeFromFishFarm(string employeeId, Guid fishFarmId);
         Task<IList<EmployeeResponseDTO>> GetUnassignedEmployeesToFishFarm(Guid fishFarmId);

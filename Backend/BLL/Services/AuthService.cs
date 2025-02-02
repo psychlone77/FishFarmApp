@@ -73,7 +73,7 @@ namespace BLL.Services
             return _mapper.Map<EmployeeResponseDTO>(addedEmployee);
         }
 
-        public async Task<EmployeeResponseDTO> GetMyDetails(Guid userId)
+        public async Task<UserResponse<EmployeeResponseDTO>> GetMyDetails(Guid userId)
         {
             var user = await _userRepository.GetUserById(userId);
             if (user == null)
@@ -81,7 +81,39 @@ namespace BLL.Services
             var employee = await _employeeRepository.GetEmployeeEntityById(user.EmployeeId);
             if (employee == null)
                 throw new KeyNotFoundException("Employee not found");
-            return _mapper.Map<EmployeeResponseDTO>(employee);
+            return new UserResponse<EmployeeResponseDTO>
+            {
+                User = _mapper.Map<EmployeeResponseDTO>(employee),
+                Email = user.Email,
+                Role = user.Role.ToString()
+            };
+        }
+
+        public async Task<String> UpdateMyEmail(Guid userId, string newEmail)
+        {
+            var user = await _userRepository.GetUserById(userId);
+            if (user == null)
+                throw new KeyNotFoundException("User not found");
+            var check = await _userRepository.GetUserByEmail(newEmail);
+            if (check != null)
+                throw new ArgumentException("User with this email already exists");
+            user.Email = newEmail;
+            await _userRepository.UpdateUser(user);
+            return await Task.FromResult(newEmail);
+        }
+
+        public async Task UpdateMyPassword(Guid userId, string oldPassword, string newPassword)
+        {
+            var user = await _userRepository.GetUserById(userId);
+            if (user == null)
+                throw new KeyNotFoundException("User not found");
+            var passwordVerificationResult = new PasswordHasher<IdentityUser>()
+                .VerifyHashedPassword(new IdentityUser(), user.PasswordHash, oldPassword);
+            if (passwordVerificationResult == PasswordVerificationResult.Failed)
+                throw new UnauthorizedAccessException("Old Password is incorrect");
+            user.PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(new IdentityUser(), newPassword);
+            await _userRepository.UpdateUser(user);
+            return;
         }
 
         public async Task CheckFishFarmAccess(Guid fishFarmId, string userId, PermissionLevel permissionLevel)

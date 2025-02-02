@@ -28,7 +28,7 @@ namespace BLL.Services
                 _config["Jwt:Issuer"],
                 _config["Jwt:Audience"],
                 claims,
-                expires: DateTime.Now.AddDays(1),
+                expires: DateTime.Now.AddHours(24),
                 signingCredentials: creds
             );
 

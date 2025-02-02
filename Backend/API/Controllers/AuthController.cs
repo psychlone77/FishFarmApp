@@ -37,12 +37,32 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Route("my-details")]
+        [Route("me")]
         [Authorize]
         public async Task<ActionResult> GetMyDetails()
         {
-            var (userId, userRole) = GetClaims(User);
+            var (userId, _) = GetClaims(User);
             return Ok(await _authService.GetMyDetails(Guid.Parse(userId)));
+        }
+
+        [HttpPut]
+        [Route("email")]
+        [Authorize]
+        public async Task<ActionResult> UpdateMyEmail(UpdateEmailRequest emailRequest)
+        {
+            var (userId, _) = GetClaims(User);
+            var email = await _authService.UpdateMyEmail(Guid.Parse(userId), emailRequest.Email);
+            return Ok(email);
+        }
+
+        [HttpPut]
+        [Route("password")]
+        [Authorize]
+        public async Task<ActionResult> UpdateMyPassword(UpdatePasswordRequest passwordRequest)
+        {
+            var (userId, _) = GetClaims(User);
+            await _authService.UpdateMyPassword(Guid.Parse(userId), passwordRequest.OldPassword, passwordRequest.NewPassword);
+            return Ok();
         }
 
         [HttpGet]

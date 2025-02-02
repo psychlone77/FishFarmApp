@@ -8,7 +8,9 @@ namespace BLL.Services.Interfaces
     {
         public Task<LoginSuccess<EmployeeResponseDTO>> EmployeeLogin(LoginRequest loginRequest);
         public Task<EmployeeResponseDTO> EmployeeRegister(EmployeeRegisterDTO registerRequest, UserRole userRole);
-        public Task<EmployeeResponseDTO> GetMyDetails(Guid userId);
+        public Task<UserResponse<EmployeeResponseDTO>> GetMyDetails(Guid userId);
+        public Task<String> UpdateMyEmail(Guid userId, string newEmail);
+        public Task UpdateMyPassword(Guid userId, string oldPassword, string newPassword);
         public Task CheckFishFarmAccess(Guid fishFarmId, string userId, PermissionLevel permissionLevel);
     }
 }
