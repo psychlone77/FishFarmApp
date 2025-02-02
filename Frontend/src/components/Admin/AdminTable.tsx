@@ -67,10 +67,6 @@ export default function AdminTable({ fishFarmId }: { fishFarmId: string | undefi
             <Link />
             Assign Admin
           </Button>
-          <Button variant='contained' onClick={() => setShowAdminForm(true)}>
-            <Add />
-            Add Admin
-          </Button>
         </Box>
       </Box>
       <Table sx={{ minWidth: 300 }}>
@@ -162,14 +158,6 @@ export default function AdminTable({ fishFarmId }: { fishFarmId: string | undefi
           handleClose={() => setShowUnassignModal(false)}
         />
       )}
-      {/* <AdminForm
-        title='Add Admin'
-        fishFarmId={fishFarmId!}
-        open={showAdminForm}
-        handleClose={() => setShowAdminForm(false)}
-      />
-
-      )} */}
     </TableContainer>
   )
 }

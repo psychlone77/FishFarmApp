@@ -14,16 +14,14 @@ import {
   Typography,
 } from '@mui/material'
 import { useNavigate } from 'react-router'
-import { Add, Edit, Link, LinkOff, Person } from '@mui/icons-material'
+import { Edit, Link, LinkOff, Person } from '@mui/icons-material'
 import { useState } from 'react'
-import EmployeeForm from './EmployeeForm'
 import AssignEmployeeForm from './AssignEmployeeForm'
 import UnassignEmployeeModal from './UnassignEmployeeModal'
 import { EmployeeResponse } from '../../types/types'
 
 export default function EmployeeTable({ fishFarmId }: { fishFarmId: string | undefined }) {
   const navigate = useNavigate()
-  const [showEmployeeForm, setShowEmployeeForm] = useState(false)
   const [showAssignEmployeeForm, setShowAssignEmployeeForm] = useState(false)
   const [showUnassignModal, setShowUnassignModal] = useState(false)
   const [unassignEmployee, setUnassignEmployee] = useState<EmployeeResponse | null>(null)
@@ -61,10 +59,6 @@ export default function EmployeeTable({ fishFarmId }: { fishFarmId: string | und
           <Button variant='contained' onClick={() => setShowAssignEmployeeForm(true)}>
             <Link />
             Assign Employee
-          </Button>
-          <Button variant='contained' onClick={() => setShowEmployeeForm(true)}>
-            <Add />
-            Add Employee
           </Button>
         </Box>
       </Box>
@@ -144,11 +138,6 @@ export default function EmployeeTable({ fishFarmId }: { fishFarmId: string | und
           )}
         </TableBody>
       </Table>
-      <EmployeeForm
-        title='Add Employee'
-        open={showEmployeeForm}
-        handleClose={() => setShowEmployeeForm(false)}
-      />
       <AssignEmployeeForm
         open={showAssignEmployeeForm}
         handleClose={() => setShowAssignEmployeeForm(false)}

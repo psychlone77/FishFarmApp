@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { notifyError } from '../contexts/ToastContext';
 
 const baseURL = import.meta.env.VITE_API_BASE_URL
 
@@ -26,32 +27,32 @@ axiosInstance.interceptors.response.use(
       console.error('This error is from axiosInstance:', error.response);
       switch (error.response.status) {
         case 400:
-          toast.error('Bad Request: ' + message);
+          notifyError('Bad Request: ' + message);
           break;
         case 401:
-          toast.error('Unauthorized: ' + message);
+          notifyError('Unauthorized: ' + message);
           break;
         case 403:
-          toast.error('Forbidden: ' + message);
+          notifyError('Forbidden: ' + message);
           break;
         case 404:
-          toast.error('Not Found: ' + message);
+          notifyError('Not Found: ' + message);
           break;
         case 500:
-          toast.error('Internal Server Error');
+          notifyError('Internal Server Error');
           break;
         default:
-          toast.error('An Unknow Error has occured: ' + message);
+          notifyError('An Unknow Error has occured: ' + message);
           break;
       }
     } else if (error.request) {
       // Request was made but no response was received
       console.error('Error request:', error.request);
-      toast.error('Server is not responding');
+      notifyError('Server is not responding');
     } else {
       // Something happened in setting up the request
       console.error('Error message:', error.message);
-      toast.error('Error in setting up the request');
+      notifyError('Error in setting up the request');
     }
     return Promise.reject(error);
   }

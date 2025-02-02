@@ -1,9 +1,10 @@
 import { createContext, useEffect, useState } from 'react'
-import { AuthContextType, LoginRequest } from '../types/types'
-import { checkSession, loginAction } from '../actions/authActions'
+import { AuthContextType, EmployeeResponse, LoginRequest, UserDetail } from '../types/types'
+import { checkSession, getMyDetails, loginAction } from '../actions/authActions'
 import { useNavigate } from 'react-router'
 import axiosInstance from '../actions/axiosInstance.ts'
-import { useQueryClient } from 'react-query'
+import { useQuery, useQueryClient } from 'react-query'
+import { notifyError } from './ToastContext.tsx'
 
 const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
@@ -22,8 +23,13 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [role, setRole] = useState('')
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState<EmployeeResponse|null>(null)
   const [token, setToken] = useState(sessionStorage.getItem('token'))
+
+  const { data: userDetails } = useQuery<UserDetail>('user', getMyDetails, {
+    enabled: false,
+    refetchOnWindowFocus: false,
+  })
 
   const storeUserDetails = (token: string, userData: any, role: string) => {
     sessionStorage.setItem('token', token)
@@ -44,11 +50,11 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`
         try {
           await checkSession()
-          setRole(sessionStorage.getItem('role')!)
-          setUser(JSON.parse(sessionStorage.getItem('user')!))
+          queryClient.refetchQueries('user')
           setIsAuthenticated(true)
         } catch (error) {
-          console.error('Authentication failed', error)
+          notifyError('Session expired. Please login again')
+          navigate('/login')
         }
       }
       setIsLoading(false)
@@ -56,6 +62,13 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     authenticate()
   }, [token])
+
+  useEffect(() => {
+    if (userDetails) {
+      setUser(userDetails.user)
+      setRole(userDetails.role)
+    }
+  }, [userDetails])
 
   const login = async (data: LoginRequest) => {
     const res = await loginAction(data)

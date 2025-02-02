@@ -22,14 +22,14 @@ export default function FishFarmsGrid({
   const [showFishFarmForm, setShowFishFarmForm] = useState(false)
 
   return (
-    <Box sx={{ padding: 2 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+    <>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', background: 'transparent' }}>
         <Typography variant='h3'>Fish Farms</Typography>
         <Authorize requiredAccess={1}>
           <Button
             variant='contained'
             onClick={() => setShowFishFarmForm(true)}
-            sx={{ marginLeft: 2 }}
+            sx={{ marginLeft: 1, height: 40 }}
           >
             <Add />
             Add Fish Farm
@@ -74,6 +74,8 @@ export default function FishFarmsGrid({
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
             gap: 3,
+            maxHeight: 'calc(100vh - 100px)',
+            overflowY: 'auto',
           }}
         >
           {Array.isArray(data) &&
@@ -91,6 +93,6 @@ export default function FishFarmsGrid({
         open={showFishFarmForm}
         handleClose={() => setShowFishFarmForm(false)}
       />
-    </Box>
+      </>
   )
 }

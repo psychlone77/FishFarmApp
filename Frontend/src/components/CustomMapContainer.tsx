@@ -1,7 +1,8 @@
-import { MapContainer, Marker, TileLayer, Tooltip, useMap } from 'react-leaflet';
+import { MapContainer, Marker, Popup, TileLayer, Tooltip, useMap } from 'react-leaflet';
 import { FishFarmResponse } from '../types/types';
 import { LatLngBounds } from 'leaflet';
 import { useEffect } from 'react';
+import FishFarmGridCard from './FishFarm/FishFarmGridCard';
 
 interface CustomMapContainerProps {
   fishFarms: FishFarmResponse[];
@@ -36,6 +37,9 @@ export default function CustomMapContainer({ fishFarms }: CustomMapContainerProp
           <Tooltip direction='top' offset={[-15, -15]} permanent>
             {fishFarm.name}
           </Tooltip>
+          <Popup>
+            <FishFarmGridCard onClick={() => {}} fishFarm={fishFarm} />
+          </Popup>
         </Marker>
       ))}
       <FitBounds bounds={bounds} />

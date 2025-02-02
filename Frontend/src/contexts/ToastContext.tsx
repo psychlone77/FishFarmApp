@@ -10,17 +10,18 @@ interface ToastContextProps {
 
 const ToastContext = createContext<ToastContextProps | undefined>(undefined)
 
+export const notifySuccess = (message: string) => {
+  toast.success(message)
+}
+
+export const notifyError = (message: string) => {
+  toast.error(message, {
+    toastId: message,
+  })
+}
+
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const theme = useTheme()
-  const notifySuccess = (message: string) => {
-    toast.success(message)
-  }
-
-  const notifyError = (message: string) => {
-    toast.error(message, {
-      toastId: message,
-    })
-  }
 
   return (
     <ToastContext.Provider value={{ notifySuccess, notifyError }}>

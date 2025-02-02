@@ -1,9 +1,24 @@
 import { AxiosResponse } from 'axios'
-import { LoginRequest } from '../types/types'
+import { LoginRequest, UpdateEmail, UpdatePasswordRequest, UserDetail } from '../types/types'
 import axiosInstance from './axiosInstance.ts'
 
 export async function checkSession(): Promise<AxiosResponse> {
-  const response = await axiosInstance.get('/Auth/validate-token')
+  const response = await axiosInstance.get('/auth/validate-token')
+  return response
+}
+
+export async function getMyDetails(): Promise<UserDetail> {
+  const response = await axiosInstance.get('/Auth/me')
+  return response.data
+}
+
+export async function updateMyEmail(email: UpdateEmail): Promise<AxiosResponse> {
+  const response = await axiosInstance.put('/auth/email', email)
+  return response
+}
+
+export async function changeMyPassword(changePassword: UpdatePasswordRequest): Promise<AxiosResponse> {
+  const response = await axiosInstance.put('/auth/password', changePassword)
   return response
 }
 

@@ -74,6 +74,11 @@ export async function deleteEmployee(employeeId: string): Promise<void> {
   await axiosInstance.delete(`Employee/${employeeId}`)
 }
 
+export async function getEmployeePositions(): Promise<string[]> {
+  const response = await axiosInstance.get('Employee/positions')
+  return response.data
+}
+
 export async function getUnassignedEmployees(fishFarmId: string): Promise<EmployeeResponse[]> {
   const response = await axiosInstance.get(`Employee/FishFarm/${fishFarmId}/unassigned`)
   return response.data

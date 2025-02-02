@@ -32,15 +32,13 @@ export const FishFarmUserSchema = z.object({
   fishFarm: FishFarmResponseSchema,
 })
 
-export const EmployeePositionEnum = z.enum(['CEO', 'Captain', 'Worker'])
-
 export const EmployeeResponseSchema = z.object({
   id: z.string(),
   name: z.string(),
   age: z.number().positive(),
   email: z.string().email(),
   imageURL: z.union([z.string().url().optional(), z.literal('')]),
-  employeePosition: EmployeePositionEnum,
+  employeePosition: z.string(),
   certifiedUntil: z.date(),
 })
 
@@ -49,7 +47,7 @@ export const EmployeeRequestSchema = z.object({
   age: z.number().positive(),
   email: z.string().email(),
   imageFile: z.instanceof(File).optional(),
-  employeePosition: EmployeePositionEnum,
+  employeePosition: z.string(),
   certifiedUntil: z.date(),
   password: z.string().optional(),
 })
@@ -66,3 +64,22 @@ export const BoatSchema = z.object({
   model: z.string(),
   boatType: z.string(),
 })
+
+export const UserDetailSchema = z.object({
+  email: z.string().email(),
+  role: z.string(),
+  user: EmployeeResponseSchema,
+})
+
+export const UpdateEmailRequestSchema = z.object({
+  email: z.string().email(),
+})
+
+export const UpdatePasswordRequestSchema = z.object({
+  oldPassword: z.string().nonempty('Old password is required'),
+  newPassword: z.string().nonempty('New password is required'),
+  confirmPassword: z.string().nonempty('Confirm password is required'),
+}).refine(data => data.newPassword === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ['confirmPassword'],
+});

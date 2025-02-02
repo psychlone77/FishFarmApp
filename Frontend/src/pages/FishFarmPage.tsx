@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   Card,
+  Grid2,
   List,
   ListItem,
   ListItemIcon,
@@ -136,7 +137,9 @@ export default function FishFarmPage() {
               </Box>
             </Box>
           </Card>
-          <CustomMapContainer fishFarms={[fishFarm]} />
+          <Box sx={{height: '300px', width: '100%'}}>
+            <CustomMapContainer fishFarms={[fishFarm]} />
+          </Box>
         </>
       )}
       {showFishFarmForm && fishFarm && fishFarmId && (
@@ -147,28 +150,17 @@ export default function FishFarmPage() {
           handleClose={() => toggleFishFarmForm(false)}
         />
       )}
-      <Authorize requiredAccess={1}>
-        <Box
-          sx={{
-            display: 'flex',
-            gap: 3,
-            padding: 2,
-            paddingY: 4,
-            flexDirection: { xs: 'column', md: 'column', lg: 'row' },
-          }}
-        >
-          <AdminTable fishFarmId={fishFarmId} />
-        </Box>
-      </Authorize>
       <Box
         sx={{
-          display: 'flex',
-          gap: 3,
           padding: 2,
-          paddingY: 4,
-          flexDirection: { xs: 'column', md: 'column', lg: 'row' },
+          display: 'grid',
+          gridTemplateColumns: 'repeat(2, 1fr)',
+          gap: 3,
         }}
       >
+        <Authorize requiredAccess={1}>
+          <AdminTable fishFarmId={fishFarmId} />
+        </Authorize>
         <Authorize requiredAccess={2}>
           <EmployeeTable fishFarmId={fishFarmId} />
         </Authorize>

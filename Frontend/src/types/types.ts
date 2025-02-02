@@ -8,6 +8,9 @@ import {
   BoatSchema,
   BoatFullResponseSchema,
   FishFarmUserSchema,
+  UpdateEmailRequestSchema,
+  UserDetailSchema,
+  UpdatePasswordRequestSchema,
 } from './schemas'
 import { AxiosResponse } from 'axios'
 
@@ -28,3 +31,6 @@ export type EmployeeResponse = z.infer<typeof EmployeeResponseSchema>
 export type EmployeeRequest = z.infer<typeof EmployeeRequestSchema>
 export type Boat = z.infer<typeof BoatSchema>
 export type BoatFull = z.infer<typeof BoatFullResponseSchema>
+export type UpdateEmail = z.infer<typeof UpdateEmailRequestSchema>
+export type UserDetail = z.infer<typeof UserDetailSchema>
+export type UpdatePasswordRequest = z.infer<typeof UpdatePasswordRequestSchema>

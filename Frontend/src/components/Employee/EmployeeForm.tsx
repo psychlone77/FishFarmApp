@@ -1,5 +1,5 @@
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import {
   TextField,
   Button,
@@ -12,10 +12,10 @@ import {
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import { EmployeeRequest } from '../../types/types'
-import { createEmployee, updateEmployee } from '../../actions/employeeActions'
+import { createEmployee, getEmployeePositions, updateEmployee } from '../../actions/employeeActions'
 import { EmployeeFormProps } from '../../types/interfaces'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { EmployeePositionEnum, EmployeeRequestSchema } from '../../types/schemas'
+import { EmployeeRequestSchema } from '../../types/schemas'
 import ImagePicker from '../ImagePicker'
 import { useToast } from '../../contexts/ToastContext'
 
@@ -46,6 +46,7 @@ export default function EmployeeForm({
     handleSubmit,
     formState: { errors },
   } = useForm<EmployeeRequest>({ resolver: zodResolver(EmployeeRequestSchema) })
+  const { data: employeePositions } = useQuery('employeePositions', getEmployeePositions)
   const mutation = useMutation(
     initialValues
       ? (employee: EmployeeRequest) => updateEmployee(employee, initialValues.id)
@@ -147,7 +148,7 @@ export default function EmployeeForm({
             helperText={errors.employeePosition ? errors.employeePosition.message : ''}
             {...register('employeePosition', { required: true })}
           >
-            {EmployeePositionEnum.options.map(position => (
+            {employeePositions && employeePositions.map(position => (
               <MenuItem key={position} value={position}>
                 {position}
               </MenuItem>
