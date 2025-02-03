@@ -1,15 +1,18 @@
-import { Box, Card, CardContent, Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import { FishFarmResponse } from '../../types/types'
 
 export default function FishFarmGridCard({
   fishFarm,
   onClick,
+  onMouseEnter,
 }: {
   fishFarm: FishFarmResponse
   onClick: () => void
+  onMouseEnter?: () => void
 }) {
   return (
     <Box
+    onMouseEnter={onMouseEnter}
       onClick={onClick}
       sx={{
         maxWidth: 345,

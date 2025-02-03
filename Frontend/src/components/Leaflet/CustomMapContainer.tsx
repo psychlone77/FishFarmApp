@@ -1,7 +1,7 @@
 import { MapContainer, Marker, Popup, TileLayer, Tooltip, useMap } from 'react-leaflet';
 import { Boat, FishFarmResponse } from '../../types/types';
-import { LatLngBounds } from 'leaflet';
-import { useEffect } from 'react';
+import { LatLngBounds, LatLngExpression } from 'leaflet';
+import { useEffect, useState } from 'react';
 import FishFarmGridCard from '../FishFarm/FishFarmGridCard';
 import { boatMarkerIcon, markerIcon } from './CustomMarkers';
 import { Typography } from '@mui/material';
@@ -9,9 +9,10 @@ import { Typography } from '@mui/material';
 interface CustomMapContainerProps {
   fishFarms: FishFarmResponse[];
   boats?: Boat[];
+  hoverId?: string;
 }
 
-const FitBounds = ({ bounds }: { bounds: LatLngBounds }) => {
+const FitBounds = ({ bounds, center }: { bounds: LatLngBounds, center?: LatLngExpression }) => {
   const map = useMap();
 
   useEffect(() => {
@@ -20,17 +21,32 @@ const FitBounds = ({ bounds }: { bounds: LatLngBounds }) => {
     }
   }, [map, bounds]);
 
+  useEffect(() => {
+    if (center) {
+      map.setView(center);
+    }
+  }, [map, center]);
+
   return null;
 };
 
-export default function CustomMapContainer({ fishFarms, boats }: CustomMapContainerProps) {
+export default function CustomMapContainer({ fishFarms, boats, hoverId }: CustomMapContainerProps) {
   const bounds = new LatLngBounds([
     ...fishFarms.map(fishFarm => [fishFarm.latitude, fishFarm.longitude] as [number, number]),
     ...(boats ? boats.map(boat => [boat.latitude, boat.longitude] as [number, number]) : [])
   ]);
+  const [center, setCenter] = useState<LatLngExpression>(bounds.getCenter());
+  useEffect(() => {
+    if (hoverId) {
+      const fishFarm = fishFarms.find(fishFarm => fishFarm.id === hoverId);
+      if (fishFarm) {
+        setCenter([fishFarm.latitude, fishFarm.longitude]);
+      }
+    }
+  }, [hoverId, fishFarms]);
 
   return (
-    <MapContainer center={bounds.getCenter()} minZoom={5} scrollWheelZoom={false}>
+    <MapContainer  minZoom={5} scrollWheelZoom={false}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
@@ -52,7 +68,7 @@ export default function CustomMapContainer({ fishFarms, boats }: CustomMapContai
           </Tooltip>
         </Marker>
       ))}
-      <FitBounds bounds={bounds} />
+      <FitBounds bounds={bounds} center={center} />
     </MapContainer>
   );
 }

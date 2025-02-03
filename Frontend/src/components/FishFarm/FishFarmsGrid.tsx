@@ -11,10 +11,12 @@ export default function FishFarmsGrid({
   data,
   isLoading,
   isError,
+  setHoverId,
 }: {
   data: FishFarmResponse[] | undefined
   isLoading: boolean
   isError: boolean
+  setHoverId?: (id: string) => void
 }) {
   const navigate = useNavigate()
   const theme = useTheme()
@@ -94,6 +96,7 @@ export default function FishFarmsGrid({
           {Array.isArray(data) &&
             data?.map(fishFarm => (
               <FishFarmGridCard
+                onMouseEnter={() => setHoverId && setHoverId(fishFarm.id)}
                 onClick={() => navigate(`/fish-farms/${fishFarm.id}`)}
                 key={fishFarm.id}
                 fishFarm={fishFarm}
