@@ -21,8 +21,20 @@ export default function FishFarmsGrid({
   const [showFishFarmForm, setShowFishFarmForm] = useState(false)
 
   return (
-    <>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', background: 'transparent' }}>
+    <Box sx={{ position: 'relative', height: '100%', overflowY: 'auto' }}>
+      <Box
+        sx={{
+          position: 'sticky',
+          zIndex: 1000,
+          top: 0,
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          background: 'transparent',
+          backdropFilter: 'blur(10px)',
+          padding: 2,
+        }}
+      >
         <Typography variant='h3'>Fish Farms</Typography>
         <Authorize requiredAccess={1}>
           <Button
@@ -31,16 +43,16 @@ export default function FishFarmsGrid({
             sx={{ marginLeft: 1, height: 40 }}
           >
             <Add />
-            Add Fish Farm
+            Add
           </Button>
         </Authorize>
       </Box>
-      <Box sx={{ marginTop: 2 }}>
+      <Box>
         {isLoading && (
           <Box
             sx={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+              display: 'flex',
+              // gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
               gap: 3,
             }}
           >
@@ -70,10 +82,12 @@ export default function FishFarmsGrid({
         {isError && <p>Error loading fish farms.</p>}
         <Box
           sx={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+            display: 'flex',
+            flexDirection: 'column',
+            padding: 2,
+            // gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
             gap: 3,
-            height: 'calc(100vh - 100px)',
+            height: '100%',
             overflowY: 'auto',
           }}
         >
@@ -92,6 +106,6 @@ export default function FishFarmsGrid({
         open={showFishFarmForm}
         handleClose={() => setShowFishFarmForm(false)}
       />
-      </>
+    </Box>
   )
 }

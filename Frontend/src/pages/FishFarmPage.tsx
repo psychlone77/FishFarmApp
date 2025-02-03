@@ -1,16 +1,17 @@
-import { useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 import { FishFarmResponse } from '../types/types'
-import { getFishFarm } from '../actions/fishFarmActions'
-import { useQuery } from 'react-query'
+import { deleteFishFarm, getFishFarm } from '../actions/fishFarmActions'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import {
   Box,
   Button,
-  Card, List,
+  Card,
+  List,
   ListItem,
   ListItemIcon,
   ListItemText,
   Skeleton,
-  Typography
+  Typography,
 } from '@mui/material'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import DirectionsBoatFilledIcon from '@mui/icons-material/DirectionsBoatFilled'
@@ -22,11 +23,17 @@ import { useState } from 'react'
 import Authorize from '../components/Authorize'
 import BoatTable from '../components/Boat/BoatTable'
 import AdminTable from '../components/Admin/AdminTable'
-import CustomMapContainer from '../components/CustomMapContainer'
+import CustomMapContainer from '../components/Leaflet/CustomMapContainer'
+import { notifySuccess } from '../contexts/ToastContext'
+import { set } from 'zod'
+import DeleteModal from '../components/DeleteModal'
 
 export default function FishFarmPage() {
+  const queryClient = useQueryClient()
+  const navigate = useNavigate()
   const { fishFarmId } = useParams<{ fishFarmId: string }>()
   const [showFishFarmForm, setShowFishFarmForm] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
   const {
     data: fishFarm,
     isLoading,
@@ -34,6 +41,21 @@ export default function FishFarmPage() {
   } = useQuery<FishFarmResponse>(['fishFarm', fishFarmId], () => getFishFarm(fishFarmId!), {
     enabled: !!fishFarmId,
   })
+
+  const mutationDelete = useMutation(() => deleteFishFarm(fishFarmId!))
+
+  const handleDelete = () => {
+    if (mutationDelete) {
+      mutationDelete.mutate(undefined, {
+        onSuccess: () => {
+          queryClient.invalidateQueries('fishfarms')
+          notifySuccess('Fish farm deleted successfully')
+          setShowDeleteModal(false)
+          navigate('/')
+        },
+      })
+    }
+  }
 
   const toggleFishFarmForm = (toggle: boolean) => {
     setShowFishFarmForm(toggle)
@@ -126,15 +148,28 @@ export default function FishFarmPage() {
                 </Box>
                 <Authorize requiredAccess={2}>
                   <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
-                    <Button variant='contained' onClick={() => toggleFishFarmForm(true)}>
+                    <Button
+                      sx={{ mr: 2 }}
+                      variant='contained'
+                      onClick={() => toggleFishFarmForm(true)}
+                    >
                       Edit
                     </Button>
+                    <Authorize requiredAccess={1}>
+                      <Button
+                        variant='outlined'
+                        color='error'
+                        onClick={() => setShowDeleteModal(true)}
+                      >
+                        Delete Fish Farm
+                      </Button>
+                    </Authorize>
                   </Box>
                 </Authorize>
               </Box>
             </Box>
           </Card>
-          <Box sx={{height: '300px', width: '100%'}}>
+          <Box sx={{ height: '300px', width: '100%' }}>
             <CustomMapContainer fishFarms={[fishFarm]} />
           </Box>
         </>
@@ -145,6 +180,15 @@ export default function FishFarmPage() {
           open={showFishFarmForm}
           title='Edit Fish Farm'
           handleClose={() => toggleFishFarmForm(false)}
+        />
+      )}
+      {showDeleteModal && fishFarmId && (
+        <DeleteModal
+          open={showDeleteModal}
+          handleClose={() => setShowDeleteModal(false)}
+          handleDelete={handleDelete}
+          entityName='Fish Farm'
+          warningText='This fish farm will still remain in the system but will be marked as deleted. Any employees assigned to this fish farm will be unassigned.'
         />
       )}
       <Box

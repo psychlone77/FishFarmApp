@@ -19,6 +19,7 @@ import { useState } from 'react'
 import AssignEmployeeForm from './AssignEmployeeForm'
 import UnassignEmployeeModal from './UnassignEmployeeModal'
 import { EmployeeResponse } from '../../types/types'
+import { checkAccess } from '../Authorize'
 
 export default function EmployeeTable({ fishFarmId }: { fishFarmId: string | undefined }) {
   const navigate = useNavigate()
@@ -99,14 +100,19 @@ export default function EmployeeTable({ fishFarmId }: { fishFarmId: string | und
           {employees?.map(employee => (
             <TableRow
               key={employee.id}
-              hover
-              sx={{
-                '&:hover': { cursor: 'pointer' },
-                '&:last-child td, &:last-child th': { border: 0 },
-              }}
-              onClick={() => {
-                navigate(`/employees/${employee.id}`, {preventScrollReset: false})
-              }}
+              {...checkAccess(1)
+                ? {
+                  hover: true,
+                    sx: {
+                      '&:hover': { cursor: 'pointer' },
+                      '&:last-child td, &:last-child th': { border: 0 },
+                    },
+                    onClick:() => {
+                      navigate(`/employees/${employee.id}`, {preventScrollReset: false})
+                    },
+                  }
+                : {}
+              }
             >
               <TableCell align='center'>{employee.id}</TableCell>
               <TableCell align='center'>{employee.name}</TableCell>
@@ -118,14 +124,13 @@ export default function EmployeeTable({ fishFarmId }: { fishFarmId: string | und
               </TableCell>
               <TableCell align='center'>
                 <LinkOff
-                  sx={{ marginRight: 2, '&:hover': { color: 'red' } }}
+                  sx={{ marginRight: 2, '&:hover': { color: 'red', cursor: 'pointer' } }}
                   onClick={e => {
                     e.stopPropagation()
                     setUnassignEmployee(employee)
                     setShowUnassignModal(true)
                   }}
                 />
-                <Edit />
               </TableCell>
             </TableRow>
           ))}

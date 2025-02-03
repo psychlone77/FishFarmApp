@@ -10,12 +10,15 @@
 main {
   display: flex;
   flex-direction: column;
-  min-height: 90vh;
+  min-height: 100vh;
 }
 
 .body {
-  margin: 0 !important;
   padding: 0;
   font-family: sans-serif;
-  background-color: #f0f0f0;
+  margin-bottom: '20px';
+}
+
+.footer{
+  margin-top: auto;
 }

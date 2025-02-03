@@ -18,7 +18,7 @@ import { FishFarmRequestSchema } from '../../types/schemas'
 import { useNavigate } from 'react-router'
 import ImagePicker from '../ImagePicker'
 import { useToast } from '../../contexts/ToastContext'
-import LocationPicker from '../CustomLocationPicker'
+import LocationPicker from '../Leaflet/CustomLocationPicker'
 
 const style = {
   position: 'absolute',
@@ -53,9 +53,6 @@ export default function FishFarmForm({
       ? (farm: FishFarmRequest) => updateFishFarm(farm, initialValues.id)
       : createFishFarm,
   })
-  const mutationSecondary = useMutation(() =>
-    initialValues ? deleteFishFarm(initialValues?.id) : Promise.resolve(),
-  )
 
   const onSubmit: SubmitHandler<FishFarmRequest> = data => {
     mutation.mutate(data, {
@@ -67,19 +64,6 @@ export default function FishFarmForm({
         handleClose()
       },
     })
-  }
-
-  const handleSecondaryAction = () => {
-    if (mutationSecondary) {
-      mutationSecondary.mutate(undefined, {
-        onSuccess: () => {
-          queryClient.invalidateQueries('fishfarms')
-          notifySuccess('Fish farm deleted successfully')
-          handleClose()
-          navigate('/')
-        },
-      })
-    }
   }
 
   return (
@@ -148,7 +132,9 @@ export default function FishFarmForm({
           <TextField
             fullWidth
             label='Cage Count'
+            type='number'
             variant='outlined'
+            sx={{ width: '20%' }}
             defaultValue={initialValues?.cageCount}
             error={!!errors.cageCount}
             helperText={errors.cageCount ? errors.cageCount.message : ''}
@@ -156,17 +142,12 @@ export default function FishFarmForm({
           />
         </Box>
         <Box display='flex' justifyContent='space-between' width={'100%'}>
-          {mutation.isLoading || mutationSecondary.isLoading ? (
+          {mutation.isLoading ? (
             <Box sx={{ width: '100%', height: 37, display: 'flex', alignItems: 'center' }}>
               <LinearProgress sx={{ flexGrow: 1 }} />
             </Box>
           ) : (
             <>
-              {initialValues && (
-                <Button variant='outlined' color='error' onClick={handleSecondaryAction}>
-                  Delete Fish Farm
-                </Button>
-              )}
               <Button sx={{ marginLeft: 'auto' }} variant='contained' color='primary' type='submit'>
                 {initialValues ? 'Update' : 'Add'}
               </Button>

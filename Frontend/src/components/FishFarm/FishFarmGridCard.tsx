@@ -1,4 +1,4 @@
-import { Card, CardContent, Typography } from '@mui/material'
+import { Box, Card, CardContent, Typography } from '@mui/material'
 import { FishFarmResponse } from '../../types/types'
 
 export default function FishFarmGridCard({
@@ -9,11 +9,12 @@ export default function FishFarmGridCard({
   onClick: () => void
 }) {
   return (
-    <Card
+    <Box
       onClick={onClick}
       sx={{
         maxWidth: 345,
         height: 'fit-content',
+        padding: 2,
         cursor: 'pointer',
         borderRadius: 2,
         transition: 'transform 0.15s ease-in-out',
@@ -23,14 +24,14 @@ export default function FishFarmGridCard({
         },
       }}
     >
-      <CardContent>
+      <Box>
         {fishFarm.imageURL && (
           <img
             src={fishFarm.imageURL}
             alt={fishFarm.name}
             style={{
               width: '100%',
-              height: '200px',
+              height: '40%',
               objectFit: 'cover',
               borderRadius: '8px 8px 8px 8px',
             }}
@@ -47,7 +48,7 @@ export default function FishFarmGridCard({
         <Typography variant='body2'>
           Created On: {new Date(fishFarm.createdOn).toLocaleDateString()}
         </Typography>
-      </CardContent>
-    </Card>
+      </Box>
+    </Box>
   )
 }

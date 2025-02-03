@@ -2,8 +2,9 @@ import { Controller, Control, UseFormSetValue } from 'react-hook-form'
 import { MapContainer, TileLayer, useMapEvents, Marker } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import { useState } from 'react'
-import { FishFarmRequest } from '../types/types'
+import { FishFarmRequest } from '../../types/types'
 import { Box, Typography } from '@mui/material'
+import { markerIcon } from './MarkerIcon'
 
 export default function LocationPicker({
   initialLocation,
@@ -28,7 +29,7 @@ export default function LocationPicker({
       },
     })
 
-    return position === null ? null : <Marker position={position} />
+    return position === null ? null : <Marker icon={markerIcon} position={position} />
   }
 
   return (

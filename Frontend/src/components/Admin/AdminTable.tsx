@@ -19,6 +19,7 @@ import { useState } from 'react'
 import { EmployeeResponse as AdminResponse } from '../../types/types'
 import AssignAdminForm from './AssignAdminForm'
 import UnassignAdminModal from './UnassignAdminModal'
+import { checkAccess } from '../Authorize'
 
 export default function AdminTable({ fishFarmId }: { fishFarmId: string | undefined }) {
   const navigate = useNavigate()
@@ -71,7 +72,7 @@ export default function AdminTable({ fishFarmId }: { fishFarmId: string | undefi
       <Table sx={{ minWidth: 300 }}>
         <TableHead>
           <TableRow>
-            <TableCell align='center'>Admin Id</TableCell>
+            <TableCell align='center'>Employee Id</TableCell>
             <TableCell align='center'>Name</TableCell>
             <TableCell align='center'>Position</TableCell>
             <TableCell align='center'>Age</TableCell>
