@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BLL.AppConfigManager;
 using BLL.DTOs.Employee;
 using BLL.DTOs.FishFarm;
 using BLL.Services.Interfaces;
@@ -9,12 +10,13 @@ using DAL.Repository.Interface;
 
 namespace BLL.Services
 {
-    public class EmployeeService(IEmployeeRepository employeeRepository, IUserRepository userRepository, IAuthService authService, IBlobStorage blobStorage, IMapper mapper) : IEmployeeService
+    public class EmployeeService(IEmployeeRepository employeeRepository, IUserRepository userRepository, IAuthService authService, IBlobStorage blobStorage, IAppConfigManager configManager, IMapper mapper) : IEmployeeService
     {
         private readonly IEmployeeRepository _employeeRepository = employeeRepository;
         private readonly IUserRepository _userRepository = userRepository;
         private readonly IAuthService _authService = authService;
         private readonly IBlobStorage _blobStorage = blobStorage;
+        private readonly string _containerName = configManager.GetEmployeeContainerName();
         private readonly IMapper _mapper = mapper;
 
         public async Task<IList<EmployeeResponseDTO>> GetEmployees()
@@ -68,8 +70,8 @@ namespace BLL.Services
             employeeEntity.Id = employeeId;
             if (employee.Image != null)
             {
-                await _blobStorage.DeleteFile("employee-images", employeeId);
-                var imageURL = await _blobStorage.UploadFile("employee-images", employeeId, employee.Image.OpenReadStream());
+                await _blobStorage.DeleteFile(_containerName, employeeId);
+                var imageURL = await _blobStorage.UploadFile(_containerName, employeeId, employee.Image.OpenReadStream());
                 employeeEntity.ImageURL = imageURL;
             }
             else

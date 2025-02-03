@@ -5,14 +5,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace BlobStorage
 {
-    public class AzureBlobStorage : IBlobStorage
+    public class AzureBlobStorage(string connectionString) : IBlobStorage
     {
-        private readonly BlobServiceClient _blobServiceClient;
-        public AzureBlobStorage(IConfiguration configuration)
-        {
-            var connectionString = configuration["ConnectionStrings:StorageConnection"];
-            _blobServiceClient = new BlobServiceClient(connectionString);
-        }
+        private readonly BlobServiceClient _blobServiceClient = new BlobServiceClient(connectionString);
 
         private BlobContainerClient GetContainerClient(string containerName)
         {

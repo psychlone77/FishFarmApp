@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BLL.AppConfigManager;
 using BLL.DTOs.Employee;
 using BLL.DTOs.User;
 using BLL.Services.Interfaces;
@@ -9,13 +10,16 @@ using Microsoft.AspNetCore.Identity;
 
 namespace BLL.Services
 {
-    public class AuthService(IFishFarmRepository fishFarmRepository, IUserRepository userRepository, IEmployeeRepository employeeRepository, IBlobStorage blobStorage, TokenProvider tokenProvider, IMapper mapper) : IAuthService
+    public class AuthService(IFishFarmRepository fishFarmRepository, IUserRepository userRepository, IEmployeeRepository employeeRepository, IBlobStorage blobStorage, TokenProvider tokenProvider, IAppConfigManager configManager, IMapper mapper) : IAuthService
     {
         private readonly IFishFarmRepository _fishFarmRepository = fishFarmRepository;
         private readonly IUserRepository _userRepository = userRepository;
         private readonly IEmployeeRepository _employeeRepository = employeeRepository;
         private readonly IBlobStorage _blobStorage = blobStorage;
         private readonly TokenProvider _tokenProvider = tokenProvider;
+        private readonly string _containerName = configManager.GetEmployeeContainerName();
+        private readonly int _failedLoginAttempts = int.Parse(configManager.GetFailedLoginAttempts());
+        private readonly int _lockoutTime = int.Parse(configManager.GetLockoutTime());
         private readonly IMapper _mapper = mapper;
 
         public async Task<LoginSuccess<EmployeeResponseDTO>> EmployeeLogin(LoginRequest loginRequest)
@@ -23,7 +27,7 @@ namespace BLL.Services
             var user = await _userRepository.GetUserByEmail(loginRequest.Email);
             if (user == null)
                 throw new KeyNotFoundException("Employee Email not found");
-            if (user.FailedLoginAttempts >= 5 && user.LastLogin > DateTime.UtcNow.AddHours(-1))
+            if (user.FailedLoginAttempts >= _failedLoginAttempts && user.LastLogin > DateTime.UtcNow.AddHours(_lockoutTime))
                 throw new UnauthorizedAccessException("User is blocked");
             var employee = await _employeeRepository.GetEmployeeEntityById(user.EmployeeId);
             if (employee == null)
@@ -65,8 +69,8 @@ namespace BLL.Services
             var addedEmployee = await _employeeRepository.GetEmployeeEntityById(addedUser.EmployeeId);
             if (registerRequest.Image != null && addedEmployee != null)
             {
-                await _blobStorage.DeleteFile("employee-images", addedEmployee.Id);
-                var imageURL = await _blobStorage.UploadFile("employee-images", addedEmployee.Id, registerRequest.Image.OpenReadStream());
+                await _blobStorage.DeleteFile(_containerName, addedEmployee.Id);
+                var imageURL = await _blobStorage.UploadFile(_containerName, addedEmployee.Id, registerRequest.Image.OpenReadStream());
                 addedEmployee.ImageURL = imageURL;
                 addedEmployee = await _employeeRepository.UpdateEmployeeEntity(addedEmployee);
             }

@@ -1,18 +1,21 @@
 ﻿using AutoMapper;
+using BLL.AppConfigManager;
 using BLL.DTOs.FishFarm;
 using BLL.Services.Interfaces;
 using BlobStorage.Interfaces;
 using DAL.Entities;
 using DAL.Repository.Interface;
+using Microsoft.Extensions.Configuration;
 
 namespace BLL.Services
 {
-    public class FishFarmsService(IFishFarmRepository fishFarmRepository, IBoatRepository boatRepository, IBlobStorage blobStorage, IAuthService authService, IMapper mapper) : IFishFarmsService
+    public class FishFarmsService(IFishFarmRepository fishFarmRepository, IBoatRepository boatRepository, IBlobStorage blobStorage, IAuthService authService, IMapper mapper, IAppConfigManager configManager) : IFishFarmsService
     {
         private readonly IFishFarmRepository _fishFarmRepository = fishFarmRepository;
         private readonly IBoatRepository _boatRepository = boatRepository;
         private readonly IBlobStorage _blobStorage = blobStorage;
         private readonly IMapper _mapper = mapper;
+        private readonly string _containerName = configManager.GetFishFarmContainerName();
         private readonly IAuthService _authService = authService;
         public async Task<IList<FishFarmResponseDTO>> GetAllFishFarms(string userId, string userRole)
         {
@@ -51,7 +54,7 @@ namespace BLL.Services
             if(fishFarm.Image is null)
                 throw new ArgumentException("Image is required");
             var fishFarmId = Guid.NewGuid();
-            var imageURL = await _blobStorage.UploadFile("fish-farm-images", fishFarmId.ToString(), fishFarm.Image.OpenReadStream());
+            var imageURL = await _blobStorage.UploadFile(_containerName, fishFarmId.ToString(), fishFarm.Image.OpenReadStream());
             FishFarmEntity fishFarmEntity = _mapper.Map<FishFarmEntity>(fishFarm);
             fishFarmEntity.Id = fishFarmId;
             fishFarmEntity.ImageURL = imageURL;
@@ -68,8 +71,8 @@ namespace BLL.Services
             var currentFishFarm = await _fishFarmRepository.GetFishFarmEntityById(fishFarmId);
             if (fishFarm.Image is not null)
             {
-                await _blobStorage.DeleteFile("fish-farm-images", fishFarmId.ToString());
-                var imageURL = await _blobStorage.UploadFile("fish-farm-images", fishFarmId.ToString(), fishFarm.Image.OpenReadStream());
+                await _blobStorage.DeleteFile(_containerName, fishFarmId.ToString());
+                var imageURL = await _blobStorage.UploadFile(_containerName, fishFarmId.ToString(), fishFarm.Image.OpenReadStream());
                 fishFarmEntity.ImageURL = imageURL;
             }
             else
