@@ -10,9 +10,10 @@ interface ImagePickerProps {
   name: string
   imageUrl?: string
   required?: boolean
+  avatar?: boolean
 }
 
-export default function ImagePicker({ control, setValue, name, imageUrl, required = false }: ImagePickerProps) {
+export default function ImagePicker({ control, setValue, name, imageUrl, required = false, avatar = false }: ImagePickerProps) {
   const [file, setFile] = useState<File | null>(null)
   const { getRootProps, getInputProps, isDragActive, acceptedFiles } = useDropzone({
     accept: { 'image/*': [] },
@@ -40,10 +41,11 @@ export default function ImagePicker({ control, setValue, name, imageUrl, require
           {...getRootProps()}
           sx={{
             position: 'relative',
-            borderRadius: '20px',
+            borderRadius: avatar ? '50%' : '4px',
             minHeight: '200px',
             minWidth: '200px',
-            height: '100%',
+            height: avatar ? '100px' : '100%',
+            width: avatar ? '100px' : '100%',
             overflow: 'hidden',
             border: '2px dashed',
             borderColor: error ? 'error.main' : 'grey.500',
@@ -78,7 +80,7 @@ export default function ImagePicker({ control, setValue, name, imageUrl, require
             <img
               src={URL.createObjectURL(file)}
               alt='Preview'
-              style={{ width: '100%', height: '100%' }}
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
             />
           ) : imageUrl ? (
             <img src={imageUrl} alt='Preview' style={{ width: '100%', height: '100%' }} />

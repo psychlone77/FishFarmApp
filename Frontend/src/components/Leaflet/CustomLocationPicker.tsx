@@ -1,7 +1,7 @@
 import { Controller, Control, UseFormSetValue } from 'react-hook-form'
 import { MapContainer, TileLayer, useMapEvents, Marker } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Box, Typography } from '@mui/material'
 import { markerIcon } from './CustomMarkers'
 
@@ -17,6 +17,11 @@ export default function LocationPicker({
   icon?: L.Icon
 }) {
   const [position, setPosition] = useState<[number, number] | null>(initialLocation)
+
+  useEffect(() => {
+    setValue('latitude', initialLocation ? initialLocation[0] : null)
+    setValue('longitude', initialLocation ? initialLocation[1] : null)
+  }, [initialLocation, setValue])
 
   const LocationMarker = () => {
     const map = useMapEvents({

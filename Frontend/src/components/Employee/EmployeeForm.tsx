@@ -78,13 +78,14 @@ export default function EmployeeForm({
             </IconButton>
           </Box>
         </Box>
-        <Box mb={2}>
+        <Box sx={{display: 'flex', justifyContent:'center'}} mb={2}>
           <ImagePicker
             control={control}
             setValue={setValue}
             name='imageFile'
             imageUrl={initialValues?.imageURL}
             required={true}
+            avatar={true}
           />
         </Box>
         <Box mb={2}>
@@ -92,7 +93,7 @@ export default function EmployeeForm({
             fullWidth
             label='Name'
             variant='outlined'
-            defaultValue={initialValues?.name}
+            value={initialValues?.name}
             error={!!errors.name}
             helperText={errors.name ? errors.name.message : ''}
             {...register('name', { required: true })}

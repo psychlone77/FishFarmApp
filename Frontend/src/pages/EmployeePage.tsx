@@ -1,5 +1,5 @@
-import { useParams } from 'react-router'
-import { useQuery } from 'react-query'
+import { useNavigate, useParams } from 'react-router'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import {
   Avatar,
   Box,
@@ -20,27 +20,42 @@ import {
 } from '@mui/icons-material'
 import { EmployeeResponse } from '../types/types'
 import { useState } from 'react'
-import { getEmployee } from '../actions/employeeActions'
+import { deleteEmployee, getEmployee } from '../actions/employeeActions'
 import EmployeeForm from '../components/Employee/EmployeeForm'
 import EmployeeFishFarmsTable from '../components/Employee/EmployeeFishFarmsTable'
+import { notifySuccess } from '../contexts/ToastContext'
+import DeleteModal from '../components/DeleteModal'
 // import EmployeeForm from '../components/EmployeeForm'
 
 export default function EmployeePage() {
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { employeeId } = useParams<{ employeeId: string }>()
   const [showEmployeeForm, setShowEmployeeForm] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
 
   const {
     data: employee,
     isLoading,
     isFetching,
     isError,
-  } = useQuery<EmployeeResponse>(
-    ['employee', employeeId],
-    () => getEmployee(employeeId!),
-    {
-      enabled: !!employeeId,
-    },
-  )
+  } = useQuery<EmployeeResponse>(['employee', employeeId], () => getEmployee(employeeId!), {
+    enabled: !!employeeId,
+  })
+
+  const mutationDelete = useMutation(() => deleteEmployee(employeeId!))
+
+  const handleDelete = () => {
+    if (mutationDelete) {
+      mutationDelete.mutate(undefined, {
+        onSuccess: () => {
+          queryClient.invalidateQueries('employees')
+          notifySuccess('Employee deleted successfully')
+          navigate('/employees')
+        },
+      })
+    }
+  }
 
   const toggleEmployeeForm = (toggle: boolean) => {
     setShowEmployeeForm(toggle)
@@ -109,78 +124,93 @@ export default function EmployeePage() {
               {employee.name}
             </Typography>
             <Typography variant='subtitle1'>{employee.employeePosition}</Typography>
-            <Card
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 2,
-                justifyContent: 'center',
-                padding: 5,
-                width: '100%',
-                maxWidth: 'sm',
-                border: 1,
-                borderColor: 'primary.main',
-                borderRadius: 2,
-                boxShadow: 3,
-              }}
-            >
-              <List>
-                <ListItem>
-                  <ListItemIcon sx={{ minWidth: 40 }}>
-                    <CalendarTodayIcon color='primary' />
-                  </ListItemIcon>
-                  <ListItemText primary='Age' secondary={employee.age} />
-                </ListItem>
-                <ListItem>
-                  <ListItemIcon sx={{ minWidth: 40 }}>
-                    <EmailIcon color='primary' />
-                  </ListItemIcon>
-                  <ListItemText primary='Email' secondary={employee.email} />
-                </ListItem>
-                <ListItem>
-                  <ListItemIcon sx={{ minWidth: 40 }}>
-                  {new Date(employee.certifiedUntil) > new Date() ? (
-                    <VerifiedIcon color='primary' />
-                  ) : (
-                    <NewReleasesIcon sx={{ color: 'red' }} />
-                  )}
-                  </ListItemIcon>
-                  <ListItemText
-                  primary='Certified Until'
-                  secondary={
-                    new Date(employee.certifiedUntil) > new Date()
-                    ? `${new Date(employee.certifiedUntil).toLocaleDateString()} (${Math.ceil(
-                      (new Date(employee.certifiedUntil).getTime() - new Date().getTime()) /
-                        (1000 * 60 * 60 * 24),
-                      )} days left)`
-                    : `${new Date(employee.certifiedUntil).toLocaleDateString()} (${Math.abs(
-                      Math.ceil(
-                        (new Date().getTime() - new Date(employee.certifiedUntil).getTime()) /
-                        (1000 * 60 * 60 * 24),
-                      ),
-                      )} days overdue)`
-                  }
-                  />
-                </ListItem>
-              </List>
-            </Card>
+            <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, width: '100%' }}>
+              <Card
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 2,
+                  justifyContent: 'center',
+                  padding: 5,
+                  width: '100%',
+                  maxWidth: 'sm',
+                  border: 1,
+                  borderColor: 'primary.main',
+                  borderRadius: 2,
+                  boxShadow: 3,
+                }}
+              >
+                <List>
+                  <ListItem>
+                    <ListItemIcon sx={{ minWidth: 40 }}>
+                      <CalendarTodayIcon color='primary' />
+                    </ListItemIcon>
+                    <ListItemText primary='Age' secondary={employee.age} />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemIcon sx={{ minWidth: 40 }}>
+                      <EmailIcon color='primary' />
+                    </ListItemIcon>
+                    <ListItemText primary='Email' secondary={employee.email} />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemIcon sx={{ minWidth: 40 }}>
+                      {new Date(employee.certifiedUntil) > new Date() ? (
+                        <VerifiedIcon color='primary' />
+                      ) : (
+                        <NewReleasesIcon sx={{ color: 'red' }} />
+                      )}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary='Certified Until'
+                      secondary={
+                        new Date(employee.certifiedUntil) > new Date()
+                          ? `${new Date(employee.certifiedUntil).toLocaleDateString()} (${Math.ceil(
+                              (new Date(employee.certifiedUntil).getTime() - new Date().getTime()) /
+                                (1000 * 60 * 60 * 24),
+                            )} days left)`
+                          : `${new Date(employee.certifiedUntil).toLocaleDateString()} (${Math.abs(
+                              Math.ceil(
+                                (new Date().getTime() -
+                                  new Date(employee.certifiedUntil).getTime()) /
+                                  (1000 * 60 * 60 * 24),
+                              ),
+                            )} days overdue)`
+                      }
+                    />
+                  </ListItem>
+                </List>
+              </Card>
+              <Box>
+                <EmployeeFishFarmsTable employeeId={employeeId} />
+              </Box>
+            </Box>
             <Box sx={{ marginTop: 1, marginLeft: 2, position: 'absolute', right: 30, top: 30 }}>
-              <Button variant='contained' onClick={() => toggleEmployeeForm(true)}>
+              <Button sx={{mr:2}} variant='contained' onClick={() => toggleEmployeeForm(true)}>
                 Edit
+              </Button>
+              <Button variant='outlined' color='error' onClick={() => setShowDeleteModal(true)}>
+                Delete Employee
               </Button>
             </Box>
           </Box>
         )
       )}
-      <Box sx={{ padding: 2 }}>
-        <EmployeeFishFarmsTable employeeId={employeeId} />
-      </Box>
       {showEmployeeForm && employee && employeeId && (
         <EmployeeForm
           initialValues={employee}
           open={showEmployeeForm}
           title='Edit Employee'
           handleClose={() => toggleEmployeeForm(false)}
+        />
+      )}
+      {showDeleteModal && employeeId && (
+        <DeleteModal
+          open={showDeleteModal}
+          handleClose={() => setShowDeleteModal(false)}
+          handleDelete={handleDelete}
+          entityName='employee'
+          warningText='This employee will removed from all fish farms, but will still remain in the system.'
         />
       )}
     </>
