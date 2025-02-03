@@ -6,9 +6,7 @@ import {
   Avatar,
   List,
   ListItem,
-  ListItemText,
-  TextField,
-  Button,
+  ListItemText, Button
 } from '@mui/material'
 import { EmployeeResponse } from '../types/types'
 import ChangePasswordModal from './ChangePasswordModal'

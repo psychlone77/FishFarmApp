@@ -5,7 +5,6 @@ import { ReactNode } from 'react'
 import { BrowserRouter } from 'react-router'
 import { AuthProvider } from './AuthContext'
 import { ToastProvider } from './ToastContext'
-import ScrollToTop from '../components/ScrollToTop'
 
 export default function AppProviders({ children }: { children: ReactNode }) {
   const theme = createTheme({

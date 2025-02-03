@@ -5,14 +5,12 @@ import { useQuery } from 'react-query'
 import {
   Box,
   Button,
-  Card,
-  Grid2,
-  List,
+  Card, List,
   ListItem,
   ListItemIcon,
   ListItemText,
   Skeleton,
-  Typography,
+  Typography
 } from '@mui/material'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import DirectionsBoatFilledIcon from '@mui/icons-material/DirectionsBoatFilled'
@@ -21,7 +19,6 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
 import EmployeeTable from '../components/Employee/EmployeeTable'
 import FishFarmForm from '../components/FishFarm/FishFarmForm'
 import { useState } from 'react'
-import { MapContainer, TileLayer, Marker, Tooltip } from 'react-leaflet'
 import Authorize from '../components/Authorize'
 import BoatTable from '../components/Boat/BoatTable'
 import AdminTable from '../components/Admin/AdminTable'

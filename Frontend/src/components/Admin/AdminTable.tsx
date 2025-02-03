@@ -14,7 +14,7 @@ import {
   Typography,
 } from '@mui/material'
 import { useNavigate } from 'react-router'
-import { Add, Edit, Link, LinkOff, Person } from '@mui/icons-material'
+import { Edit, Link, LinkOff, Person } from '@mui/icons-material'
 import { useState } from 'react'
 import { EmployeeResponse as AdminResponse } from '../../types/types'
 import AssignAdminForm from './AssignAdminForm'
@@ -22,7 +22,6 @@ import UnassignAdminModal from './UnassignAdminModal'
 
 export default function AdminTable({ fishFarmId }: { fishFarmId: string | undefined }) {
   const navigate = useNavigate()
-  const [showAdminForm, setShowAdminForm] = useState(false)
   const [showAssignAdminForm, setShowAssignAdminForm] = useState(false)
   const [showUnassignModal, setShowUnassignModal] = useState(false)
   const [unassignAdmin, setUnassignAdmin] = useState<AdminResponse | null>(null)

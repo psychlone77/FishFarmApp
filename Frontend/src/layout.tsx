@@ -6,7 +6,7 @@ export default function Layout() {
   return (
       <main>
         <CustomNavbar />
-        <div style={{ marginBottom: '100px' }}>
+        <div style={{ marginBottom: '20px' }}>
           <Outlet />
         </div>
         <Footer />

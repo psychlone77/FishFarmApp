@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router'
 import { useState } from 'react'
 import { Add } from '@mui/icons-material'
 import FishFarmForm from './FishFarmForm'
-import useAuth from '../../hooks/useAuth'
 import Authorize from '../Authorize'
 
 export default function FishFarmsGrid({
@@ -74,7 +73,7 @@ export default function FishFarmsGrid({
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
             gap: 3,
-            maxHeight: 'calc(100vh - 100px)',
+            height: 'calc(100vh - 100px)',
             overflowY: 'auto',
           }}
         >

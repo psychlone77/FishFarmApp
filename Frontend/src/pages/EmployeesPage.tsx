@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useQuery } from 'react-query'
-import getEmployeesByFishFarm, { getEmployees } from '../actions/employeeActions'
+import { getEmployees } from '../actions/employeeActions'
 import {
   Avatar,
   Box,

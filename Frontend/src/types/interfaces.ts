@@ -1,4 +1,4 @@
-import { FishFarmRequest, EmployeeRequest, Boat, FishFarmResponse, EmployeeResponse } from './types'
+import { Boat, FishFarmResponse, EmployeeResponse } from './types'
 
 export interface FishFarmFormProps {
   title: string

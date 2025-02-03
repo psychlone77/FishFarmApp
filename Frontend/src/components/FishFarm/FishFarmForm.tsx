@@ -18,6 +18,7 @@ import { FishFarmRequestSchema } from '../../types/schemas'
 import { useNavigate } from 'react-router'
 import ImagePicker from '../ImagePicker'
 import { useToast } from '../../contexts/ToastContext'
+import LocationPicker from '../CustomLocationPicker'
 
 const style = {
   position: 'absolute',
@@ -95,6 +96,15 @@ export default function FishFarmForm({
           </Box>
         </Box>
         <Box mb={2}>
+          <ImagePicker
+            control={control}
+            setValue={setValue}
+            name='imageFile'
+            imageUrl={initialValues?.imageURL}
+            required={initialValues?.imageURL ? false : true}
+          />
+        </Box>
+        <Box mb={2}>
           <TextField
             fullWidth
             label='Name'
@@ -105,26 +115,33 @@ export default function FishFarmForm({
             {...register('name', { required: true })}
           />
         </Box>
-        <Box mb={2}>
-          <TextField
-            fullWidth
-            label='Latitude'
-            variant='outlined'
-            defaultValue={initialValues?.latitude}
-            error={!!errors.latitude}
-            helperText={errors.latitude ? errors.latitude.message : ''}
-            {...register('latitude', { required: true, valueAsNumber: true })}
-          />
-        </Box>
-        <Box mb={2}>
-          <TextField
-            fullWidth
-            label='Longitude'
-            variant='outlined'
-            defaultValue={initialValues?.longitude}
-            error={!!errors.longitude}
-            helperText={errors.longitude ? errors.longitude.message : ''}
-            {...register('longitude', { required: true, valueAsNumber: true })}
+        <Box sx={{ display: 'flex', gap: 2}} mb={2}>
+            {/* <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 2 }}>
+              <TextField
+                fullWidth
+                label='Latitude'
+                variant='outlined'
+                defaultValue={initialValues?.latitude}
+                error={!!errors.latitude}
+                helperText={errors.latitude ? errors.latitude.message : ''}
+                {...register('latitude', { required: true, valueAsNumber: true })}
+              />
+              <TextField
+                fullWidth
+                label='Longitude'
+                variant='outlined'
+                defaultValue={initialValues?.longitude}
+                error={!!errors.longitude}
+                helperText={errors.longitude ? errors.longitude.message : ''}
+                {...register('longitude', { required: true, valueAsNumber: true })}
+              />
+            </Box> */}
+          <LocationPicker
+            initialLocation={
+              initialValues ? [initialValues?.latitude, initialValues?.longitude] : null
+            }
+            control={control}
+            setValue={setValue}
           />
         </Box>
         <Box mb={2}>
@@ -136,15 +153,6 @@ export default function FishFarmForm({
             error={!!errors.cageCount}
             helperText={errors.cageCount ? errors.cageCount.message : ''}
             {...register('cageCount', { required: true, valueAsNumber: true })}
-          />
-        </Box>
-        <Box mb={2}>
-          <ImagePicker
-            control={control}
-            setValue={setValue}
-            name='imageFile'
-            imageUrl={initialValues?.imageURL}
-            required={initialValues?.imageURL ? false : true}
           />
         </Box>
         <Box display='flex' justifyContent='space-between' width={'100%'}>

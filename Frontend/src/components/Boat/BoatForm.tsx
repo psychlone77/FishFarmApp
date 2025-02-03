@@ -7,7 +7,6 @@ import { createBoat, updateBoat } from '../../actions/boatActions'
 import { BoatFormProps } from '../../types/interfaces'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { BoatSchema } from '../../types/schemas'
-import { toast } from 'react-toastify'
 import { useToast } from '../../contexts/ToastContext'
 
 const style = {

@@ -16,6 +16,7 @@ export default function ImagePicker({ control, setValue, name, imageUrl, require
   const [file, setFile] = useState<File | null>(null)
   const { getRootProps, getInputProps, isDragActive, acceptedFiles } = useDropzone({
     accept: { 'image/*': [] },
+    maxSize: 1048576 * 10, // 10MB in bytes
     onDrop: acceptedFiles => {
       setValue(name, acceptedFiles[0])
     },
@@ -41,7 +42,7 @@ export default function ImagePicker({ control, setValue, name, imageUrl, require
             position: 'relative',
             borderRadius: '20px',
             minHeight: '200px',
-            maxHeight: '300px',
+            maxHeight: '200px',
             overflow: 'hidden',
             border: '2px dashed',
             borderColor: error ? 'error.main' : 'grey.500',
