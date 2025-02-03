@@ -25,8 +25,8 @@ import BoatTable from '../components/Boat/BoatTable'
 import AdminTable from '../components/Admin/AdminTable'
 import CustomMapContainer from '../components/Leaflet/CustomMapContainer'
 import { notifySuccess } from '../contexts/ToastContext'
-import { set } from 'zod'
 import DeleteModal from '../components/DeleteModal'
+import { getBoats } from '../actions/boatActions'
 
 export default function FishFarmPage() {
   const queryClient = useQueryClient()
@@ -39,6 +39,13 @@ export default function FishFarmPage() {
     isLoading,
     isError,
   } = useQuery<FishFarmResponse>(['fishFarm', fishFarmId], () => getFishFarm(fishFarmId!), {
+    enabled: !!fishFarmId,
+  })
+  const {
+    data: boats,
+    isLoading: boatsLoading,
+    isFetching: boatsFetching,
+  } = useQuery(['boats', fishFarmId], () => getBoats(fishFarmId!), {
     enabled: !!fishFarmId,
   })
 
@@ -169,8 +176,8 @@ export default function FishFarmPage() {
               </Box>
             </Box>
           </Card>
-          <Box sx={{ height: '300px', width: '100%' }}>
-            <CustomMapContainer fishFarms={[fishFarm]} />
+          <Box sx={{ height: '500px', width: '100%' }}>
+            <CustomMapContainer fishFarms={[fishFarm]} boats={boats}/>
           </Box>
         </>
       )}
@@ -205,7 +212,12 @@ export default function FishFarmPage() {
         <Authorize requiredAccess={2}>
           <EmployeeTable fishFarmId={fishFarmId} />
         </Authorize>
-        <BoatTable fishFarmId={fishFarmId} />
+        <BoatTable
+          fishFarmId={fishFarmId}
+          boats={boats}
+          isLoading={boatsLoading}
+          isFetching={boatsFetching}
+        />
       </Box>
     </>
   )

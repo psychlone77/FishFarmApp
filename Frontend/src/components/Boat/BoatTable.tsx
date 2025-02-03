@@ -14,22 +14,23 @@ import {
 } from '@mui/material'
 import { Add, DirectionsBoat, Edit, Link } from '@mui/icons-material'
 import { useState } from 'react'
-import { getBoats } from '../../actions/boatActions'
 import BoatForm from './BoatForm'
 import AssignBoatForm from './AssignBoatForm'
 import Authorize from '../Authorize'
+import { Boat } from '../../types/types'
 
-export default function BoatTable({ fishFarmId }: { fishFarmId: string | undefined }) {
+interface BoatTableProps {
+  boats: Boat[] | undefined
+  isLoading: boolean
+  isFetching: boolean
+  fishFarmId: string | undefined
+}
+
+export default function BoatTable({ boats, isLoading, isFetching, fishFarmId }: BoatTableProps) {
   const [showBoatForm, setShowBoatForm] = useState(false)
+  const [selectedBoat, setSelectedBoat] = useState<Boat | null>(null)
   const [showBoatEditForm, setShowBoatEditForm] = useState(false)
   const [showAssignBoatForm, setShowAssignBoatForm] = useState(false)
-  const {
-    data: boats,
-    isLoading,
-    isFetching,
-  } = useQuery(['boats', fishFarmId], () => getBoats(fishFarmId!), {
-    enabled: !!fishFarmId,
-  })
   return (
     <TableContainer
       sx={{
@@ -124,24 +125,17 @@ export default function BoatTable({ fishFarmId }: { fishFarmId: string | undefin
               <TableCell align='center'>{boat.id}</TableCell>
               <TableCell align='center'>{boat.model}</TableCell>
               <TableCell align='center'>{boat.boatType}</TableCell>
-                <Authorize requiredAccess={2}>
-              <TableCell align='center'>
+              <Authorize requiredAccess={2}>
+                <TableCell align='center'>
                   <Edit
                     sx={{
                       cursor: 'pointer',
-                      '&:hover': { boxShadow: 2, borderRadius: 5, color: 'primary.main' }
+                      '&:hover': { boxShadow: 2, borderRadius: 5, color: 'primary.main' },
                     }}
-                    onClick={() => setShowBoatEditForm(true)}
+                    onClick={() => setSelectedBoat(boat)}
                   />
-                  <BoatForm
-                    title='Edit Boat'
-                    initialValues={boat}
-                    fishFarmId={fishFarmId!}
-                    open={showBoatEditForm}
-                    handleClose={() => setShowBoatEditForm(false)}
-                  />
-              </TableCell>
-                </Authorize>
+                </TableCell>
+              </Authorize>
             </TableRow>
           ))}
           {boats?.length === 0 && !isFetching && (
@@ -151,6 +145,13 @@ export default function BoatTable({ fishFarmId }: { fishFarmId: string | undefin
               </TableCell>
             </TableRow>
           )}
+          {selectedBoat ? (<BoatForm
+            title='Edit Boat'
+            initialValues={selectedBoat}
+            fishFarmId={fishFarmId!}
+            open={setSelectedBoat !== null}
+            handleClose={() => setSelectedBoat(null)}
+          />) : null}
         </TableBody>
       </Table>
     </TableContainer>

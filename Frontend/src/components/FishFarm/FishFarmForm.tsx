@@ -25,7 +25,6 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: '40%',
   bgcolor: 'background.paper',
   boxShadow: 24,
   borderRadius: 4,
@@ -79,67 +78,79 @@ export default function FishFarmForm({
             </IconButton>
           </Box>
         </Box>
-        <Box mb={2}>
-          <ImagePicker
-            control={control}
-            setValue={setValue}
-            name='imageFile'
-            imageUrl={initialValues?.imageURL}
-            required={initialValues?.imageURL ? false : true}
-          />
-        </Box>
-        <Box mb={2}>
-          <TextField
-            fullWidth
-            label='Name'
-            variant='outlined'
-            defaultValue={initialValues?.name}
-            error={!!errors.name}
-            helperText={errors.name ? errors.name.message : ''}
-            {...register('name', { required: true })}
-          />
-        </Box>
-        <Box sx={{ display: 'flex', gap: 2}} mb={2}>
-            {/* <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 2 }}>
-              <TextField
-                fullWidth
-                label='Latitude'
-                variant='outlined'
-                defaultValue={initialValues?.latitude}
-                error={!!errors.latitude}
-                helperText={errors.latitude ? errors.latitude.message : ''}
-                {...register('latitude', { required: true, valueAsNumber: true })}
+        <Box sx={{ display: 'flex', gap: 2 }}>
+          <Box sx={{ width: '500px' }}>
+            <ImagePicker
+              control={control}
+              setValue={setValue}
+              name='imageFile'
+              imageUrl={initialValues?.imageURL}
+              required={initialValues?.imageURL ? false : true}
+            />
+          </Box>
+          <Box>
+            <Box sx={{ display: 'flex', gap: 2 }}>
+              <Box mb={2}>
+                <TextField
+                  fullWidth
+                  label='Name'
+                  variant='outlined'
+                  defaultValue={initialValues?.name}
+                  error={!!errors.name}
+                  helperText={errors.name ? errors.name.message : ''}
+                  {...register('name', { required: true })}
+                />
+              </Box>
+              <Box mb={2}>
+                <TextField
+                  fullWidth
+                  label='Cage Count'
+                  type='number'
+                  variant='outlined'
+                  defaultValue={initialValues?.cageCount}
+                  error={!!errors.cageCount}
+                  helperText={errors.cageCount ? errors.cageCount.message : ''}
+                  {...register('cageCount', { required: true, valueAsNumber: true })}
+                />
+              </Box>
+            </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }} mb={2}>
+              {/* <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 2 }}>
+                  <TextField
+                    fullWidth
+                    label='Latitude'
+                    variant='outlined'
+                    defaultValue={initialValues?.latitude}
+                    error={!!errors.latitude}
+                    helperText={errors.latitude ? errors.latitude.message : ''}
+                    {...register('latitude', { required: true, valueAsNumber: true })}
+                  />
+                  <TextField
+                    fullWidth
+                    label='Longitude'
+                    variant='outlined'
+                    defaultValue={initialValues?.longitude}
+                    error={!!errors.longitude}
+                    helperText={errors.longitude ? errors.longitude.message : ''}
+                    {...register('longitude', { required: true, valueAsNumber: true })}
+                  />
+                </Box> */}
+              <LocationPicker
+                initialLocation={
+                  initialValues ? [initialValues?.latitude, initialValues?.longitude] : null
+                }
+                control={control}
+                setValue={setValue}
               />
-              <TextField
-                fullWidth
-                label='Longitude'
-                variant='outlined'
-                defaultValue={initialValues?.longitude}
-                error={!!errors.longitude}
-                helperText={errors.longitude ? errors.longitude.message : ''}
-                {...register('longitude', { required: true, valueAsNumber: true })}
-              />
-            </Box> */}
-          <LocationPicker
-            initialLocation={
-              initialValues ? [initialValues?.latitude, initialValues?.longitude] : null
-            }
-            control={control}
-            setValue={setValue}
-          />
-        </Box>
-        <Box mb={2}>
-          <TextField
-            fullWidth
-            label='Cage Count'
-            type='number'
-            variant='outlined'
-            sx={{ width: '20%' }}
-            defaultValue={initialValues?.cageCount}
-            error={!!errors.cageCount}
-            helperText={errors.cageCount ? errors.cageCount.message : ''}
-            {...register('cageCount', { required: true, valueAsNumber: true })}
-          />
+              {(errors.latitude || errors.longitude) && (
+                <Box>
+                  <Typography variant='body2' color='error'>
+                    Please select a location on the map
+                  </Typography>
+                </Box>
+              )}
+            </Box>
+          </Box>
         </Box>
         <Box display='flex' justifyContent='space-between' width={'100%'}>
           {mutation.isLoading ? (

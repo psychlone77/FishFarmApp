@@ -12,6 +12,11 @@ namespace DAL.Entities
         public required string Id { get; set; }
         public required string Model { get; set; }
         public BoatType BoatType { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+
+        //public string? EmployeeId { get; set; }
+        //public EmployeeEntity? Employee { get; set; }
 
         public Guid? FishFarmId { get; set; }
         public FishFarmEntity? FishFarm { get; set; }

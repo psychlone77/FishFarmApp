@@ -52,17 +52,16 @@ export const EmployeeRequestSchema = z.object({
   password: z.string().optional(),
 })
 
-export const BoatFullResponseSchema = z.object({
-  id: z.string(),
-  model: z.string(),
-  boatType: z.string(),
-  fishFarm: FishFarmResponseSchema,
+export const BoatSchema = z.object({
+  id: z.string().nonempty('Boat ID is required'),
+  model: z.string().nonempty('Boat model is required'),
+  boatType: z.string().nonempty('Boat type is required'),
+  latitude: z.number(),
+  longitude: z.number(),
 })
 
-export const BoatSchema = z.object({
-  id: z.string(),
-  model: z.string(),
-  boatType: z.string(),
+export const BoatFullResponseSchema = BoatSchema.extend({
+  fishFarm: FishFarmResponseSchema,
 })
 
 export const UserDetailSchema = z.object({

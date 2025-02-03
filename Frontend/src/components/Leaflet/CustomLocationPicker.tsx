@@ -2,18 +2,19 @@ import { Controller, Control, UseFormSetValue } from 'react-hook-form'
 import { MapContainer, TileLayer, useMapEvents, Marker } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import { useState } from 'react'
-import { FishFarmRequest } from '../../types/types'
 import { Box, Typography } from '@mui/material'
-import { markerIcon } from './MarkerIcon'
+import { markerIcon } from './CustomMarkers'
 
 export default function LocationPicker({
   initialLocation,
   control,
   setValue,
+  icon = markerIcon,
 }: {
   initialLocation: [number, number] | null
-  control: Control<FishFarmRequest>
-  setValue: UseFormSetValue<FishFarmRequest>
+  control: Control<any>
+  setValue: UseFormSetValue<any>
+  icon?: L.Icon
 }) {
   const [position, setPosition] = useState<[number, number] | null>(initialLocation)
 
@@ -29,7 +30,7 @@ export default function LocationPicker({
       },
     })
 
-    return position === null ? null : <Marker icon={markerIcon} position={position} />
+    return position === null ? null : <Marker icon={icon} position={position} />
   }
 
   return (
@@ -65,12 +66,22 @@ export default function LocationPicker({
       <Controller
         name='latitude'
         control={control}
-        render={({ field }) => <input type='hidden' {...field} />}
+        render={({ field, fieldState: { error } }) => (
+          <>
+            <input type='hidden' {...field} />
+            {error && <Typography color='error'>{error.message}</Typography>}
+          </>
+        )}
       />
       <Controller
         name='longitude'
         control={control}
-        render={({ field }) => <input type='hidden' {...field} />}
+        render={({ field, fieldState: { error } }) => (
+          <>
+            <input type='hidden' {...field} />
+            {error && <Typography color='error'>{error.message}</Typography>}
+          </>
+        )}
       />
     </MapContainer>
   )

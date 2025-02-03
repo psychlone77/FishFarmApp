@@ -8,6 +8,8 @@ namespace BLL.DTOs.Boat
         public required string Id { get; set; }
         public required string Model { get; set; }
         public required string BoatType { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
     }
 
     public class BoatWithFishFarmDTO : BoatDTO

@@ -8,6 +8,8 @@ import { BoatFormProps } from '../../types/interfaces'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { BoatSchema } from '../../types/schemas'
 import { useToast } from '../../contexts/ToastContext'
+import LocationPicker from '../Leaflet/CustomLocationPicker'
+import { boatMarkerIcon } from '../Leaflet/CustomMarkers'
 
 const style = {
   position: 'absolute',
@@ -32,6 +34,8 @@ export default function BoatForm({
   const { notifySuccess } = useToast()
   const {
     register,
+    control,
+    setValue,
     handleSubmit,
     formState: { errors },
   } = useForm<Boat>({ resolver: zodResolver(BoatSchema) })
@@ -44,6 +48,7 @@ export default function BoatForm({
   const onSubmit: SubmitHandler<Boat> = data => {
     mutation.mutate(data, {
       onSuccess: () => {
+        queryClient.invalidateQueries(['boats', fishFarmId])
         queryClient.invalidateQueries(initialValues ? ['boat', initialValues?.id] : 'boats')
         notifySuccess(initialValues ? 'Boat updated successfully' : 'Boat added successfully')
         handleClose()
@@ -70,6 +75,7 @@ export default function BoatForm({
             label='Boat ID'
             variant='outlined'
             defaultValue={initialValues?.id}
+            disabled={!!initialValues}
             error={!!errors.id}
             helperText={errors.id ? errors.id.message : ''}
             {...register('id', { required: true })}
@@ -97,6 +103,19 @@ export default function BoatForm({
             {...register('boatType', { required: true })}
           />
         </Box>
+        <LocationPicker
+          control={control}
+          setValue={setValue}
+          initialLocation={
+            initialValues ? [initialValues?.latitude, initialValues?.longitude] : null
+          }
+          icon={boatMarkerIcon}
+        />
+        {(errors.latitude || errors.longitude) && (
+          <Box mt={2}>
+            <Typography color='error'>Please select a location on the map</Typography>
+          </Box>
+        )}
         <Box display='flex' justifyContent='space-between'>
           <Button sx={{ marginLeft: 'auto' }} variant='contained' color='primary' type='submit'>
             {initialValues ? 'Update' : 'Add'}
