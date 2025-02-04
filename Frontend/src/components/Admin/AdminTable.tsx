@@ -19,7 +19,6 @@ import { useState } from 'react'
 import { EmployeeResponse as AdminResponse } from '../../types/types'
 import AssignAdminForm from './AssignAdminForm'
 import UnassignAdminModal from './UnassignAdminModal'
-import { checkAccess } from '../Authorize'
 
 export default function AdminTable({ fishFarmId }: { fishFarmId: string | undefined }) {
   const navigate = useNavigate()

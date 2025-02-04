@@ -36,6 +36,7 @@ export default function CustomMapContainer({ fishFarms, boats, hoverId }: Custom
     ...(boats ? boats.map(boat => [boat.latitude, boat.longitude] as [number, number]) : [])
   ]);
   const [center, setCenter] = useState<LatLngExpression>(bounds.getCenter());
+  
   useEffect(() => {
     if (hoverId) {
       const fishFarm = fishFarms.find(fishFarm => fishFarm.id === hoverId);

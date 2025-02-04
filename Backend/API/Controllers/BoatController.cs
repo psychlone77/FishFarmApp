@@ -19,7 +19,9 @@ namespace API.Controllers
         [Route("fishfarm/{fishFarmId}")]
         public async Task<ActionResult<List<BoatDTO>>> GetBoats(Guid fishFarmId)
         {
-            //var (userId, userRole) = GetClaims(User);
+            var (userId, userRole) = GetClaims(User);
+            if (userRole != "SuperAdmin")
+                await _authService.CheckFishFarmAccess(fishFarmId, userId, PermissionLevel.Read);
             return Ok(await _boatService.GetBoats(fishFarmId));
         }
 

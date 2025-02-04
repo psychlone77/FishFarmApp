@@ -52,8 +52,8 @@ export default function EmployeeForm({
       ? (employee: EmployeeRequest) => updateEmployee(employee, initialValues.id)
       : (employee: EmployeeRequest) => createEmployee(employee),
   )
-
   const onSubmit: SubmitHandler<EmployeeRequest> = data => {
+    data.certifiedUntil = new Date(data.certifiedUntil)
     mutation.mutate(data, {
       onSuccess: () => {
         queryClient.invalidateQueries(initialValues ? ['employee', initialValues?.id] : 'employees')
@@ -78,7 +78,7 @@ export default function EmployeeForm({
             </IconButton>
           </Box>
         </Box>
-        <Box sx={{display: 'flex', justifyContent:'center'}} mb={2}>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }} mb={2}>
           <ImagePicker
             control={control}
             setValue={setValue}
@@ -126,13 +126,20 @@ export default function EmployeeForm({
             fullWidth
             label='Certified Until'
             variant='outlined'
-            type='datetime-local'
+            type='date'
             slotProps={{
+              htmlInput: {
+                min: new Date().toISOString().split('T')[0],
+              },
               inputLabel: {
                 shrink: true,
               },
             }}
-            defaultValue={initialValues?.certifiedUntil}
+            defaultValue={
+              initialValues?.certifiedUntil
+                ? new Date(initialValues.certifiedUntil).toLocaleDateString('en-CA')
+                : ''
+            }
             error={!!errors.certifiedUntil}
             helperText={errors.certifiedUntil ? errors.certifiedUntil.message : ''}
             {...register('certifiedUntil', { required: true, valueAsDate: true })}
@@ -149,11 +156,12 @@ export default function EmployeeForm({
             helperText={errors.employeePosition ? errors.employeePosition.message : ''}
             {...register('employeePosition', { required: true })}
           >
-            {employeePositions && employeePositions.map(position => (
-              <MenuItem key={position} value={position}>
-                {position}
-              </MenuItem>
-            ))}
+            {employeePositions &&
+              employeePositions.map(position => (
+                <MenuItem key={position} value={position}>
+                  {position}
+                </MenuItem>
+              ))}
           </TextField>
         </Box>
         <Box mb={2}>

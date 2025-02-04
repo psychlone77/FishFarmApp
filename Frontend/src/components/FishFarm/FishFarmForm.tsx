@@ -11,11 +11,10 @@ import {
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import { FishFarmRequest } from '../../types/types'
-import { createFishFarm, deleteFishFarm, updateFishFarm } from '../../actions/fishFarmActions'
+import { createFishFarm, updateFishFarm } from '../../actions/fishFarmActions'
 import { FishFarmFormProps } from '../../types/interfaces'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FishFarmRequestSchema } from '../../types/schemas'
-import { useNavigate } from 'react-router'
 import ImagePicker from '../ImagePicker'
 import { useToast } from '../../contexts/ToastContext'
 import LocationPicker from '../Leaflet/CustomLocationPicker'
@@ -39,7 +38,6 @@ export default function FishFarmForm({
 }: FishFarmFormProps) {
   const queryClient = useQueryClient()
   const { notifySuccess } = useToast()
-  const navigate = useNavigate()
   const {
     register,
     handleSubmit,

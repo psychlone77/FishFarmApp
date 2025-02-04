@@ -1,4 +1,3 @@
-import { useQuery } from 'react-query'
 import {
   Box,
   Button,
@@ -29,7 +28,6 @@ interface BoatTableProps {
 export default function BoatTable({ boats, isLoading, isFetching, fishFarmId }: BoatTableProps) {
   const [showBoatForm, setShowBoatForm] = useState(false)
   const [selectedBoat, setSelectedBoat] = useState<Boat | null>(null)
-  const [showBoatEditForm, setShowBoatEditForm] = useState(false)
   const [showAssignBoatForm, setShowAssignBoatForm] = useState(false)
   return (
     <TableContainer

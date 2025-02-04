@@ -83,7 +83,7 @@ export default function ImagePicker({ control, setValue, name, imageUrl, require
               style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
             />
           ) : imageUrl ? (
-            <img src={imageUrl} alt='Preview' style={{ width: '100%', height: '100%' }} />
+            <img src={imageUrl} alt='Preview' style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           ) : null}
           {error && (
             <Typography color='error' sx={{ zIndex: 11, position: 'absolute', bottom: 0 }}>

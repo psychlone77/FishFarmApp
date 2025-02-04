@@ -14,7 +14,7 @@ import {
   Typography,
 } from '@mui/material'
 import { useNavigate } from 'react-router'
-import { Edit, Link, LinkOff, Person } from '@mui/icons-material'
+import { Link, LinkOff, Person } from '@mui/icons-material'
 import { useState } from 'react'
 import AssignEmployeeForm from './AssignEmployeeForm'
 import UnassignEmployeeModal from './UnassignEmployeeModal'

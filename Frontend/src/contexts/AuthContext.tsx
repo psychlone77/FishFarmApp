@@ -31,7 +31,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     refetchOnWindowFocus: false,
   })
 
-  const storeUserDetails = (token: string, userData: any, role: string) => {
+  const storeUserDetails = (token: string, userData: object, role: string) => {
     sessionStorage.setItem('token', token)
     sessionStorage.setItem('user', JSON.stringify(userData))
     sessionStorage.setItem('role', role)
@@ -52,7 +52,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           await checkSession()
           queryClient.refetchQueries('user')
           setIsAuthenticated(true)
-        } catch (error) {
+        } catch {
           notifyError('Session expired. Please login again')
           navigate('/login')
         }

@@ -123,6 +123,7 @@ export default function EmployeePage() {
             <Typography variant='h3' component='div' noWrap>
               {employee.name}
             </Typography>
+            <Typography variant='subtitle1'>{employee.id}</Typography>
             <Typography variant='subtitle1'>{employee.employeePosition}</Typography>
             <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, width: '100%' }}>
               <Card
