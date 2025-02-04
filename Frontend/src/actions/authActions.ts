@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios'
+import { AxiosResponse } from 'axios'
 import { LoginRequest, UpdateEmail, UpdatePasswordRequest, UserDetail } from '../types/types'
 import axiosInstance from './axiosInstance.ts'
 

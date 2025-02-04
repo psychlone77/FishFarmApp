@@ -4,7 +4,6 @@ import { checkSession, getMyDetails, loginAction } from '../actions/authActions'
 import { useNavigate } from 'react-router'
 import axiosInstance from '../actions/axiosInstance.ts'
 import { useQuery, useQueryClient } from 'react-query'
-import { notifyError } from './ToastContext.tsx'
 
 const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
@@ -24,7 +23,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [role, setRole] = useState('')
   const [user, setUser] = useState<EmployeeResponse | null>(null)
-  // const [token, setToken] = useState(sessionStorage.getItem('token'))
+  const [token, setToken] = useState(sessionStorage.getItem('token'))
 
   const { data: userDetails } = useQuery<UserDetail>('user', getMyDetails, {
     enabled: false,
@@ -53,7 +52,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const authenticate = async () => {
       setIsLoading(true)
-      if (true) {
+      if (token) {
         try {
           await checkSession()
           queryClient.refetchQueries('user')
@@ -66,7 +65,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     authenticate()
-  }, [])
+  }, [token])
 
   useEffect(() => {
     if (userDetails) {
@@ -84,6 +83,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`
       setUser(res.data.userData)
       setRole(res.data.role)
+      setToken(token)
       setIsAuthenticated(true)
       storeUserDetails(token, res.data.refreshToken, res.data.userData, res.data.role)
       navigate('/')

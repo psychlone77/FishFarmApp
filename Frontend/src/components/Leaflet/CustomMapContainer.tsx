@@ -1,8 +1,7 @@
-import { MapContainer, Marker, Popup, TileLayer, Tooltip, useMap } from 'react-leaflet'
+import { MapContainer, Marker, TileLayer, Tooltip, useMap } from 'react-leaflet'
 import { Boat, FishFarmResponse } from '../../types/types'
 import { LatLngBounds, LatLngExpression } from 'leaflet'
 import { useEffect, useState } from 'react'
-import FishFarmGridCard from '../FishFarm/FishFarmGridCard'
 import { boatMarkerIcon, markerIcon } from './CustomMarkers'
 import { Typography } from '@mui/material'
 
