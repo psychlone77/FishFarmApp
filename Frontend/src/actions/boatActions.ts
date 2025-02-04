@@ -31,3 +31,7 @@ export async function reassignBoat(
 ): Promise<void> {
   await axiosInstance.post(`/Boat/fishfarm/${fishFarmId}/${boatId}/reassign/${newFishFarmId}`)
 }
+
+export async function deleteBoat(boatId: string, fishFarmId: string): Promise<void> {
+  await axiosInstance.delete(`/Boat/fishfarm/${fishFarmId}/${boatId}`)
+}

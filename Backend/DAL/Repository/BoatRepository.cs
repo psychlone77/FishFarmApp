@@ -54,7 +54,8 @@ namespace DAL.Repository
             var boat = await _context.Boats.FirstOrDefaultAsync(b => b.Id == boatId);
             if (boat == null)
                 throw new KeyNotFoundException("Boat not found");
-            _context.Boats.Remove(boat);
+            boat.IsDeleted = true;
+            _context.Boats.Update(boat);
             await _context.SaveChangesAsync();
             return boat;
         }
