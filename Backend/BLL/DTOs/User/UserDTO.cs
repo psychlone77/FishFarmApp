@@ -9,6 +9,7 @@
     public class  LoginSuccess<T>
     {
         public required string Token { get; set; }
+        public required string RefreshToken { get; set; }
         public required string Email { get; set; }
         public required string Role { get; set; }
         public required T UserData { get; set; }
@@ -19,6 +20,17 @@
         public required string Role { get; set; }
         public required string Email { get; set; }
         public required T User { get; set; }
+    }
+
+    public class TokenResponse
+    {
+        public required string AccessToken { get; set; }
+        public required string RefreshToken { get; set; }
+    }
+
+    public class RefreshTokenRequest
+    {
+        public required string RefreshToken { get; set; }
     }
 
     public class UpdateEmailRequest

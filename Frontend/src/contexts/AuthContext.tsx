@@ -23,22 +23,29 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [role, setRole] = useState('')
-  const [user, setUser] = useState<EmployeeResponse|null>(null)
-  const [token, setToken] = useState(sessionStorage.getItem('token'))
+  const [user, setUser] = useState<EmployeeResponse | null>(null)
+  // const [token, setToken] = useState(sessionStorage.getItem('token'))
 
   const { data: userDetails } = useQuery<UserDetail>('user', getMyDetails, {
     enabled: false,
     refetchOnWindowFocus: false,
   })
 
-  const storeUserDetails = (token: string, userData: object, role: string) => {
+  const storeUserDetails = (
+    token: string,
+    refreshToken: string,
+    userData: object,
+    role: string,
+  ) => {
     sessionStorage.setItem('token', token)
+    localStorage.setItem('refreshToken', refreshToken)
     sessionStorage.setItem('user', JSON.stringify(userData))
     sessionStorage.setItem('role', role)
   }
 
   const removeUserDetails = () => {
     sessionStorage.removeItem('token')
+    localStorage.removeItem('refreshToken')
     sessionStorage.removeItem('user')
     sessionStorage.removeItem('role')
   }
@@ -46,14 +53,12 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const authenticate = async () => {
       setIsLoading(true)
-      if (token) {
-        axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`
+      if (true) {
         try {
           await checkSession()
           queryClient.refetchQueries('user')
           setIsAuthenticated(true)
         } catch {
-          notifyError('Session expired. Please login again')
           navigate('/login')
         }
       }
@@ -61,7 +66,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     authenticate()
-  }, [token])
+  }, [])
 
   useEffect(() => {
     if (userDetails) {
@@ -80,20 +85,19 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUser(res.data.userData)
       setRole(res.data.role)
       setIsAuthenticated(true)
-      storeUserDetails(token, res.data.userData, res.data.role)
+      storeUserDetails(token, res.data.refreshToken, res.data.userData, res.data.role)
       navigate('/')
     }
-    return res;
+    return res
   }
 
   const logout = () => {
     setIsAuthenticated(false)
-    setToken('')
     setUser(null)
     setRole('')
-    removeUserDetails();
-    delete axiosInstance.defaults.headers.common['Authorization'];
-    queryClient.invalidateQueries();
+    removeUserDetails()
+    delete axiosInstance.defaults.headers.common['Authorization']
+    queryClient.invalidateQueries()
     navigate('/login')
   }
 

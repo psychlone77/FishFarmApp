@@ -45,6 +45,9 @@ namespace BLL.AppConfigManager
             try { GetJwtExpiryTime(); }
             catch (Exception ex) { errorMessage.AppendLine($"JWT Expiry Time: {ex.Message}"); }
 
+            try { GetRefreshTokenExpiryTime(); }
+            catch (Exception ex) { errorMessage.AppendLine($"Refresh Token Expiry Time: {ex.Message}"); }
+
             try { GetBlobStorageConnectionString(); }
             catch (Exception ex) { errorMessage.AppendLine($"Blob Storage Connection String: {ex.Message}"); }
 
@@ -114,7 +117,12 @@ namespace BLL.AppConfigManager
 
         public string GetJwtExpiryTime()
         {
-            return _configuration["Jwt:ExpTime"] ?? throw new InvalidOperationException("JWT expiry time not found.");
+            return _configuration["Jwt:ExpTimeMin"] ?? throw new InvalidOperationException("JWT expiry time not found.");
+        }
+
+        public string GetRefreshTokenExpiryTime()
+        {
+            return _configuration["Jwt:RefreshTokenExpTimeHours"] ?? throw new InvalidOperationException("Refresh token expiry time not found.");
         }
 
         public string GetBlobStorageConnectionString()

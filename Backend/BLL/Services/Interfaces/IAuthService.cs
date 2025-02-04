@@ -11,6 +11,8 @@ namespace BLL.Services.Interfaces
         public Task<UserResponse<EmployeeResponseDTO>> GetMyDetails(Guid userId);
         public Task<String> UpdateMyEmail(Guid userId, string newEmail);
         public Task UpdateMyPassword(Guid userId, string oldPassword, string newPassword);
+        public Task<TokenResponse> RefreshToken(string refreshToken);
+        public Task InvalidateRefreshToken(string refreshToken);
         public Task CheckFishFarmAccess(Guid fishFarmId, string userId, PermissionLevel permissionLevel);
     }
 }

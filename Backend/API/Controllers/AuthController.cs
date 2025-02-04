@@ -73,6 +73,22 @@ namespace API.Controllers
             return Task.FromResult<ActionResult>(Ok("Token is valid"));
         }
 
+        [HttpPost]
+        [Route("refresh-token")]
+        public async Task<ActionResult<TokenResponse>> RefreshToken(RefreshTokenRequest request)
+        {
+            return Ok(await _authService.RefreshToken(request.RefreshToken));
+        }
+
+        [HttpPost]
+        [Route("logout")]
+        [Authorize]
+        public async Task<ActionResult> Logout(RefreshTokenRequest request)
+        {
+            await _authService.InvalidateRefreshToken(request.RefreshToken);
+            return Ok();
+        }
+
         [HttpGet]
         [Route("test-auth-sa")]
         [Authorize(Roles = "SuperAdmin")]

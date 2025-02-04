@@ -1,5 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using BLL.AppConfigManager;
 using DAL.Entities;
@@ -29,12 +30,24 @@ namespace BLL.Services
                 _configManager.GetJwtIssuer(),
                 _configManager.GetJwtAudience(),
                 claims,
-                expires: DateTime.Now.AddHours(double.Parse(_configManager.GetJwtExpiryTime())),
+                expires: DateTime.Now.AddMinutes(double.Parse(_configManager.GetJwtExpiryTime())),
+                //expires: DateTime.Now.AddSeconds(10),
                 signingCredentials: creds
             );
 
             var tokenHandler = new JwtSecurityTokenHandler();
             return tokenHandler.WriteToken(tokenDescriptor);
+        }
+
+        public (string, int) CreateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            var expTime = int.Parse(_configManager.GetRefreshTokenExpiryTime());
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+                return (Convert.ToBase64String(randomNumber), expTime);
+            }
         }
     }
 }

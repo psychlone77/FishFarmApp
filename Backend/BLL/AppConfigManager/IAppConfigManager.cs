@@ -14,6 +14,7 @@ namespace BLL.AppConfigManager
         public string GetJwtIssuer();
         public string GetJwtAudience();
         public string GetJwtExpiryTime();
+        public string GetRefreshTokenExpiryTime();
         public string GetBlobStorageConnectionString();
         public string GetFishFarmContainerName();
         public string GetEmployeeContainerName();

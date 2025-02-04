@@ -62,28 +62,31 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = false,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configManager.GetJwtKey())),
             ValidIssuer = configManager.GetJwtIssuer(),
-            ValidAudience = configManager.GetJwtAudience()
+            ValidAudience = configManager.GetJwtAudience(),
+            ClockSkew = TimeSpan.Zero
         };
 
-        options.Events = new JwtBearerEvents
-        {
-            OnAuthenticationFailed = context =>
-            {
-                context.Response.StatusCode = 401;
-                context.Response.ContentType = "application/json";
-                var result = JsonSerializer.Serialize(new { message = "Authentication failed." });
-                return context.Response.WriteAsync(result);
-            },
-            OnForbidden = context =>
-            {
-                context.Response.StatusCode = 403;
-                context.Response.ContentType = "application/json";
-                var result = JsonSerializer.Serialize(new { message = "You are not authorized to perform this action" });
-                return context.Response.WriteAsync(result);
+        //options.Events = new JwtBearerEvents
+        //{
+        //    OnAuthenticationFailed = context =>
+        //    {
+        //        context.Response.StatusCode = 401;
+        //        context.Response.ContentType = "application/json";
+        //        var result = JsonSerializer.Serialize(new { message = "Authentication failed." });
+        //        return context.Response.WriteAsync(result);
+        //    },
+        //    OnForbidden = context =>
+        //    {
+        //        context.Response.StatusCode = 403;
+        //        context.Response.ContentType = "application/json";
+        //        var result = JsonSerializer.Serialize(new { message = "You are not authorized to perform this action" });
+        //        return context.Response.WriteAsync(result);
 
-            }
-        };
+        //    }
+        //};
     });
+
+builder.Services.AddAuthorization();
 
 // Add scoped services for dependency injection
 builder.Services.AddSingleton<TokenProvider>();
@@ -92,6 +95,7 @@ builder.Services.AddScoped<IFishFarmsService, FishFarmsService>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserSessionRepository, UserSessionRepository>();
 builder.Services.AddScoped<IBoatService, BoatService>();
 builder.Services.AddScoped<IBoatRepository, BoatRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
