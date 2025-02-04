@@ -12,7 +12,7 @@ export default function FishFarmGridCard({
 }) {
   return (
     <Box
-    onMouseEnter={onMouseEnter}
+      onMouseEnter={onMouseEnter}
       onClick={onClick}
       sx={{
         maxWidth: 345,
@@ -43,13 +43,13 @@ export default function FishFarmGridCard({
         <Typography variant='h5' component='div' noWrap>
           {fishFarm.name}
         </Typography>
-        <Typography variant='body2'>
+        {/* <Typography variant='body2'>
           Location: {fishFarm.latitude}, {fishFarm.longitude}
         </Typography>
         <Typography variant='body2'>Cage Count: {fishFarm.cageCount}</Typography>
-        <Typography variant='body2'>Has Barge: {fishFarm.hasBarge ? 'Yes' : 'No'}</Typography>
-        <Typography variant='body2'>
-          Created On: {new Date(fishFarm.createdOn).toLocaleDateString()}
+        <Typography variant='body2'>Has Barge: {fishFarm.hasBarge ? 'Yes' : 'No'}</Typography> */}
+        <Typography variant='subtitle2' color='text.secondary' noWrap>
+          {new Date(fishFarm.createdOn).toLocaleDateString()}
         </Typography>
       </Box>
     </Box>
