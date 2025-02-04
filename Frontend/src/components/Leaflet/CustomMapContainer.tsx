@@ -61,9 +61,6 @@ export default function CustomMapContainer({ fishFarms, boats, hoverId }: Custom
           <Tooltip direction='top' offset={[-15, -15]} permanent>
             <Typography variant='subtitle2'>{fishFarm.name}</Typography>
           </Tooltip>
-          <Popup>
-            <FishFarmGridCard onClick={() => {}} fishFarm={fishFarm} />
-          </Popup>
         </Marker>
       ))}
       {boats?.map(boat => (

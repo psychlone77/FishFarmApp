@@ -102,6 +102,7 @@ namespace BLL.Services
         {
             return Enum.GetValues(typeof(EmployeePosition))
                        .Cast<EmployeePosition>()
+                       .Where(position => position != EmployeePosition.CEO)
                        .Select(position => Helpers.GetEnumDisplayName(position))
                        .ToList();
         }
