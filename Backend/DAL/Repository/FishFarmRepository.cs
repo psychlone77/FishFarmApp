@@ -53,7 +53,8 @@ namespace DAL.Repository
                 .FirstOrDefaultAsync(f => f.Id == fishFarmId);
             if (fishFarm is null)
                 return null;
-            _fishFarmAppDbContext.FishFarms.Remove(fishFarm);
+            fishFarm.IsDeleted = true;
+            _fishFarmAppDbContext.FishFarms.Update(fishFarm);
             await _fishFarmAppDbContext.SaveChangesAsync();
             return fishFarm;
         }

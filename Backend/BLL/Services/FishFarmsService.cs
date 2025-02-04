@@ -89,6 +89,9 @@ namespace BLL.Services
         {
             if (userRole != "SuperAdmin")
                 await _authService.CheckFishFarmAccess(fishFarmId, userId, PermissionLevel.Delete);
+            var boats = await _boatRepository.GetBoats(fishFarmId);
+            if (boats.Any())
+                throw new ArgumentException("Cannot delete fish farm with boats");
             FishFarmEntity? deletedFishFarm = await _fishFarmRepository.DeleteFishFarmEntity(fishFarmId, userId);
             if (deletedFishFarm is null)
                 throw new KeyNotFoundException($"Fish farm with id {fishFarmId} not found");
