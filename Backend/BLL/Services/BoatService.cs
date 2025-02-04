@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BLL.DTOs.Boat;
 using BLL.Services.Interfaces;
+using BLL.Utils;
 using DAL.Entities;
 using DAL.Repository.Interface;
 
@@ -26,11 +27,19 @@ namespace BLL.Services
             return _mapper.Map<IList<BoatWithFishFarmDTO>>(await _boatRepository.GetAllBoats(userId));
         }
 
+        public IList<string> GetBoatTypes()
+        {
+            return Enum.GetValues(typeof(BoatType))
+                       .Cast<BoatType>()
+                       .Select(position => Helpers.GetEnumDisplayName(position))
+                       .ToList();
+        }
+
         public async Task<BoatDTO> AddBoat(Guid fishFarmId, BoatDTO boatDTO)
         {
             var existingBoat = await _boatRepository.GetBoat(boatDTO.Id);
             if (existingBoat != null)
-                throw new KeyNotFoundException("Boat with ID already exists");
+                throw new ArgumentException("Boat with ID already exists");
             var boatEntity = _mapper.Map<BoatEntity>(boatDTO);
             boatEntity.FishFarmId = fishFarmId;
             return _mapper.Map<BoatDTO>(await _boatRepository.AddBoat(boatEntity));

@@ -54,8 +54,12 @@ export default function FishFarmsGrid({
           <Box
             sx={{
               display: 'flex',
+              flexDirection: 'column',
+              padding: 2,
               // gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
               gap: 3,
+              height: '100%',
+              overflowY: 'auto',
             }}
           >
             {Array.from(new Array(4)).map((_, index) => (

@@ -11,6 +11,11 @@ export async function getAllBoats(): Promise<BoatFull[]> {
   return response.data
 }
 
+export async function getBoatTypes(): Promise<string[]> {
+  const response = await axiosInstance.get(`/Boat/types`)
+  return response.data
+}
+
 export async function createBoat(boat: Boat, fishFarmId: string): Promise<void> {
   await axiosInstance.post(`/Boat/fishfarm/${fishFarmId}`, boat)
 }

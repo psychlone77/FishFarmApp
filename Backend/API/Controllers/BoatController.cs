@@ -37,6 +37,13 @@ namespace API.Controllers
                 return Ok(await _boatService.GetAllBoats(Guid.Parse(userId)));
         }
 
+        [HttpGet]
+        [Route("types")]
+        public ActionResult GetBoatTypes()
+        {
+            return Ok(_boatService.GetBoatTypes());
+        }
+
         [HttpPost]
         [Route("fishfarm/{fishFarmId}")]
         [Authorize(Roles = "SuperAdmin, Admin")]

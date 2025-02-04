@@ -1,9 +1,9 @@
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { useMutation, useQueryClient } from 'react-query'
-import { TextField, Button, Box, Modal, IconButton, Typography } from '@mui/material'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { TextField, Button, Box, Modal, IconButton, Typography, MenuItem } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import { Boat } from '../../types/types'
-import { createBoat, updateBoat } from '../../actions/boatActions'
+import { createBoat, getBoatTypes, updateBoat } from '../../actions/boatActions'
 import { BoatFormProps } from '../../types/interfaces'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { BoatSchema } from '../../types/schemas'
@@ -39,6 +39,7 @@ export default function BoatForm({
     handleSubmit,
     formState: { errors },
   } = useForm<Boat>({ resolver: zodResolver(BoatSchema) })
+  const { data: boatTypes } = useQuery('boatTypes', getBoatTypes)
   const mutation = useMutation(
     initialValues
       ? (boat: Boat) => updateBoat(boat, initialValues.id, fishFarmId)
@@ -95,13 +96,20 @@ export default function BoatForm({
         <Box mb={2}>
           <TextField
             fullWidth
+            select
             label='Boat Type'
             variant='outlined'
             defaultValue={initialValues?.boatType}
             error={!!errors.boatType}
             helperText={errors.boatType ? errors.boatType.message : ''}
             {...register('boatType', { required: true })}
-          />
+          >
+            {boatTypes?.map(boatType => (
+              <MenuItem key={boatType} value={boatType}>
+                {boatType}
+              </MenuItem>
+            ))}
+          </TextField>
         </Box>
         <LocationPicker
           control={control}
