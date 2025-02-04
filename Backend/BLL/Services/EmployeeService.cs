@@ -75,7 +75,7 @@ namespace BLL.Services
             {
                 if (existingEmployee.ImageURL != null)
                     await _blobStorage.DeleteFileGivenUrl(existingEmployee.ImageURL.ToString());
-                var imageURL = await _blobStorage.UploadFile(_containerName, employeeId, employee.Image.OpenReadStream());
+                var imageURL = await _blobStorage.UploadFile(_containerName, Helpers.GenerateRandomString(employeeId), employee.Image.OpenReadStream());
                 employeeEntity.ImageURL = imageURL;
             }
             else
