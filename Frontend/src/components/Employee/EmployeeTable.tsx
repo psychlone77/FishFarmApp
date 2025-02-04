@@ -19,7 +19,7 @@ import { useState } from 'react'
 import AssignEmployeeForm from './AssignEmployeeForm'
 import UnassignEmployeeModal from './UnassignEmployeeModal'
 import { EmployeeResponse } from '../../types/types'
-import { checkAccess } from '../Authorize'
+import Authorize, { checkAccess } from '../Authorize'
 
 export default function EmployeeTable({ fishFarmId }: { fishFarmId: string | undefined }) {
   const navigate = useNavigate()
@@ -131,7 +131,9 @@ export default function EmployeeTable({ fishFarmId }: { fishFarmId: string | und
                     setShowUnassignModal(true)
                   }}
                 />
-                <NavigateNext />
+                <Authorize requiredAccess={1}>
+                  <NavigateNext />
+                </Authorize>
               </TableCell>
             </TableRow>
           ))}
