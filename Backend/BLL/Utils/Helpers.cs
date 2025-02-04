@@ -6,6 +6,10 @@ namespace BLL.Utils
 {
     public class Helpers
     {
+        public static string GenerateRandomString(string id)
+        {
+            return string.Concat(id, Guid.NewGuid().ToString().AsSpan(0, 8));
+        }
         public static string GetEnumDisplayName(Enum enumValue)
         {
             return enumValue.GetType()

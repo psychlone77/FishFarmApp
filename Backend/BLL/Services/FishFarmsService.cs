@@ -2,10 +2,10 @@
 using BLL.AppConfigManager;
 using BLL.DTOs.FishFarm;
 using BLL.Services.Interfaces;
+using BLL.Utils;
 using BlobStorage.Interfaces;
 using DAL.Entities;
 using DAL.Repository.Interface;
-using Microsoft.Extensions.Configuration;
 
 namespace BLL.Services
 {
@@ -54,7 +54,7 @@ namespace BLL.Services
             if(fishFarm.Image is null)
                 throw new ArgumentException("Image is required");
             var fishFarmId = Guid.NewGuid();
-            var imageURL = await _blobStorage.UploadFile(_containerName, fishFarmId.ToString(), fishFarm.Image.OpenReadStream());
+            var imageURL = await _blobStorage.UploadFile(_containerName, Helpers.GenerateRandomString(fishFarmId.ToString()), fishFarm.Image.OpenReadStream());
             FishFarmEntity fishFarmEntity = _mapper.Map<FishFarmEntity>(fishFarm);
             fishFarmEntity.Id = fishFarmId;
             fishFarmEntity.ImageURL = imageURL;
@@ -69,15 +69,17 @@ namespace BLL.Services
             FishFarmEntity fishFarmEntity = _mapper.Map<FishFarmEntity>(fishFarm);
             fishFarmEntity.Id = fishFarmId;
             var currentFishFarm = await _fishFarmRepository.GetFishFarmEntityById(fishFarmId);
+            if (currentFishFarm is null)
+                throw new KeyNotFoundException($"Fish farm with id {fishFarmId} not found");
             if (fishFarm.Image is not null)
             {
-                await _blobStorage.DeleteFile(_containerName, fishFarmId.ToString());
-                var imageURL = await _blobStorage.UploadFile(_containerName, fishFarmId.ToString(), fishFarm.Image.OpenReadStream());
+                await _blobStorage.DeleteFileGivenUrl(currentFishFarm.ImageURL.ToString());
+                var imageURL = await _blobStorage.UploadFile(_containerName, Helpers.GenerateRandomString(fishFarmId.ToString()), fishFarm.Image.OpenReadStream());
                 fishFarmEntity.ImageURL = imageURL;
             }
             else
             {
-                fishFarmEntity.ImageURL = currentFishFarm!.ImageURL;
+                fishFarmEntity.ImageURL = currentFishFarm.ImageURL;
             }
             FishFarmEntity? updatedFishFarm = await _fishFarmRepository.UpdateFishFarmEntity(fishFarmEntity, userId);
             if (updatedFishFarm is null)

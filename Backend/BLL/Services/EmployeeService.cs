@@ -68,19 +68,19 @@ namespace BLL.Services
         {
             var employeeEntity = _mapper.Map<EmployeeEntity>(employee);
             employeeEntity.Id = employeeId;
+            var existingEmployee = await _employeeRepository.GetEmployeeEntityById(employeeId);
+            if (existingEmployee is null)
+                throw new KeyNotFoundException($"Employee with id {employeeId} not found");
             if (employee.Image != null)
             {
-                await _blobStorage.DeleteFile(_containerName, employeeId);
+                if (existingEmployee.ImageURL != null)
+                    await _blobStorage.DeleteFileGivenUrl(existingEmployee.ImageURL.ToString());
                 var imageURL = await _blobStorage.UploadFile(_containerName, employeeId, employee.Image.OpenReadStream());
                 employeeEntity.ImageURL = imageURL;
             }
             else
             {
-                var existingEmployee = await _employeeRepository.GetEmployeeEntityById(employeeId);
-                if (existingEmployee != null)
-                {
-                    employeeEntity.ImageURL = existingEmployee.ImageURL;
-                }
+                employeeEntity.ImageURL = existingEmployee.ImageURL;
             }
             var updatedEmployee = await _employeeRepository.UpdateEmployeeEntity(employeeEntity);
             if (updatedEmployee is null)
