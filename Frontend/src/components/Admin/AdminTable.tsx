@@ -14,7 +14,7 @@ import {
   Typography,
 } from '@mui/material'
 import { useNavigate } from 'react-router'
-import { Edit, Link, LinkOff, Person } from '@mui/icons-material'
+import { Link, LinkOff, NavigateNext, Person } from '@mui/icons-material'
 import { useState } from 'react'
 import { EmployeeResponse as AdminResponse } from '../../types/types'
 import AssignAdminForm from './AssignAdminForm'
@@ -131,7 +131,7 @@ export default function AdminTable({ fishFarmId }: { fishFarmId: string | undefi
                     setShowUnassignModal(true)
                   }}
                 />
-                <Edit />
+                <NavigateNext />
               </TableCell>
             </TableRow>
           ))}

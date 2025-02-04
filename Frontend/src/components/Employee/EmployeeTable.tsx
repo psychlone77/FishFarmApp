@@ -14,7 +14,7 @@ import {
   Typography,
 } from '@mui/material'
 import { useNavigate } from 'react-router'
-import { Link, LinkOff, Person } from '@mui/icons-material'
+import { Link, LinkOff, NavigateNext, Person } from '@mui/icons-material'
 import { useState } from 'react'
 import AssignEmployeeForm from './AssignEmployeeForm'
 import UnassignEmployeeModal from './UnassignEmployeeModal'
@@ -131,6 +131,7 @@ export default function EmployeeTable({ fishFarmId }: { fishFarmId: string | und
                     setShowUnassignModal(true)
                   }}
                 />
+                <NavigateNext />
               </TableCell>
             </TableRow>
           ))}
