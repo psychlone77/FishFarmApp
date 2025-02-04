@@ -152,14 +152,16 @@ export default function BoatTable({ boats, isLoading, isFetching, fishFarmId }: 
                     }}
                     onClick={() => setSelectedBoat(boat)}
                   />
-                  <Delete
-                    sx={{
-                      cursor: 'pointer',
-                      ml: 2,
-                      '&:hover': { boxShadow: 2, borderRadius: 5, color: 'error.main' },
-                    }}
-                    onClick={() => setSelectedDeleteBoat(boat)}
-                  />
+                  <Authorize requiredAccess={1}>
+                    <Delete
+                      sx={{
+                        cursor: 'pointer',
+                        ml: 2,
+                        '&:hover': { boxShadow: 2, borderRadius: 5, color: 'error.main' },
+                      }}
+                      onClick={() => setSelectedDeleteBoat(boat)}
+                    />
+                  </Authorize>
                 </TableCell>
               </Authorize>
             </TableRow>

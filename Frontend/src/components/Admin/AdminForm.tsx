@@ -72,13 +72,14 @@ export default function AdminForm({ title, open, handleClose, initialValues }: E
             </IconButton>
           </Box>
         </Box>
-        <Box mb={2}>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }} mb={2}>
           <ImagePicker
             control={control}
             setValue={setValue}
             name='imageFile'
             imageUrl={initialValues?.imageURL}
             required={true}
+            avatar={true}
           />
         </Box>
         <Box mb={2}>

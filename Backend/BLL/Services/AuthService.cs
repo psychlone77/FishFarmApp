@@ -3,6 +3,7 @@ using BLL.AppConfigManager;
 using BLL.DTOs.Employee;
 using BLL.DTOs.User;
 using BLL.Services.Interfaces;
+using BLL.Utils;
 using BlobStorage.Interfaces;
 using DAL.Entities;
 using DAL.Repository.Interface;
@@ -29,7 +30,7 @@ namespace BLL.Services
             if (user == null)
                 throw new KeyNotFoundException("Employee Email not found");
             if (user.FailedLoginAttempts >= _failedLoginAttempts && user.LastLogin > DateTime.UtcNow.AddHours(_lockoutTime))
-                throw new UnauthorizedAccessException("User is blocked");
+                throw new AccessViolationException("User is blocked");
             var employee = await _employeeRepository.GetEmployeeEntityById(user.EmployeeId);
             if (employee == null)
                 throw new KeyNotFoundException("Employee does not exist for this email");
@@ -38,7 +39,7 @@ namespace BLL.Services
             if (passwordVerificationResult == PasswordVerificationResult.Failed)
             {
                 await _userRepository.FailedLoginAttempt(user.Id);
-                throw new UnauthorizedAccessException("Password is incorrect");
+                throw new ArgumentException("Password is incorrect");
             }
             await _userRepository.SuccessfulLogin(user.Id);
             var token = _tokenProvider.CreateToken(user);
@@ -128,10 +129,12 @@ namespace BLL.Services
             var user = await _userRepository.GetUserById(userId);
             if (user == null)
                 throw new KeyNotFoundException("User not found");
+            if (newPassword.Length < 8)
+                throw new ArgumentException("Password must be at least 8 characters long");
             var passwordVerificationResult = new PasswordHasher<IdentityUser>()
                 .VerifyHashedPassword(new IdentityUser(), user.PasswordHash, oldPassword);
             if (passwordVerificationResult == PasswordVerificationResult.Failed)
-                throw new UnauthorizedAccessException("Old Password is incorrect");
+                throw new ArgumentException("Old Password is incorrect");
             user.PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(new IdentityUser(), newPassword);
             await _userRepository.UpdateUser(user);
             return;
@@ -179,7 +182,7 @@ namespace BLL.Services
         {
             FishFarmEntity? fishFarm = await _fishFarmRepository.GetFishFarmByPermissionLevel(fishFarmId, userId, permissionLevel);
             if (fishFarm is null)
-                throw new AccessViolationException($"You do not have access to this Fish Farm");
+                throw new AccessViolationException($"You do not have {Helpers.GetEnumDisplayName(permissionLevel)} access to this Fish Farm");
             return;
         }
 

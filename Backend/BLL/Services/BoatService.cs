@@ -59,7 +59,7 @@ namespace BLL.Services
             if (boat == null)
                 throw new KeyNotFoundException("Boat not found");
             if (boat.FishFarmId != fishFarmId)
-                throw new UnauthorizedAccessException("Boat does not belong to the fish farm");
+                throw new AccessViolationException("Boat does not belong to the fish farm");
             return _mapper.Map<BoatDTO>(await _boatRepository.DeleteBoat(boatId));
         }
 
@@ -69,7 +69,7 @@ namespace BLL.Services
             if (boat == null)
                 throw new KeyNotFoundException("Boat not found");
             if (boat.FishFarmId != fishFarmId)
-                throw new UnauthorizedAccessException("Current Fish Farm Id does not match old one");
+                throw new ArgumentException("Current Fish Farm Id does not match old one");
             boat.FishFarmId = newFishFarmId;
             return _mapper.Map<BoatDTO>(await _boatRepository.UpdateBoat(boat));
         }
