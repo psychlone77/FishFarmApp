@@ -111,6 +111,11 @@ builder.Services.AddCors(options =>
                           .AllowCredentials());
 });
 
+builder.Services.AddSpaStaticFiles(configuration =>
+{
+    configuration.RootPath = "wwwroot";
+});
+
 var app = builder.Build();
 
 // Enable CORS with the specified policy
@@ -133,15 +138,29 @@ if (app.Environment.IsDevelopment())
 // Enable HTTPS redirection
 app.UseHttpsRedirection();
 
-
 // Enable authorization
 app.UseAuthorization();
 
 // Map controller routes
 app.MapControllers();
-app.MapFallbackToFile("index.html");
 
-app.UseStaticFiles();
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path == "/" && context.Request.Headers.Accept.ToString().Contains("text/html"))
+    {
+        context.Response.Redirect("/app");
+    }
+    else
+    {
+        await next();
+    }
+});
+
+app.Map(new PathString("/app"), client =>
+{
+    client.UseSpaStaticFiles();
+    client.UseSpa(spa => { });
+});
 
 // Run the application
 app.Run();

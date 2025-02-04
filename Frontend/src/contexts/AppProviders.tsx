@@ -31,7 +31,7 @@ export default function AppProviders({ children }: { children: ReactNode }) {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <ToastProvider>
-            <BrowserRouter>
+            <BrowserRouter basename='/app'>
               <AuthProvider>{children}</AuthProvider>
             </BrowserRouter>
           </ToastProvider>
