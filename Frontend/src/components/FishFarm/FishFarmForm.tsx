@@ -17,7 +17,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { FishFarmRequestSchema } from '../../types/schemas'
 import ImagePicker from '../ImagePicker'
 import { useToast } from '../../contexts/ToastContext'
-import LocationPicker from '../Leaflet/CustomLocationPicker'
+import CustomLocationPicker from '../Leaflet/CustomLocationPicker'
 
 const style = {
   position: 'absolute',
@@ -133,7 +133,7 @@ export default function FishFarmForm({
                     {...register('longitude', { required: true, valueAsNumber: true })}
                   />
                 </Box> */}
-              <LocationPicker
+              <CustomLocationPicker
                 initialLocation={
                   initialValues ? [initialValues?.latitude, initialValues?.longitude] : null
                 }

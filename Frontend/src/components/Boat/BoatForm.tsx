@@ -8,7 +8,7 @@ import { BoatFormProps } from '../../types/interfaces'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { BoatSchema } from '../../types/schemas'
 import { useToast } from '../../contexts/ToastContext'
-import LocationPicker from '../Leaflet/CustomLocationPicker'
+import CustomLocationPicker from '../Leaflet/CustomLocationPicker'
 import { boatMarkerIcon } from '../Leaflet/CustomMarkers'
 
 const style = {
@@ -111,7 +111,7 @@ export default function BoatForm({
             ))}
           </TextField>
         </Box>
-        <LocationPicker
+        <CustomLocationPicker
           control={control}
           setValue={setValue}
           initialLocation={

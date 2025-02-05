@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { Box, Typography } from '@mui/material'
 import { markerIcon } from './CustomMarkers'
 
-export default function LocationPicker({
+export default function CustomLocationPicker({
   initialLocation,
   control,
   setValue,
@@ -33,6 +33,15 @@ export default function LocationPicker({
         map.flyTo(e.latlng, map.getZoom())
         map.setView(e.latlng, map.getZoom())
       },
+      mouseover() {
+        map.getContainer().style.cursor = 'crosshair'
+      },
+      drag() {
+        map.getContainer().style.cursor = 'grab'
+      },
+      dragend() {
+        map.getContainer().style.cursor = 'crosshair'
+      }
     })
 
     return position === null ? null : <Marker icon={icon} position={position} />
@@ -42,7 +51,7 @@ export default function LocationPicker({
     <MapContainer
       center={initialLocation || [59.9, 10.74]}
       zoom={11}
-      style={{ height: '200px', width: '100%' }}
+      style={{ height: '200px', width: '100%'}}
     >
       <Box
         sx={{
