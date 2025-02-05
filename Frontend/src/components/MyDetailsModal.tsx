@@ -1,16 +1,10 @@
 import { useState } from 'react'
-import {
-  Box,
-  Modal,
-  Typography,
-  Avatar,
-  List,
-  ListItem,
-  ListItemText, Button
-} from '@mui/material'
+import { Box, Modal, Typography, Avatar, List, ListItem, ListItemText, Button } from '@mui/material'
 import { EmployeeResponse } from '../types/types'
 import ChangePasswordModal from './ChangePasswordModal'
 import UpdateEmailModal from './UpdateEmailModal'
+import { Edit } from '@mui/icons-material'
+import UpdateImageModal from './UpdateImageModal'
 
 export default function MyDetailsModal({
   open,
@@ -23,6 +17,7 @@ export default function MyDetailsModal({
 }) {
   const [updateModalOpen, setUpdateModalOpen] = useState(false)
   const [passwordModalOpen, setPasswordModalOpen] = useState(false)
+  const [imageModalOpen, setImageModalOpen] = useState(false)
   if (!user) return null
   return (
     <>
@@ -43,13 +38,41 @@ export default function MyDetailsModal({
         >
           <Box sx={{ p: 2 }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <Avatar alt={user.name} src={user.imageURL} sx={{ width: 60, height: 60}} />
-              <Typography variant='h5'>
-                {user.name}
-              </Typography>
-              <Typography variant='caption'>
-                {user.employeePosition}
-              </Typography>
+              <Box
+                sx={{
+                  position: 'relative',
+                  width: 100,
+                  height: 100,
+                  borderRadius: '50%',
+                  overflow: 'hidden',
+                }}
+              >
+                <Box
+                  onClick={() => setImageModalOpen(true)}
+                  sx={{
+                    position: 'absolute',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    zIndex: 10,
+                    width: '100%',
+                    height: '100%',
+                    bgcolor: 'transparent',
+                    transition: '0.3s',
+                    color: 'transparent',
+                    '&:hover': {
+                      bgcolor: 'rgba(0, 60, 108, 0.5)',
+                      color: 'white',
+                      cursor: 'pointer',
+                    },
+                  }}
+                >
+                  <Edit sx={{ fontSize: 30 }} />
+                </Box>
+                <Avatar alt={user.name} src={user.imageURL} sx={{ width: 100, height: 100 }} />
+              </Box>
+              <Typography variant='h5'>{user.name}</Typography>
+              <Typography variant='caption'>{user.employeePosition}</Typography>
             </Box>
             <List>
               <ListItem>
@@ -86,11 +109,20 @@ export default function MyDetailsModal({
         </Box>
       </Modal>
 
-      <UpdateEmailModal email={user.email} open={updateModalOpen} handleClose={() => setUpdateModalOpen(false)} />
+      <UpdateEmailModal
+        email={user.email}
+        open={updateModalOpen}
+        handleClose={() => setUpdateModalOpen(false)}
+      />
 
       <ChangePasswordModal
         open={passwordModalOpen}
         handleClose={() => setPasswordModalOpen(false)}
+      />
+      <UpdateImageModal
+        open={imageModalOpen}
+        imageUrl={user.imageURL}
+        handleClose={() => setImageModalOpen(false)}
       />
     </>
   )

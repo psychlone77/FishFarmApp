@@ -17,17 +17,23 @@ export async function updateMyEmail(email: UpdateEmail): Promise<AxiosResponse> 
   return response
 }
 
-export async function changeMyPassword(changePassword: UpdatePasswordRequest): Promise<AxiosResponse> {
+export async function changeMyPassword(
+  changePassword: UpdatePasswordRequest,
+): Promise<AxiosResponse> {
   const response = await axiosInstance.put('/auth/password', changePassword)
   return response
 }
 
-// export async function refreshToken(): Promise<AxiosResponse> {
-//   const response = await axios.post('/auth/refresh-token', {
-//     refreshToken: localStorage.getItem('refreshToken'),
-//   });
-//   return response;
-// }
+export async function updateProfilePicture(image: File): Promise<AxiosResponse> {
+  const formData = new FormData()
+  formData.append('Image', image)
+  const response = await axiosInstance.put('/auth/profile-picture', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    }
+  })
+  return response
+}
 
 export async function loginAction(loginRequest: LoginRequest): Promise<AxiosResponse> {
   const response = await axiosInstance.post('/auth/login', loginRequest)

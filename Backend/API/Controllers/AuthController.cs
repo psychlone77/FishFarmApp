@@ -65,6 +65,16 @@ namespace API.Controllers
             return Ok();
         }
 
+        [HttpPut]
+        [Route("profile-picture")]
+        [Authorize]
+        public async Task<ActionResult> UpdateMyProfilePicture([FromForm] UpdateProfilePictureRequest request)
+        {
+            var (userId, _) = GetClaims(User);
+            var profilePicture = await _authService.UpdateMyProfilePicture(Guid.Parse(userId), request.Image);
+            return Ok(profilePicture);
+        }
+
         [HttpGet]
         [Route("validate-token")]
         [Authorize]

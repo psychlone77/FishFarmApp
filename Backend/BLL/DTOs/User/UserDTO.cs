@@ -1,4 +1,6 @@
-﻿namespace BLL.DTOs.User
+﻿using Microsoft.AspNetCore.Http;
+
+namespace BLL.DTOs.User
 {
     public class LoginRequest
     {
@@ -42,5 +44,10 @@
     {
         public required string OldPassword { get; set; }
         public required string NewPassword { get; set; }
+    }
+
+    public class UpdateProfilePictureRequest
+    {
+        public required IFormFile Image { get; set; }
     }
 }

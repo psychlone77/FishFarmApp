@@ -7,6 +7,7 @@ using BLL.Utils;
 using BlobStorage.Interfaces;
 using DAL.Entities;
 using DAL.Repository.Interface;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 
 namespace BLL.Services
@@ -87,8 +88,9 @@ namespace BLL.Services
             var addedEmployee = await _employeeRepository.GetEmployeeEntityById(addedUser.EmployeeId);
             if (registerRequest.Image != null && addedEmployee != null)
             {
-                await _blobStorage.DeleteFile(_containerName, addedEmployee.Id);
-                var imageURL = await _blobStorage.UploadFile(_containerName, addedEmployee.Id, registerRequest.Image.OpenReadStream());
+                if (addedEmployee.ImageURL != null)
+                    await _blobStorage.DeleteFileGivenUrl(addedEmployee.ImageURL.ToString());
+                var imageURL = await _blobStorage.UploadFile(_containerName, Helpers.GenerateRandomString(addedEmployee.Id), registerRequest.Image.OpenReadStream());
                 addedEmployee.ImageURL = imageURL;
                 addedEmployee = await _employeeRepository.UpdateEmployeeEntity(addedEmployee);
             }
@@ -138,6 +140,22 @@ namespace BLL.Services
             user.PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(new IdentityUser(), newPassword);
             await _userRepository.UpdateUser(user);
             return;
+        }
+
+        public async Task<String> UpdateMyProfilePicture(Guid userId, IFormFile image)
+        {
+            var user = await _userRepository.GetUserById(userId);
+            if (user == null)
+                throw new KeyNotFoundException("User not found");
+            var employee = await _employeeRepository.GetEmployeeEntityById(user.EmployeeId);
+            if (employee == null)
+                throw new KeyNotFoundException("Employee not found");
+            if (employee.ImageURL != null)
+                await _blobStorage.DeleteFileGivenUrl(employee.ImageURL.ToString());
+            var imageURL = await _blobStorage.UploadFile(_containerName, Helpers.GenerateRandomString(employee.Id), image.OpenReadStream());
+            employee.ImageURL = imageURL;
+            await _employeeRepository.UpdateEmployeeEntity(employee);
+            return imageURL.ToString();
         }
 
         public async Task<TokenResponse> RefreshToken(string refreshToken)
