@@ -41,7 +41,7 @@ export default function CustomLocationPicker({
       },
       dragend() {
         map.getContainer().style.cursor = 'crosshair'
-      }
+      },
     })
 
     return position === null ? null : <Marker icon={icon} position={position} />
@@ -51,7 +51,7 @@ export default function CustomLocationPicker({
     <MapContainer
       center={initialLocation || [59.9, 10.74]}
       zoom={11}
-      style={{ height: '200px', width: '100%'}}
+      style={{ height: '200px', width: '100%' }}
     >
       <Box
         sx={{

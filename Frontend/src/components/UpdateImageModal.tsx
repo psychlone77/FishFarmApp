@@ -4,28 +4,15 @@ import ImagePicker from './ImagePicker'
 import { useMutation, useQueryClient } from 'react-query'
 import { updateProfilePicture } from '../actions/authActions'
 import { notifySuccess } from '../contexts/ToastContext'
+import { UpdateImageFormValues, UpdateImageModalProps } from '../types/interfaces'
 
-interface UpdateImageModalProps {
-  open: boolean
-  handleClose: () => void
-  imageUrl?: string
-}
-
-interface FormValues {
-  image: File
-}
-
-export default function UpdateImageModal({
-  open,
-  handleClose,
-  imageUrl,
-}: UpdateImageModalProps) {
-  const { control, handleSubmit, setValue } = useForm<FormValues>()
+export default function UpdateImageModal({ open, handleClose, imageUrl }: UpdateImageModalProps) {
+  const { control, handleSubmit, setValue } = useForm<UpdateImageFormValues>()
   const queryClient = useQueryClient()
 
-  const mutation = useMutation((data: FormValues) => updateProfilePicture(data.image))
+  const mutation = useMutation((data: UpdateImageFormValues) => updateProfilePicture(data.image))
 
-  const onSubmit: SubmitHandler<FormValues> = data => {
+  const onSubmit: SubmitHandler<UpdateImageFormValues> = data => {
     mutation.mutate(data, {
       onSuccess: () => {
         queryClient.refetchQueries('user')

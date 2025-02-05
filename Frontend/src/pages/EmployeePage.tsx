@@ -187,7 +187,7 @@ export default function EmployeePage() {
               </Box>
             </Box>
             <Box sx={{ marginTop: 1, marginLeft: 2, position: 'absolute', right: 30, top: 30 }}>
-              <Button sx={{mr:2}} variant='contained' onClick={() => toggleEmployeeForm(true)}>
+              <Button sx={{ mr: 2 }} variant='contained' onClick={() => toggleEmployeeForm(true)}>
                 Edit
               </Button>
               <Button variant='outlined' color='error' onClick={() => setShowDeleteModal(true)}>

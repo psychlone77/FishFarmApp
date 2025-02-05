@@ -203,7 +203,10 @@ export default function EmployeesPage() {
                     <TableCell align='center'>{employee.employeePosition}</TableCell>
                     <TableCell align='center'>{employee.age}</TableCell>
                     <TableCell align='center'>{employee.email}</TableCell>
-                    <TableCell align='center' sx={{ color: isDatePassed(employee.certifiedUntil) ? 'red' : 'inherit' }}>
+                    <TableCell
+                      align='center'
+                      sx={{ color: isDatePassed(employee.certifiedUntil) ? 'red' : 'inherit' }}
+                    >
                       {new Date(employee.certifiedUntil).toLocaleDateString()}
                     </TableCell>
                     <TableCell align='center'>

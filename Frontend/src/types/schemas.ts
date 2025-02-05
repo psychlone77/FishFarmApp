@@ -74,11 +74,13 @@ export const UpdateEmailRequestSchema = z.object({
   email: z.string().email(),
 })
 
-export const UpdatePasswordRequestSchema = z.object({
-  oldPassword: z.string().nonempty('Old password is required'),
-  newPassword: z.string().nonempty('New password is required'),
-  confirmPassword: z.string().nonempty('Confirm password is required'),
-}).refine(data => data.newPassword === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ['confirmPassword'],
-});
+export const UpdatePasswordRequestSchema = z
+  .object({
+    oldPassword: z.string().nonempty('Old password is required'),
+    newPassword: z.string().nonempty('New password is required'),
+    confirmPassword: z.string().nonempty('Confirm password is required'),
+  })
+  .refine(data => data.newPassword === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ['confirmPassword'],
+  })

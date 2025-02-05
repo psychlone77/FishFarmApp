@@ -21,13 +21,7 @@ import { useMutation, useQueryClient } from 'react-query'
 import { deleteBoat } from '../../actions/boatActions'
 import DeleteModal from '../DeleteModal'
 import { notifySuccess } from '../../contexts/ToastContext'
-
-interface BoatTableProps {
-  boats: Boat[] | undefined
-  isLoading: boolean
-  isFetching: boolean
-  fishFarmId: string | undefined
-}
+import { BoatTableProps } from '../../types/interfaces'
 
 export default function BoatTable({ boats, isLoading, isFetching, fishFarmId }: BoatTableProps) {
   const [showBoatForm, setShowBoatForm] = useState(false)

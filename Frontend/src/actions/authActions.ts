@@ -30,7 +30,7 @@ export async function updateProfilePicture(image: File): Promise<AxiosResponse> 
   const response = await axiosInstance.put('/auth/profile-picture', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
-    }
+    },
   })
   return response
 }

@@ -16,7 +16,7 @@ export default function LoginPage() {
   } = useForm<LoginRequest>({ resolver: zodResolver(LoginRequestSchema) })
   const mutation = useMutation(login)
 
-  const onSubmit : SubmitHandler<LoginRequest> = data => {
+  const onSubmit: SubmitHandler<LoginRequest> = data => {
     mutation.mutate(data)
   }
 
@@ -33,7 +33,7 @@ export default function LoginPage() {
         backgroundSize: 'cover',
       }}
     >
-      <Box sx={{padding: 10, borderRadius: '50px', maxWidth:'720px'}}>
+      <Box sx={{ padding: 10, borderRadius: '50px', maxWidth: '720px' }}>
         <Box
           sx={{
             display: 'flex',

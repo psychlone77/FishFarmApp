@@ -118,7 +118,10 @@ export default function AssignEmployeeForm({
                         : 'none',
                   }}
                 >
-                  <ListItemText primary={`${employee.name} - ${employee.employeePosition}`} secondary={employee.id}/>
+                  <ListItemText
+                    primary={`${employee.name} - ${employee.employeePosition}`}
+                    secondary={employee.id}
+                  />
                 </ListItemButton>
               ))}
             </List>

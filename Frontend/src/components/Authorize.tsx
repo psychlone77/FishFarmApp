@@ -21,7 +21,7 @@ export default function Authorize({
   }
 }
 
-export function checkAccess(requiredAccess: number) : boolean {
+export function checkAccess(requiredAccess: number): boolean {
   const { role } = useAuth()
   return roles[role as keyof typeof roles] <= requiredAccess
 }

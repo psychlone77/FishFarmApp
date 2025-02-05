@@ -12,42 +12,42 @@ export async function getFishFarm(id: string): Promise<FishFarmResponse> {
 }
 
 export async function createFishFarm(fishFarm: FishFarmRequest): Promise<FishFarmResponse> {
-  const formData = new FormData();
-  formData.append('Name', fishFarm.name);
-  formData.append('Latitude', fishFarm.latitude.toString());
-  formData.append('Longitude', fishFarm.longitude.toString());
-  formData.append('CageCount', fishFarm.cageCount.toString());
+  const formData = new FormData()
+  formData.append('Name', fishFarm.name)
+  formData.append('Latitude', fishFarm.latitude.toString())
+  formData.append('Longitude', fishFarm.longitude.toString())
+  formData.append('CageCount', fishFarm.cageCount.toString())
   if (fishFarm.imageFile) {
-    formData.append('Image', fishFarm.imageFile);
+    formData.append('Image', fishFarm.imageFile)
   }
 
   const response = await axiosInstance.post('/FishFarms', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
-  });
-  return response.data;
+  })
+  return response.data
 }
 
 export async function updateFishFarm(
   fishFarm: FishFarmRequest,
   fishFarmId: string,
 ): Promise<FishFarmResponse> {
-  const formData = new FormData();
-  formData.append('Name', fishFarm.name);
-  formData.append('Latitude', fishFarm.latitude.toString());
-  formData.append('Longitude', fishFarm.longitude.toString());
-  formData.append('CageCount', fishFarm.cageCount.toString());
+  const formData = new FormData()
+  formData.append('Name', fishFarm.name)
+  formData.append('Latitude', fishFarm.latitude.toString())
+  formData.append('Longitude', fishFarm.longitude.toString())
+  formData.append('CageCount', fishFarm.cageCount.toString())
   if (fishFarm.imageFile) {
-    formData.append('Image', fishFarm.imageFile);
+    formData.append('Image', fishFarm.imageFile)
   }
 
   const response = await axiosInstance.put(`/FishFarms/${fishFarmId}`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
-  });
-  return response.data;
+  })
+  return response.data
 }
 
 export async function deleteFishFarm(fishFarmId: string): Promise<void> {

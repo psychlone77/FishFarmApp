@@ -1,16 +1,9 @@
 import { MapContainer, Marker, TileLayer, Tooltip, useMap } from 'react-leaflet'
-import { Boat, FishFarmResponse } from '../../types/types'
 import { LatLngBounds, LatLngExpression } from 'leaflet'
 import { useEffect, useState } from 'react'
 import { boatMarkerIcon, markerIcon } from './CustomMarkers'
 import { Typography } from '@mui/material'
-
-interface CustomMapContainerProps {
-  fishFarms: FishFarmResponse[]
-  boats?: Boat[]
-  hoverId?: string
-  scrollWheelZoom?: boolean
-}
+import { CustomMapContainerProps } from '../../types/interfaces'
 
 const FitBounds = ({ bounds, center }: { bounds: LatLngBounds; center?: LatLngExpression }) => {
   const map = useMap()
@@ -27,10 +20,15 @@ const FitBounds = ({ bounds, center }: { bounds: LatLngBounds; center?: LatLngEx
     }
   }, [map, center])
 
-  return null;
+  return null
 }
 
-export default function CustomMapContainer({ fishFarms, boats, hoverId, scrollWheelZoom = false }: CustomMapContainerProps) {
+export default function CustomMapContainer({
+  fishFarms,
+  boats,
+  hoverId,
+  scrollWheelZoom = false,
+}: CustomMapContainerProps) {
   const bounds = new LatLngBounds([
     ...fishFarms.map(fishFarm => [fishFarm.latitude, fishFarm.longitude] as [number, number]),
     ...(boats ? boats.map(boat => [boat.latitude, boat.longitude] as [number, number]) : []),

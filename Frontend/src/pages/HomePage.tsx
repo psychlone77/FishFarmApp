@@ -24,19 +24,26 @@ export default function HomePage() {
           borderRadius: 4,
         }}
       >
-        <Typography variant='h4' color='primary.dark'>Welcome {user?.name}</Typography>
+        <Typography variant='h4' color='primary.dark'>
+          Welcome {user?.name}
+        </Typography>
       </Box>
       <Box sx={{ display: 'flex' }}>
-        <Box sx={{ height:'93vh', width: '30%' }}>
-          <FishFarmsGrid data={data} isLoading={isLoading} isError={isError} setHoverId={setHoverId}/>
+        <Box sx={{ height: '93vh', width: '30%' }}>
+          <FishFarmsGrid
+            data={data}
+            isLoading={isLoading}
+            isError={isError}
+            setHoverId={setHoverId}
+          />
         </Box>
-        <Box sx={{ width: '100%', height: '100%'}}>
+        <Box sx={{ width: '100%', height: '100%' }}>
           {data && data.length === 0 && <p>No fish farms found</p>}
-          {!isLoading && data && data.length > 0 && 
-          <Box sx={{ width: '100%', height: '93vh'}}>
-            <CustomMapContainer fishFarms={data} hoverId={hoverId} scrollWheelZoom={true}/>
-          </Box>
-          }
+          {!isLoading && data && data.length > 0 && (
+            <Box sx={{ width: '100%', height: '93vh' }}>
+              <CustomMapContainer fishFarms={data} hoverId={hoverId} scrollWheelZoom={true} />
+            </Box>
+          )}
         </Box>
       </Box>
     </Box>

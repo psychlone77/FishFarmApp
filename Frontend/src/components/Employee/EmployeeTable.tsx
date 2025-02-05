@@ -43,7 +43,15 @@ export default function EmployeeTable({ fishFarmId }: { fishFarmId: string | und
       }}
       component={Paper}
     >
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 2, padding: 2 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginTop: 2,
+          padding: 2,
+        }}
+      >
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <Person
             sx={{
@@ -54,9 +62,7 @@ export default function EmployeeTable({ fishFarmId }: { fishFarmId: string | und
           />
           <Typography variant='h5'>Assigned Employees</Typography>
         </Box>
-        <Box
-          sx={{ display: 'flex', justifyContent: 'end', gap: 2 }}
-        >
+        <Box sx={{ display: 'flex', justifyContent: 'end', gap: 2 }}>
           <Button variant='contained' onClick={() => setShowAssignEmployeeForm(true)}>
             <Link />
             Assign Employee
@@ -100,19 +106,18 @@ export default function EmployeeTable({ fishFarmId }: { fishFarmId: string | und
           {employees?.map(employee => (
             <TableRow
               key={employee.id}
-              {...checkAccess(1)
+              {...(checkAccess(1)
                 ? {
-                  hover: true,
+                    hover: true,
                     sx: {
                       '&:hover': { cursor: 'pointer' },
                       '&:last-child td, &:last-child th': { border: 0 },
                     },
-                    onClick:() => {
-                      navigate(`/employees/${employee.id}`, {preventScrollReset: false})
+                    onClick: () => {
+                      navigate(`/employees/${employee.id}`, { preventScrollReset: false })
                     },
                   }
-                : {}
-              }
+                : {})}
             >
               <TableCell align='center'>{employee.id}</TableCell>
               <TableCell align='center'>{employee.name}</TableCell>

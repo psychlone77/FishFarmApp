@@ -177,7 +177,7 @@ export default function FishFarmPage() {
             </Box>
           </Card>
           <Box sx={{ height: '500px', width: '100%' }}>
-            <CustomMapContainer fishFarms={[fishFarm]} boats={boats}/>
+            <CustomMapContainer fishFarms={[fishFarm]} boats={boats} />
           </Box>
         </>
       )}

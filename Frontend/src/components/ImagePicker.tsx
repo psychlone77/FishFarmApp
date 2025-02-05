@@ -1,19 +1,18 @@
 import { useEffect, useState } from 'react'
-import { Controller, Control, UseFormSetValue } from 'react-hook-form'
+import { Controller } from 'react-hook-form'
 import { useDropzone } from 'react-dropzone'
 import { Box, Typography } from '@mui/material'
 import { Image } from '@mui/icons-material'
+import { ImagePickerProps } from '../types/interfaces'
 
-interface ImagePickerProps {
-  control: Control<any>
-  setValue: UseFormSetValue<any>
-  name: string
-  imageUrl?: string
-  required?: boolean
-  avatar?: boolean
-}
-
-export default function ImagePicker({ control, setValue, name, imageUrl, required = false, avatar = false }: ImagePickerProps) {
+export default function ImagePicker({
+  control,
+  setValue,
+  name,
+  imageUrl,
+  required = false,
+  avatar = false,
+}: ImagePickerProps) {
   const [file, setFile] = useState<File | null>(null)
   const { getRootProps, getInputProps, isDragActive, acceptedFiles } = useDropzone({
     accept: { 'image/*': [] },
@@ -74,16 +73,20 @@ export default function ImagePicker({ control, setValue, name, imageUrl, require
               ...{ ...(isDragActive && { bgcolor: 'rgba(0, 60, 108, 0.5)', color: 'white' }) },
             }}
           >
-            <Image sx={{fontSize: 40}}/>
+            <Image sx={{ fontSize: 40 }} />
           </Box>
           {file ? (
             <img
               src={URL.createObjectURL(file)}
               alt='Preview'
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
           ) : imageUrl ? (
-            <img src={imageUrl} alt='Preview' style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <img
+              src={imageUrl}
+              alt='Preview'
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
           ) : null}
           {error && (
             <Typography color='error' sx={{ zIndex: 11, position: 'absolute', bottom: 0 }}>

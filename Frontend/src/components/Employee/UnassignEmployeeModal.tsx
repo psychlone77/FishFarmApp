@@ -1,15 +1,8 @@
 import { Modal, Box, Typography, Button } from '@mui/material'
 import { useMutation, useQueryClient } from 'react-query'
 import { unassignEmployee } from '../../actions/employeeActions'
-import { EmployeeResponse } from '../../types/types'
 import { useToast } from '../../contexts/ToastContext'
-
-interface UnassignModalProps {
-  open: boolean
-  handleClose: () => void
-  employee: EmployeeResponse
-  fishFarmId: string
-}
+import { UnassignModalProps } from '../../types/interfaces'
 
 export default function UnassignEmployeeModal({
   open,
@@ -47,12 +40,10 @@ export default function UnassignEmployeeModal({
       >
         <Typography variant='h5'>Unassign this employee?</Typography>
         <Box mt={2} mb={4}>
-            <Typography variant='body1'>
-                {employee.name} - {employee.employeePosition}
-            </Typography>
-            <Typography variant='body1'>
-                {employee.id}
-            </Typography>
+          <Typography variant='body1'>
+            {employee.name} - {employee.employeePosition}
+          </Typography>
+          <Typography variant='body1'>{employee.id}</Typography>
         </Box>
         <Box mt={2} display='flex' justifyContent='space-between'>
           <Button variant='contained' color='primary' onClick={handleClose}>

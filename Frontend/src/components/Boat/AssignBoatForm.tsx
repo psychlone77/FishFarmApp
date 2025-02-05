@@ -30,14 +30,17 @@ export default function AssignBoatForm({
   const [filteredBoats, setFilteredBoats] = useState<BoatFull[] | null>([])
   const { data } = useQuery(['boats', 'all'], () => getAllBoats())
 
-  const mutation = useMutation(() => reassignBoat(selectedBoat!.id, selectedBoat!.fishFarm.id, fishFarmId), {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['boats', 'all'])
-      queryClient.invalidateQueries(['boats', fishFarmId])
-      setSelectedBoat(null)
-      handleClose()
+  const mutation = useMutation(
+    () => reassignBoat(selectedBoat!.id, selectedBoat!.fishFarm.id, fishFarmId),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['boats', 'all'])
+        queryClient.invalidateQueries(['boats', fishFarmId])
+        setSelectedBoat(null)
+        handleClose()
+      },
     },
-  })
+  )
 
   const handleAssign = () => {
     mutation.mutate()
@@ -101,10 +104,7 @@ export default function AssignBoatForm({
                   sx={{
                     backgroundColor:
                       selectedBoat?.id === boat.id ? 'rgba(0, 0, 0, 0.08)' : 'inherit',
-                    border:
-                      selectedBoat?.id === boat.id
-                        ? '1px solid rgba(0, 0, 0, 0.2)'
-                        : 'none',
+                    border: selectedBoat?.id === boat.id ? '1px solid rgba(0, 0, 0, 0.2)' : 'none',
                   }}
                 >
                   <ListItemText primary={`${boat.id} - ${boat.model}`} secondary={boat.boatType} />
