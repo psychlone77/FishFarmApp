@@ -9,6 +9,7 @@ interface CustomMapContainerProps {
   fishFarms: FishFarmResponse[]
   boats?: Boat[]
   hoverId?: string
+  scrollWheelZoom?: boolean
 }
 
 const FitBounds = ({ bounds, center }: { bounds: LatLngBounds; center?: LatLngExpression }) => {
@@ -29,7 +30,7 @@ const FitBounds = ({ bounds, center }: { bounds: LatLngBounds; center?: LatLngEx
   return null;
 }
 
-export default function CustomMapContainer({ fishFarms, boats, hoverId }: CustomMapContainerProps) {
+export default function CustomMapContainer({ fishFarms, boats, hoverId, scrollWheelZoom = false }: CustomMapContainerProps) {
   const bounds = new LatLngBounds([
     ...fishFarms.map(fishFarm => [fishFarm.latitude, fishFarm.longitude] as [number, number]),
     ...(boats ? boats.map(boat => [boat.latitude, boat.longitude] as [number, number]) : []),
@@ -46,7 +47,7 @@ export default function CustomMapContainer({ fishFarms, boats, hoverId }: Custom
   }, [hoverId, fishFarms])
 
   return (
-    <MapContainer minZoom={5} scrollWheelZoom={false}>
+    <MapContainer minZoom={5} scrollWheelZoom={scrollWheelZoom}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'

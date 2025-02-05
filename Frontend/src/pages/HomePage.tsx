@@ -34,7 +34,7 @@ export default function HomePage() {
           {data && data.length === 0 && <p>No fish farms found</p>}
           {!isLoading && data && data.length > 0 && 
           <Box sx={{ width: '100%', height: '93vh'}}>
-            <CustomMapContainer fishFarms={data} hoverId={hoverId}/>
+            <CustomMapContainer fishFarms={data} hoverId={hoverId} scrollWheelZoom={true}/>
           </Box>
           }
         </Box>
