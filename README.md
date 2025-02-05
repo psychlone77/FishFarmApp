@@ -43,13 +43,15 @@ Frontend/
     ...configs
 ```
 ## ER Diagram
-![image](https://github.com/user-attachments/assets/b280236a-93c7-46fd-831c-e2fc2e81c43a)
+![fish-farm-er-v2](https://github.com/user-attachments/assets/01a18d25-f1b5-4989-9c24-64cd9d4bd6aa)
 
 ## Getting Started
 ### Prerequisites
 - .NET 8.0 SDK
 - Node.js
 - MSSQL Server
+### Basic Setup
+- Go through the `appsettings.json` and `env` in the Backend and Frontend to see which settings need to be set
 ### Backend Setup
 - Navigate to the API directory.
 - Restore the NuGet packages:
